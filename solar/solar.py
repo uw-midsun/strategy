@@ -7,6 +7,13 @@ def to_rad(angle):
     rad = angle * 2 * pi / 360
     return rad
 
+def integrate(x,y):
+    # Given an X and Y data set, numerically integrate
+    integral = 0
+    for i in range(len(x) - 1):
+        integral += (x[i + 1] - x[i]) * (y[i + 1] + y[i]) / 2
+    return integral
+
 class SolarDay:
    
     def __init__(self, day, latitude, longitude, timezone, cloudiness):
@@ -74,4 +81,5 @@ class SolarDay:
        energy = []
        for i in range(len(points)):
            energy.append(self.solar_insolation(self.time_to_HRA(points[i])))
+       self.total_energy = integrate(points,energy)
        return(energy, points)
