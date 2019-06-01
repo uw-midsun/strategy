@@ -21,6 +21,7 @@ class SolarDay:
         self.time = timezone
     
     def declination_angle(self):
+        # Declination angle is the angle the sun sits in the sky at noon
         d = -23.45 * cos((to_rad(360) / 365) * (self.day + 10))
         return d
     
@@ -49,7 +50,8 @@ class SolarDay:
         # gives value in kW/m^2
         ID = 1.353 * 0.7 ** (self.AM(HRA) * 0.678)
         return ID
-
+    
+    # AM is the airmass, which is a factor that allows us to take into account the effect of the angle of the sun in the sky and the time of day
     def AM(self, HRA):
         elevation = asin(sin(to_rad(self.declination_angle())) * sin(to_rad(self.lat))\
                 + cos(to_rad(self.declination_angle())) * cos(to_rad(self.lat)) * cos(HRA))
@@ -61,6 +63,7 @@ class SolarDay:
         AM = 1 / cos(zenith)
         return AM
     
+    # HRA is the solar time at the car location
     def time_to_HRA(self,time):
         LST = time + self.time_correction() / 60
         HRA = to_rad(15) * (LST - 12)
