@@ -42,31 +42,36 @@ What we want is an easy to calculate that!
 
 Given our state inputs, we get our the amount of force the motor needs to apply
 
-Our energy consumption for a given time t is given by E = Fmotor * t
+Our energy consumption for a given distance d is given by E = Fmotor * distance
 
 Given a velocity profile, give me both the instantaneous force requirement, and the total energy usage
 """
 
 import math
 class energyConsumption():
-    def __init__(self,m,theta,Crr,rho,CdA,v,vwind,t):
+    def __init__(self,m,theta,Crr,rho,CdA,v,vbefore,vwind,distance):
         self.m = m
         self.theta = theta
         self.Crr = Crr
         self.rho = rho
         self.CdA = CdA
         self.v = v
+        self.vbefore = vbefore
         self.vwind = vwind
-        self.t = t
+        self.d = distance
+        self.drag = 0.5*self.rho*self.CdA*(self.v+self.vwind)*(self.v+self.vwind)
+        self.fric = self.m*9.8*self.Crr*math.cos(self.theta)
+        self.grav = self.m*9.8*(math.sin(self.theta))
 
     def instForce(self):
-        Fmotor = self.m*9.8*(math.cos(self.theta))*self.Crr+0.5*self.rho*self.CdA*(self.v+self.vwind)*(self.v+self.vwind)+self.m*9.8*(math.sin(self.theta))
+        self.a = (self.v - self.vbefore) / (self.d / ((self.v + self.vbefore) / 2))
+        if self.a < 0:
+            self.a = 0.05 * self.a
+        Fmotor = self.m*9.8*self.Crr*math.cos(self.theta)+0.5*self.rho*self.CdA*(self.v+self.vwind)*(self.v+self.vwind)+self.m*9.8*(math.sin(self.theta))+ self.a
         return Fmotor
 
     def energyUsed(self):
         Fmotor = self.instForce()
-        energy = self.t*Fmotor
+        energy = self.d*Fmotor
         return energy
 
-newInfo = energyConsumption(5,6,3,5,2,5,3,4)
-print(newInfo.instForce())
