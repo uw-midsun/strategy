@@ -59,14 +59,20 @@ class energyConsumption():
         self.vwind = vwind
         self.t = t
 
-    def instForce(self):
-        Fmotor = self.m*9.8*(math.cos(self.theta))*self.Crr+0.5*self.rho*self.CdA*(self.v+self.vwind)*(self.v+self.vwind)+self.m*9.8*(math.sin(self.theta))
+    def instForce(self,thisTime):
+        Ffric = self.m*9.81*(math.cos(self.theta))*self.Crr
+        Fdrag = 0.5*self.rho*self.CdA*(self.v[thisTime]+self.vwind[thisTime])*(self.v[thisTime]+self.vwind[thisTime])
+        Fg = self.m*9.81*(math.sin(self.theta))
+        Fmotor = Ffric + Fdrag + Fg
         return Fmotor
 
     def energyUsed(self):
-        Fmotor = self.instForce()
-        energy = self.t*Fmotor
+        energy = 0
+        time = self.t
+        for i in range(time):
+            energyAtTime = self.instForce(i)
+            energy = energy + energyAtTime
         return energy
-
-newInfo = energyConsumption(5,6,3,5,2,5,3,4)
-print(newInfo.instForce())
+# Test:
+# newInfo = energyConsumption(5,6,3,5,2,[3,10,5],[1,8,2],3)
+# print(newInfo.energyUsed())
