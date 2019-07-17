@@ -83,3 +83,11 @@ class SolarDay:
            energy.append(self.solar_insolation(self.time_to_HRA(points[i])))
        self.total_energy = integrate(points,energy)
        return(energy, points)
+
+if __name__ == '__main__':
+     d = SolarDay(182, 30.28, 97.73, 8, 0.5)
+     print(d.energy_received())
+     insol = integrate(d.energy_received()[1], d.energy_received()[0])
+     print(insol)
+     energy = insol * 5 * 0.17
+     print(energy) 
