@@ -42,7 +42,8 @@ What we want is an easy to calculate that!
 
 Given our state inputs, we get our the amount of force the motor needs to apply
 
-Our energy consumption for a given time t is given by E = Fmotor * t
+
+Our energy consumption for a given distance d is given by E = Fmotor * distance
 
 Given a velocity profile, give me both the instantaneous force requirement, and the total energy usage
 """
@@ -76,3 +77,4 @@ class energyConsumption():
 # Test:
 # newInfo = energyConsumption(5,6,3,5,2,[3,10,5],[1,8,2],3)
 # print(newInfo.energyUsed())
+
