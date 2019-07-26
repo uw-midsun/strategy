@@ -1,6 +1,6 @@
-
 import cmath
 import SoC_OCV
+
 
 class PackEfficiency:
 	'''
@@ -40,11 +40,12 @@ class PackEfficiency:
 		
 		#this power loss is wasted as heat through the resistive elements
 		power_loss = (current_draw**2)*self.pack_resistance
+
 		
 		#the power drawn from the cell itself (before resistive losses from internal resistance), the actual power draw for SoC estimation
 		power_inside_pack = power_outside_pack_W + power_loss
 		
-		#1 = 100% efficiency
+		# 1 = 100% efficiency
 		#discharging efficiency - useable energy / given energy
 		if(power_outside_pack_W > 0):
 			efficiency = (power_inside_pack - power_loss) / power_inside_pack
@@ -126,4 +127,3 @@ if __name__ == "__main__":
 	ax2.plot(p_array, w_array)
 	
 	plt.show()
-	

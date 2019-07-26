@@ -11,6 +11,7 @@ import PackEfficiency as PE
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 class CoulombCounter:
 	'''
 	36 cell parallel
@@ -120,3 +121,4 @@ if __name__ == "__main__":
 	print("\n\n Test 2: \n")
 	TCC.test2()
 	TCC.test_graph()
+
