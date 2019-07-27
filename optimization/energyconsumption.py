@@ -42,39 +42,68 @@ What we want is an easy to calculate that!
 
 Given our state inputs, we get our the amount of force the motor needs to apply
 
-
-Our energy consumption for a given distance d is given by E = Fmotor * distance
+Our energy consumption for a given time t is given by E = Fmotor * t
 
 Given a velocity profile, give me both the instantaneous force requirement, and the total energy usage
 """
 
 import math
 class energyConsumption():
-    def __init__(self,m,theta,Crr,rho,CdA,v,vwind,t):
-        self.m = m
-        self.theta = theta
-        self.Crr = Crr
+    def __init__(self,m,theta,Crr,rho,CdA,v,vwind,a,d,t):
+        self.m = m #mass of car
+        self.theta = theta #angle of car
+        self.Crr = Crr  #angle of elevation, in radians
         self.rho = rho
         self.CdA = CdA
-        self.v = v
-        self.vwind = vwind
-        self.t = t
+        self.v = v #velocity of car
+        self.vwind = vwind #velocity of wind
+        self.a = a #acceleration of car
+        self.d = d #distance traveled (put in an array of 0 if calculate energy with time. Assuming distance to be distance travelled between since previous point, not culmulative )
+        self.t = t #total duration for total energy (put in an array of 0 if calculate energy with distance)
 
-    def instForce(self,thisTime):
-        Ffric = self.m*9.81*(math.cos(self.theta))*self.Crr
-        Fdrag = 0.5*self.rho*self.CdA*(self.v[thisTime]+self.vwind[thisTime])*(self.v[thisTime]+self.vwind[thisTime])
-        Fg = self.m*9.81*(math.sin(self.theta))
-        Fmotor = Ffric + Fdrag + Fg
-        return Fmotor
+    def instForce(self,thisMoment):
+        if self.v[thisMoment]<0:
+            raise Exception('velocity should not be negative.') #reject negative velocities
+        else:
+            Fn = self.m * 9.81 * (math.cos(self.theta[thisMoment])) #normal force
+        
+            Ffric = Fn * self.Crr #frictional force
+            allVel = self.v[thisMoment] + self.vwind[thisMoment] #overall velocity of vehicle
+            Fdrag = 0.5 * self.rho * self.CdA * (allVel) * (allVel) #aero drag force
+            Fg = self.m * 9.81 * (math.sin(self.theta[thisMoment])) #gravity
+            ma = self.a[thisMoment] * self.m #acceleration
+            Fmotor = (Ffric + Fdrag + Fg) - ma #force of motor
+            return Fmotor
 
-    def energyUsed(self):
-        energy = 0
-        time = self.t
-        for i in range(time):
-            energyAtTime = self.instForce(i)
-            energy = energy + energyAtTime
+    def energyUsedWithTime(self):
+        energy = 0 #initially energy used is 0
+        time = self.t # time variable from input
+        for i in range(time): #loop through each second
+            forceAtTime = self.instForce(i) #calculate the force at this second
+            print(forceAtTime)
+            energy = energy + forceAtTime #total energy is the previous energy plus the energy used at this second
         return energy
-# Test:
-# newInfo = energyConsumption(5,6,3,5,2,[3,10,5],[1,8,2],3)
-# print(newInfo.energyUsed())
 
+    def energyUsedWithDistance(self):
+        energy = 0 #initialize energy variable
+        for i in range(len(self.d)): #loop through each distance point
+            forceAtMoment = self.instForce(i) #force at this point
+            work = forceAtMoment * self.d[i] #energy at this point is force * distance travelled
+            energy = work + energy #sums up energy
+        return energy
+    
+# Test:
+# calcEnergyWithTime = energyConsumption(2,[2,5,3],3,5,2,[3,10,5],[1,8,2],[0.2,4,1],[4,2,3],3)
+# print(calcEnergyWithTime.energyUsedWithTime())
+# calcEnergyWithTime = energyConsumption(2,[2,5,3],3,5,2,[3,10,5],[1,8,2],[0.2,4,1],[4,2,3],3)
+# print(calcEnergyWithTime.energyUsedWithDistance())
+
+# calcEnergyWithTime = energyConsumption(9,[0.2,0.3,0.8],4,5,12,[4,39,5],[2,8,10],[9,2,14],[9,19,4],3)
+# print(calcEnergyWithTime.energyUsedWithTime())
+# calcEnergyWithTime = energyConsumption(9,[0.2,0.3,0.8],4,5,12,[4,39,5],[2,8,10],[9,2,14],[9,19,4],3)
+# print(calcEnergyWithTime.energyUsedWithDistance())
+
+# calcEnergyWithTime = energyConsumption(12,[0.2,0.3,0.8,0.6],4,5,12,[4,39,5,14],[2,8,10,29],[9,2,14,41],[9,19,4,34],4)
+# print(calcEnergyWithTime.energyUsedWithTime())
+# calcEnergyWithTime = energyConsumption(12,[0.2,0.3,0.8,0.6],4,5,12,[4,39,5,14],[2,8,10,29],[9,2,14,41],[9,19,4,34],4)
+# print(calcEnergyWithTime.energyUsedWithDistance())
