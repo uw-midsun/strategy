@@ -61,6 +61,7 @@ class energyConsumption():
         self.d = d #distance traveled (put in an array of 0 if calculate energy with time. Assuming distance to be distance travelled between since previous point, not culmulative )
         self.t = t #total duration for total energy (put in an array of 0 if calculate energy with distance)
 
+<<<<<<< HEAD
     def instForce(self,thisMoment):
         if self.v[thisMoment]<0:
             raise Exception('velocity should not be negative.') #reject negative velocities
@@ -91,3 +92,22 @@ class energyConsumption():
             energy = work + energy #sums up energy
         return energy
     
+=======
+    def instForce(self,thisTime):
+        Ffric = self.m*9.81*(math.cos(self.theta))*self.Crr
+        Fdrag = 0.5*self.rho*self.CdA*(self.v[thisTime]+self.vwind[thisTime])*(self.v[thisTime]+self.vwind[thisTime])
+        Fg = self.m*9.81*(math.sin(self.theta))
+        Fmotor = Ffric + Fdrag + Fg
+        return Fmotor
+
+    def energyUsed(self):
+        energy = 0
+        time = self.t
+        for i in range(time):
+            energyAtTime = self.instForce(i)
+            energy = energy + energyAtTime
+        return energy
+# Test:
+# newInfo = energyConsumption(5,6,3,5,2,[3,10,5],[1,8,2],3)
+# print(newInfo.energyUsed())
+>>>>>>> changes based on feedback
