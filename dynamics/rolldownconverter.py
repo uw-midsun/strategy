@@ -3,16 +3,24 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from parserdcsv import clean
 from scipy import interpolate
+<<<<<<< HEAD
 import sys 
 import os.path
 my_path = os.path.abspath(os.path.dirname(__file__))
 path = os.path.join(my_path, 'rolldowndata/test.csv') 
 data = clean(path)
+=======
+data = clean("~/midsun/dynamics/rolldowndata/test.csv")
+>>>>>>> energyconsumption
 x = data['time']
 y = data['average_velocity']
 CdAmin = 0
 CdAmax = 1
+<<<<<<< HEAD
 Crrmin = 0.0015
+=======
+Crrmin = 0.005
+>>>>>>> energyconsumption
 Crrmax = 0.1
 precision = 300 
 def generate_test_datas(CdAmin = CdAmin, CdAmax = CdAmax, Crrmin = Crrmin, Crrmax = Crrmax, vinit = y.iloc[0], time = x.tolist(), precision=precision):
