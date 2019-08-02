@@ -82,6 +82,9 @@ class energyConsumption():
             forceAtTime = self.instForce(i) #calculate the force at this second
             energy = energy + forceAtTime #total energy is the previous energy plus the energy used at this second
         return energy
+# Test:
+# newInfo = energyConsumption(5,6,3,5,2,[3,10,5],[1,8,2],3)
+# print(newInfo.energyUsed())
 
     def energyUsedWithDistance(self):
         energy = 0 #initialize energy variable
