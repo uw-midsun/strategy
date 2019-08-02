@@ -8,6 +8,12 @@ A repository of the models and race strategy developed for MSXIV (and beyond!)
  - A SOC model
  - Our optimization strategy
 
+## Getting Started
+- Make sure Python3 is installed on your system (open a command prompt and type python3, you should be brought to an interactive Python session)
+- Run pip3 install -r requirements (make sure you are in the code's directory)
+- To make sure everything is up and working, run pytest from the command line. This should run a number of tests. If they all pass, you're all set to go!
+- After making changes, be sure to run pytest before committing to make sure your changes haven't broken any tests. If they have, go fix them!
+
 ## How do I contribute?
  - Clone the repository (if you're unsure about this part, message Clarke VandenHoven on Slack)
  - Find a ticket on the JIRA board that sounds interesting (https://uwmidsun.atlassian.net/jira/software/projects/STRAT/boards/12)
