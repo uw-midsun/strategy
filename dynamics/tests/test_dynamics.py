@@ -1,9 +1,7 @@
-import pytest
 import sys
 import os.path
 my_path = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.dirname(sys.path[0]))
-print(sys.path)
 from rolldownconverter import *
 import filecmp
 path_to_csv = os.path.join(my_path, 'rolldowndata/test.csv') 
@@ -39,4 +37,4 @@ def test_clean():
     # check the columns exist
     len_time = len(data['time'])
     len_velo = len(data['average_velocity'])
-    assert(len_velo > 0 and len_time > 0)  
+    assert(len_velo > 0 and len_time > 0) 
