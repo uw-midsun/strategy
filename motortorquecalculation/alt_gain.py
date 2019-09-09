@@ -1,7 +1,7 @@
 import pandas as pd
 from haversine import haversine, Unit
 from numpy import arctan, geomspace, linspace
-from math import sin, cos, sqrt
+from math import sin, cos, sqrt, ceil
 import matplotlib.pyplot as plt
 from statistics import mean
 import argparse 
@@ -99,6 +99,7 @@ class Car:
 car = Car(720, 0.15, 0.0015)
 parser = argparse.ArgumentParser(description='Choose a map')
 parser.add_argument('--map', help='Map to pick to race on')
+parser.add_argument('--solar', help='Energy we receive from the solar panel', default=0, type=float)
 args = parser.parse_args()
 min_speed = 7 # minimum allowable speed
 if args.map == 'WSC':
@@ -130,9 +131,11 @@ breakpoint = []
 for angle in climb:
     torques.append(car.torque_req(angle, speed_req))
 torques = linspace(5, 30, 20)
-wattages = linspace(1, 500, 50)
+baseline = -1 * ceil(args.solar)
+wattages = linspace(baseline, baseline + 500, 50)
 total_energies = []
 for i in range(50):
+    
     set_torque = 14 # Nm of torque we want from the motor
     torque_obj = TorqueCurve(set_torque)
     wattage = wattages[i]
@@ -148,6 +151,7 @@ for i in range(50):
     for point in range(len(dist)):
         data.append(car.speed_torque_calculator(climb[point], speed_req, min_speed, set_torque))
     total_energy = 0
+    full_length = True
     for point in range(2, len(data)):
         pre_eff_energy = car.energy_use(dist[point - 1] - dist[point - 2], climb[point - 1], data[point][0])
         
@@ -158,8 +162,14 @@ for i in range(50):
         total_energy += pre_eff_energy + wattage * (dist[point - 1] - dist[point - 2]) / data[point][0]
         if total_energy > 5.04 * 10 ** 7:
             breakpoint.append(dist[point - 1])
+            full_length = False
             break
     total_energies.append(total_energy)
+    if full_length:
+        breakpoint.append(dist[-1])
 break_in_km = [x / 1000 for x in breakpoint]
-plt.plot(wattages, break_in_km)
+normalized_wattages = [x - baseline for x in wattages]
+plt.plot(normalized_wattages, break_in_km)
+plt.xlabel('Added Energy Use (W)')
+plt.ylabel('Range (km)')
 plt.show()
