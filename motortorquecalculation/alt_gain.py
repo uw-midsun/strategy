@@ -96,11 +96,12 @@ class Car:
             required_torque = self.torque_req(angle, min_speed)
             return min_speed, required_torque
 
-car = Car(720, 0.15, 0.0015)
 parser = argparse.ArgumentParser(description='Choose a map')
 parser.add_argument('--map', help='Map to pick to race on')
 parser.add_argument('--solar', help='Energy we receive from the solar panel', default=0, type=float)
+parser.add_argument('--weight', help='Weight of the car in kg', default=720, type=float)
 args = parser.parse_args()
+car = Car(args.weight, 0.15, 0.0015)
 min_speed = 7 # minimum allowable speed
 if args.map == 'WSC':
     csv_file = pd.read_csv('wsc_elevation.csv')
