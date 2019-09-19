@@ -49,17 +49,13 @@ def calculate_fit(v_profile, e_profile, max_time=450, dist_step=30):
     :param dist_step: the distance between measured points
     """
     energy = car.energy_used(v_profile, e_profile, distance=dist_step)
-    has_negative = any(v < 0 for v in v_profile)
     # We ignore the first point since v is 0 at the start
     time = [dist_step / v for v in v_profile[1:]]
-    if sum(time) > max_time or has_negative:
-        fit = -1
-    else: 
-        fit = energy
+    fit = energy
     return [fit, sum(time)]
 
 
-def generate_new_profile(v_profile, e_profile, dist_step=30, min_v = 7):
+def generate_new_profile(v_profile, e_profile, dist_step=30, min_v=7):
     """
     :param v_profile: a step by step list of velocities in m/s
     :param e_profile: a step by step list of gradients in rad
@@ -106,7 +102,7 @@ def load_course_map(course_name="COTA"):
             pitch = numpy.arctan(float(clean_data[i][1]) / 10)
             elev_profile.append(pitch)
     if course_name == "ASC":
-        
+        pass
     return elev_profile
  
 if __name__ == '__main__':
@@ -114,30 +110,43 @@ if __name__ == '__main__':
     # Load in the distance and necessary time for a lap
     distance = 5490
     time = 420
-    iterations = 50000  # Number of iterations to use
+    iterations = 50000 # Number of iterations to use
     init_profile = generate_initial_profile(time, distance, elev_profile)
     v_profile = init_profile
+    last_real_solution = v_profile
     values = []
     # Calculate the fitness of each population:
     values.append(calculate_fit(init_profile, elev_profile))
     min_value = 1000000
     min_time = 1000000
+    max_race_time = 1000
+
     for i in range(iterations):
         new_profile = generate_new_profile(v_profile, elev_profile)
-        value = calculate_fit(new_profile, elev_profile, max_time=1000)
-        if min_value > value[0] and value[0] > 0:
+        value = calculate_fit(new_profile, elev_profile, max_time=max_race_time)
+        if min_value > value[0]:
+            if max_race_time > value[1]: # perfect solution
+                v_profile = new_profile
+                last_real_solution = v_profile
+                min_value = value[0]
+                min_time = value[1]
+                values.append(value)
+            elif abs(max_race_time - value[1]) < abs(max_race_time - min_time):
+                # if its closer to max_race_time than before
+                v_profile = new_profile
+                min_value = value[0]
+                min_time = value[1]
+                values.append(value)
+        elif max_race_time < value[1] and value[1] < min_time and (min_time - max_race_time)/max_race_time > 0.01:
+            # if used more energy than prev, time above race time but faster than prev, and if previous optimal
+            # solution is reasonably far from the max_race_time
             v_profile = new_profile
             min_value = value[0]
             min_time = value[1]
             values.append(value)
-        elif min_time > value[1] and value[0] < 0:
-            v_profile = new_profile
-            min_value = value[0]
-            min_time = value[1]
-            values.append(value)
-            
+
     # Show a plot of those means to see the differences
     plt.plot(values)
     plt.show()
     # Show the optimal path
-    print(v_profile)
+    print(last_real_solution)
