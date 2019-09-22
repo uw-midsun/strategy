@@ -49,17 +49,16 @@ def calculate_fit(v_profile, e_profile, max_time=450, dist_step=30):
     :param dist_step: the distance between measured points
     """
     energy = car.energy_used(v_profile, e_profile, distance=dist_step)
-    has_negative = any(v < 0 for v in v_profile)
     # We ignore the first point since v is 0 at the start
     time = [dist_step / v for v in v_profile[1:]]
-    if sum(time) > max_time or has_negative:
-        fit = -1
+    if sum(time) > max_time:
+        fit = -1 # TODO: allow smart usage of too slow runs
     else: 
         fit = energy
     return [fit, sum(time)]
 
 
-def generate_new_profile(v_profile, e_profile, dist_step=30, min_v = 7):
+def generate_new_profile(v_profile, e_profile, dist_step=30, min_v = 5):
     """
     :param v_profile: a step by step list of velocities in m/s
     :param e_profile: a step by step list of gradients in rad
@@ -73,7 +72,7 @@ def generate_new_profile(v_profile, e_profile, dist_step=30, min_v = 7):
         max_v = car.max_velocity(
                 v_profile[point], theta=e_profile[point], timestep=timestep)
         if max_v > min_v:
-            new_v = uniform(min_v, max_v)
+            new_v = uniform(min_v, max_v) # Generate a random number between
         else:
             new_v = min_v
         new_profile.append(new_v)
@@ -106,15 +105,15 @@ def load_course_map(course_name="COTA"):
             pitch = numpy.arctan(float(clean_data[i][1]) / 10)
             elev_profile.append(pitch)
     if course_name == "ASC":
-        
+       pass 
     return elev_profile
  
 if __name__ == '__main__':
     elev_profile = load_course_map()
     # Load in the distance and necessary time for a lap
     distance = 5490
-    time = 420
-    iterations = 50000  # Number of iterations to use
+    time = 420 # max allowable time in s
+    iterations = 500  # Number of iterations to use
     init_profile = generate_initial_profile(time, distance, elev_profile)
     v_profile = init_profile
     values = []
