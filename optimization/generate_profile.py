@@ -54,8 +54,7 @@ def calculate_fit(v_profile, e_profile, max_time=450, dist_step=30):
     fit = energy
     return [fit, sum(time)]
 
-
-def generate_new_profile(v_profile, e_profile, dist_step=30, min_v=7):
+def generate_new_profile(v_profile, e_profile, dist_step=30, min_v=5):
     """
     :param v_profile: a step by step list of velocities in m/s
     :param e_profile: a step by step list of gradients in rad
@@ -69,7 +68,7 @@ def generate_new_profile(v_profile, e_profile, dist_step=30, min_v=7):
         max_v = car.max_velocity(
                 v_profile[point], theta=e_profile[point], timestep=timestep)
         if max_v > min_v:
-            new_v = uniform(min_v, max_v)
+            new_v = uniform(min_v, max_v) # Generate a random number between
         else:
             new_v = min_v
         new_profile.append(new_v)
@@ -109,8 +108,13 @@ if __name__ == '__main__':
     elev_profile = load_course_map()
     # Load in the distance and necessary time for a lap
     distance = 5490
-    time = 420
-    iterations = 50000 # Number of iterations to use
+
+    #TODO make these values user given
+    time = 420  # max allowable time in s
+    iterations = 500  # Number of iterations to use
+    max_race_time = 1000
+    min_velocity = 5
+
     init_profile = generate_initial_profile(time, distance, elev_profile)
     v_profile = init_profile
     last_real_solution = v_profile
@@ -119,10 +123,9 @@ if __name__ == '__main__':
     values.append(calculate_fit(init_profile, elev_profile))
     min_value = 1000000
     min_time = 1000000
-    max_race_time = 1000
 
     for i in range(iterations):
-        new_profile = generate_new_profile(v_profile, elev_profile)
+        new_profile = generate_new_profile(v_profile, elev_profile, min_v=min_velocity)
         value = calculate_fit(new_profile, elev_profile, max_time=max_race_time)
         if min_value > value[0]:
             if max_race_time > value[1]: # perfect solution
@@ -146,7 +149,13 @@ if __name__ == '__main__':
             values.append(value)
 
     # Show a plot of those means to see the differences
-    plt.plot(values)
+    value_energies = [i[0] for i in values]
+    value_times = [i[1] for i in values]
+    fig, axs = plt.subplots(2)
+    axs[0].plot(value_energies)
+    axs[0].set_title("Energy")
+    axs[1].plot(value_times)
+    axs[1].set_title("Time")
     plt.show()
     # Show the optimal path
     print(last_real_solution)
