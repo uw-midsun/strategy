@@ -4,14 +4,14 @@ from numpy import arctan
 
 class Car():
 
-    
+    g = 9.81
+    rho = 1.225
+
     def __init__(
-        self, m=720, Crr=0.0015, CdA=0.15, rho=1.225, g=9.81, max_force=300):
+        self, m=720, Crr=0.0015, CdA=0.15, max_force=300):
         self.m = m  # mass of car in kg
         self.Crr = Crr  # Rolling Resistance coefficient of the car
         self.CdA = CdA  # Drag coefficient of the car
-        self.rho = rho  # Density of air in kg/m^3 at 25 C
-        self.g = g  # Acceleration due to gravity in m/s^2
         self.max_force = max_force # Max force of motors in N
 
     def force_req(self, v, vwind=0, v_old=None, theta=0, timestep=30):
@@ -72,6 +72,6 @@ class Car():
             theta = arctan(e_gain / distance)  # Calculate the angle of elev
             v_avg = (v_new + v_old) / 2
             timestep = distance / v_avg
-            energy_used = self.force_req(v_new, wind, v_old, theta, timestep)
+            energy_used = self.force_req(v_new, wind, v_old, theta, timestep) * distance
             energy += energy_used
         return energy
