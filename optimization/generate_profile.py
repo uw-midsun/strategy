@@ -53,8 +53,8 @@ def calculate_fit(v_profile, e_profile, max_time=450, dist_step=30):
     time = [dist_step / v for v in v_profile[1:]]
     fit = energy
     return [fit, sum(time)]
-
-def generate_new_profile(v_profile, e_profile, dist_step=30, min_v=5):
+  
+def generate_new_profile(v_profile, e_profile, dist_step=30, min_v = 5):
     """
     :param v_profile: a step by step list of velocities in m/s
     :param e_profile: a step by step list of gradients in rad
@@ -102,13 +102,13 @@ def load_course_map(course_name="COTA"):
             elev_profile.append(pitch)
     if course_name == "ASC":
         pass
+
     return elev_profile
  
 if __name__ == '__main__':
     elev_profile = load_course_map()
     # Load in the distance and necessary time for a lap
     distance = 5490
-
     #TODO make these values user given
     time = 420  # max allowable time in s
     iterations = 500  # Number of iterations to use
