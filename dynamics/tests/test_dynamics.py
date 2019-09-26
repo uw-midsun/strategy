@@ -2,7 +2,7 @@ import sys
 import os.path
 my_path = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.dirname(sys.path[0]))
-from rolldownconverter import *
+from CdACrrCalculator import *
 import filecmp
 path_to_csv = os.path.join(my_path, 'rolldowndata/test.csv') 
 
