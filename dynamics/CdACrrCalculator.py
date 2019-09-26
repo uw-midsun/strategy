@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from parserdcsv import clean
+from parserolldowndata import clean
 from scipy import interpolate
 import sys 
 import os.path
@@ -16,7 +16,7 @@ Crrmin = 0.0015
 Crrmax = 0.1
 precision = 300 
 def generate_test_datas(CdAmin = CdAmin, CdAmax = CdAmax, Crrmin = Crrmin, Crrmax = Crrmax, vinit = y.iloc[0], time = x.tolist(), precision=precision):
-    m = 660 # kg
+    m = 720 # kg
     g = 9.81
     rho = 1.225
     combos = []
