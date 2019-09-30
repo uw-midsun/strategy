@@ -108,11 +108,10 @@ def load_course_map(course_name="COTA"):
 if __name__ == '__main__':
     elev_profile = load_course_map()
     # Load in the distance and necessary time for a lap
-    distance = 5490
     #TODO make these values user given
-    time = 420  # max allowable time in s
-    iterations = 500  # Number of iterations to use
-    max_race_time = 1000
+    distance = 5490
+    time = 1000  # max allowable time in s
+    iterations = 5000  # Number of iterations to use
     min_velocity = 5
 
     init_profile = generate_initial_profile(time, distance, elev_profile)
@@ -126,23 +125,24 @@ if __name__ == '__main__':
 
     for i in range(iterations):
         new_profile = generate_new_profile(v_profile, elev_profile, min_v=min_velocity)
-        value = calculate_fit(new_profile, elev_profile, max_time=max_race_time)
+        value = calculate_fit(new_profile, elev_profile, max_time=time)
         if min_value > value[0]:
-            if max_race_time > value[1]: # perfect solution
+            if time > value[1]: # perfect solution
                 v_profile = new_profile
                 last_real_solution = v_profile
                 min_value = value[0]
                 min_time = value[1]
                 values.append(value)
-            elif abs(max_race_time - value[1]) < abs(max_race_time - min_time):
-                # if its closer to max_race_time than before
+            elif abs(time - value[1]) < abs(time - min_time):
+                # if this time is closer to max race time than before
                 v_profile = new_profile
                 min_value = value[0]
                 min_time = value[1]
                 values.append(value)
-        elif max_race_time < value[1] and value[1] < min_time and (min_time - max_race_time)/max_race_time > 0.01:
+        elif time < value[1] and value[1] < min_time and (min_time - time)/time > 0.05:
             # if used more energy than prev, time above race time but faster than prev, and if previous optimal
-            # solution is reasonably far from the max_race_time
+            # solution is reasonably far from the max race time
+            # TODO: handling if solutions are all too far from max race time due to min_velocity being too high
             v_profile = new_profile
             min_value = value[0]
             min_time = value[1]
