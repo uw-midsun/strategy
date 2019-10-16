@@ -4,9 +4,13 @@ from math import ceil, floor, sqrt
 from car_model import Car
 import matplotlib.pyplot as plt
 import numpy
+import argparse
+
 global car
 
 car = Car()
+
+
 def v_over_d_to_a(v1, a, d):
     v2squared = (v1 ** 2 + 2 * a * d)
     if v2squared > 0:
@@ -53,26 +57,28 @@ def calculate_fit(v_profile, e_profile, max_time=450, dist_step=30):
     time = [dist_step / v for v in v_profile[1:]]
     fit = energy
     return [fit, sum(time)]
-  
-def generate_new_profile(v_profile, e_profile, dist_step=30, min_v = 5):
+
+
+def generate_new_profile(v_profile, e_profile, dist_step=30, min_v=5):
     """
     :param v_profile: a step by step list of velocities in m/s
     :param e_profile: a step by step list of gradients in rad
     :param dist_step: distance between points
-    :param min_v: the slowest we are allowed to go 
+    :param min_v: the slowest we are allowed to go
     """
     new_profile = []
-    new_profile.append(v_profile[0]) # start at the same speed
+    new_profile.append(v_profile[0])  # start at the same speed
     for point in range(len(v_profile) - 1):
         timestep = dist_step / v_profile[point]
         max_v = car.max_velocity(
-                v_profile[point], theta=e_profile[point], timestep=timestep)
+            v_profile[point], theta=e_profile[point], timestep=timestep)
         if max_v > min_v:
-            new_v = uniform(min_v, max_v) # Generate a random number between
+            new_v = uniform(min_v, max_v)  # Generate a random number between
         else:
             new_v = min_v
         new_profile.append(new_v)
     return new_profile
+
 
 def load_course_map(course_name="COTA"):
     """
@@ -104,15 +110,22 @@ def load_course_map(course_name="COTA"):
         pass
 
     return elev_profile
- 
+
+
+parser = argparse.ArgumentParser(description="Add parameters to model")
+parser.add_argument("-d", "--distance", type=int, required=True, help="Distance to travel (m)")
+parser.add_argument("-t", "--time", type=int, required=True, help="Maximum allowable time (s)")
+parser.add_argument("-i", "--iterations", type=int, required=True, help="Number of iterations to run")
+parser.add_argument("-v", "--min_velocity", type=int, required=True, help="Minimum allowable velocity (m/s)")
+args = parser.parse_args()
+
 if __name__ == '__main__':
     elev_profile = load_course_map()
     # Load in the distance and necessary time for a lap
-    #TODO make these values user given
-    distance = 5490
-    time = 1000  # max allowable time in s
-    iterations = 5000  # Number of iterations to use
-    min_velocity = 5
+    distance = args.distance
+    time = args.time  # max allowable time in s
+    iterations = args.iterations  # Number of iterations to use
+    min_velocity = args.min_velocity
 
     init_profile = generate_initial_profile(time, distance, elev_profile)
     v_profile = init_profile
@@ -127,7 +140,7 @@ if __name__ == '__main__':
         new_profile = generate_new_profile(v_profile, elev_profile, min_v=min_velocity)
         value = calculate_fit(new_profile, elev_profile, max_time=time)
         if min_value > value[0]:
-            if time > value[1]: # perfect solution
+            if time > value[1]:  # perfect solution
                 v_profile = new_profile
                 last_real_solution = v_profile
                 min_value = value[0]
@@ -139,7 +152,7 @@ if __name__ == '__main__':
                 min_value = value[0]
                 min_time = value[1]
                 values.append(value)
-        elif time < value[1] and value[1] < min_time and (min_time - time)/time > 0.05:
+        elif time < value[1] and value[1] < min_time and (min_time - time) / time > 0.05:
             # if used more energy than prev, time above race time but faster than prev, and if previous optimal
             # solution is reasonably far from the max race time
             # TODO: handling if solutions are all too far from max race time due to min_velocity being too high
