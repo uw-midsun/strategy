@@ -15,10 +15,10 @@ CdAmax = 1
 Crrmin = 0.0015
 Crrmax = 0.1
 precision = 300 
-def generate_test_datas(CdAmin = CdAmin, CdAmax = CdAmax, Crrmin = Crrmin, Crrmax = Crrmax, vinit = y.iloc[0], time = x.tolist(), precision=precision):
+def generate_test_data(CdAmin = CdAmin, CdAmax = CdAmax, Crrmin = Crrmin, Crrmax = Crrmax, vinit = y.iloc[0], time = x.tolist(), precision=precision):
     m = 720 # kg
-    g = 9.81
-    rho = 1.225
+    g = 9.81 # m/s^2
+    rho = 1.225 # kg/m^3
     combos = []
     for i in range(precision):
         CdA = CdAmin + (CdAmax - CdAmin) * i / precision
@@ -46,18 +46,15 @@ def diff(l1, l2):
 if __name__ == '__main__':
     velocities = y.tolist()
     plt.plot(x,y, '--bo')
-    #plt.show()
     
     min_SSE = 100000000000000
-    datas = generate_test_datas()
+    data = generate_test_data()
     for i in range(len(datas)):
         for j in range(len(datas[i])):
             SSE = diff(velocities, datas[i][j])
             if SSE < min_SSE:
                 min_SSE = SSE
                 a,b = i,j
-    print(min_SSE)
-    print(a,b)
     Crrmeas = Crrmin + (Crrmax - Crrmin) * b / precision
     CdAmeas = CdAmin + (CdAmax - CdAmin) * a / precision
     plt.plot(x, datas[a][b], '--co')
@@ -68,5 +65,4 @@ if __name__ == '__main__':
         next_v_half = v[t - 1] - ((Crrmeas * 660 * 9.81) + (CdAmeas * 1.225 * (v[t - 1] ** 2))) * ((dt/2) / 660)
         next_v = v[t - 1] - ((Crrmeas * 660 * 9.81) + (CdAmeas * 1.225 * (next_v_half ** 2))) * (dt / 660)
         v.append(next_v)
-    print(v)
-    print(Crrmeas, CdAmeas)
+    print('The mesasured Crr is: ' + Crrmeas, 'The measured CdA is : ' + CdAmeas)

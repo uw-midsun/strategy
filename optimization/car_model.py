@@ -8,7 +8,7 @@ class Car():
     rho = 1.225
 
     def __init__(
-        self, m=720, Crr=0.0015, CdA=0.15, max_force=300):
+        self, m=720, Crr=0.0015, CdA=0.15, max_force=100):
         self.m = m  # mass of car in kg
         self.Crr = Crr  # Rolling Resistance coefficient of the car
         self.CdA = CdA  # Drag coefficient of the car
