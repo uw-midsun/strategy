@@ -5,11 +5,17 @@ from numpy import linspace
 from openpyxl import Workbook
 
 
-# Creating an Excel Workbook
-wb = Workbook()
-ws = wb.active()
-ws.title = "SolarPowerOutput"
-
+# # Creating an Excel Workbook
+# wb = Workbook()
+# ws = wb.active
+# ws.title = 'Solar Power Output'
+#
+# ws['A1'] = 'Energy Received'
+# ws['B1'] = 'Insol'
+# ws['C1'] = 'Energy'
+#
+# filename = 'Solar-Power-Calculations.xlsx'
+# row = 2
 
 def to_rad(angle):
     rad = angle * 2 * pi / 360
@@ -24,7 +30,7 @@ def integrate(x,y):
 
 class SolarDay:
 
-    def __init__(self, day, latitude, longitude, timezone, cloudiness):
+    def __init__(self, day, latitude, longitude, timezone, cloudiness, module_angle):
         self.day = day
         self.lat = latitude
         self.long = longitude
@@ -34,6 +40,7 @@ class SolarDay:
         # Given as an integer of the difference between us and UTC
         self.points = []
         self.time = timezone
+        self.mod_angle = module_angle
 
     def declination_angle(self):
         # Declination angle is the angle the sun sits in the sky at noon
@@ -63,8 +70,10 @@ class SolarDay:
 
     def solar_insolation(self, HRA):
         # gives value in kW/m^2
-        ID = 1.353 * 0.7 ** (self.AM(HRA) * 0.678)
-        return ID
+        ID = 1.353 * 0.7 ** (self.AM(HRA) * 0.678) # Direct solar radiation component/incident radiation
+        elevation = to_rad(90 - self.lat + self.declination_angle())
+        IM = ID * sin(to_rad(self.mod_angle) + elevation) # Perpendicular solar radiation component
+        return IM
 
     # AM is the airmass, which is a factor that allows us to take into account the effect of the angle of the sun in the sky and the time of day
     def AM(self, HRA):
@@ -93,11 +102,15 @@ class SolarDay:
        return(energy, points)
 
 if __name__ == '__main__':
-     d = SolarDay(182, 30.28, 97.73, 8, 0.5)
+     d = SolarDay(182, 30.28, 97.73, 8, 0.5, 45)
      print(d.energy_received())
+     # ws['A2'] = d.energy_received()
      insol = integrate(d.energy_received()[1], d.energy_received()[0])
      print(insol)
+     # ws['B2'] = insol
      energy = insol * 5 * 0.17
      print(energy)
+     # ws['C2'] = energy
 
-wb.save('testFile.xlsx')
+
+# wb.save(filename = filename)
