@@ -3,14 +3,12 @@
 from math import cos, sin, pi, acos, tan, asin
 from numpy import linspace
 from openpyxl import Workbook
+
 from openpyxl import load_workbook
 
 wb = Workbook()
 ws = wb.active
 
-# filename = 'energy.xlsx'
-# wb = load_workbook(filename, data_only=True)
-# ws = wb.active
 
 def to_rad(angle):
     rad = angle * 2 * pi / 360
