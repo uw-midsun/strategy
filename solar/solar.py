@@ -3,19 +3,14 @@
 from math import cos, sin, pi, acos, tan, asin
 from numpy import linspace
 from openpyxl import Workbook
+from openpyxl import load_workbook
 
+wb = Workbook()
+ws = wb.active
 
-# # Creating an Excel Workbook
-# wb = Workbook()
+# filename = 'energy.xlsx'
+# wb = load_workbook(filename, data_only=True)
 # ws = wb.active
-# ws.title = 'Solar Power Output'
-#
-# ws['A1'] = 'Energy Received'
-# ws['B1'] = 'Insol'
-# ws['C1'] = 'Energy'
-#
-# filename = 'Solar-Power-Calculations.xlsx'
-# row = 2
 
 def to_rad(angle):
     rad = angle * 2 * pi / 360
@@ -40,11 +35,12 @@ class SolarDay:
         # Given as an integer of the difference between us and UTC
         self.points = []
         self.time = timezone
+        # the module angle is the panel angle wrt the horizontal plane. 0 degrees/rad faces North (front of car)
         self.mod_angle = module_angle
 
     def declination_angle(self):
         # Declination angle is the angle the sun sits in the sky at noon
-        d = -23.45 * cos((to_rad(360) / 365) * (self.day + 10))
+        d = -23.45 * cos(to_rad(360 / 365) * (self.day + 10))
         return d
 
     def time_correction(self):
@@ -70,9 +66,10 @@ class SolarDay:
 
     def solar_insolation(self, HRA):
         # gives value in kW/m^2
-        ID = 1.353 * 0.7 ** (self.AM(HRA) * 0.678) # Direct solar radiation component/incident radiation
+        ID = 1.353 * 0.7 ** (self.AM(HRA) ** 0.678) # Direct solar radiation component/incident radiation to plane perpendicular to raw
         elevation = to_rad(90 - self.lat + self.declination_angle())
-        IM = ID * sin(to_rad(self.mod_angle) + elevation) # Perpendicular solar radiation component
+        # IM = ID * cos(to_rad(90) - (to_rad(self.mod_angle) + elevation)) # vector format; Note: formulas are exactly the same
+        IM = ID * sin(to_rad(self.mod_angle) + elevation) # Perpendicular solar radiation component to module/panel
         return IM
 
     # AM is the airmass, which is a factor that allows us to take into account the effect of the angle of the sun in the sky and the time of day
@@ -98,19 +95,14 @@ class SolarDay:
        energy = []
        for i in range(len(points)):
            energy.append(self.solar_insolation(self.time_to_HRA(points[i])))
-       self.total_energy = integrate(points,energy)
+       self.total_energy = integrate(points,energy) * self.cloud
        return(energy, points)
 
-if __name__ == '__main__':
-     d = SolarDay(182, 30.28, 97.73, 8, 0.5, 45)
-     print(d.energy_received())
-     # ws['A2'] = d.energy_received()
-     insol = integrate(d.energy_received()[1], d.energy_received()[0])
-     print(insol)
-     # ws['B2'] = insol
-     energy = insol * 5 * 0.17
-     print(energy)
-     # ws['C2'] = energy
-
-
-# wb.save(filename = filename)
+# if __name__ == '__main__':
+#      # d = SolarDay(182, 30.28, 97.73, 8, 0.5, -45)
+#      # print(d.energy_received())
+#      d = SolarDay(182, 1, 97.73, 8, 0.5, -45)
+#      insol = integrate(d.energy_received()[1], d.energy_received()[0])
+#      print(insol)
+#      energy = insol * 5 * 0.17
+#      print(energy)
