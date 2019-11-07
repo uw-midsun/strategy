@@ -3,14 +3,15 @@ import numpy
 from scipy.optimize import minimize
 import argparse
 
+
 global car
 car = Car()
 
 parser = argparse.ArgumentParser(description="Add parameters to model")
-parser.add_argument("-d", "--distance", type=int, required=True, help="Distance to travel (m)")
-parser.add_argument("-t", "--time", type=int, required=True, help="Maximum allowable time (s)")
-parser.add_argument("-v", "--min_velocity", type=int, required=True, help="Minimum allowable velocity (m/s)")
-parser.add_argument("-s", "--step", type=int, required=True,help="Distance between elevation profile measurements")
+parser.add_argument("-d", "--distance", type=int, default=5490, help="Distance to travel (m)")
+parser.add_argument("-t", "--time", type=int, default=450, help="Maximum allowable time (s)")
+parser.add_argument("-v", "--min_velocity", type=int, default=5, help="Minimum allowable velocity (m/s)")
+parser.add_argument("-s", "--step", type=int, default=30, help="Distance between elevation profile measurements")
 args = parser.parse_args()
 
 def load_course_map(course_name="COTA"):
@@ -36,19 +37,24 @@ def load_course_map(course_name="COTA"):
                 clean_data.append(row)
         # Create the elevation profile
         elev_profile = []
+        stops = []
         for i in range(len(clean_data) - 1):
             pitch = numpy.arctan(float(clean_data[i][1]) / 10)
             elev_profile.append(pitch)
+            if len(clean_data[i]) > 2:
+                stops.append(int(clean_data[i][0]))
     if course_name == "ASC":
         pass
 
-    return elev_profile
+    return (elev_profile, stops)
 
-def generate_initial_profile(time, distance, e_profile, min_velocity):
+def generate_initial_profile(time, distance, e_profile, min_velocity, stop_profile, max_stop_velocity):
     """
     :param time: Maximum allowable time to cover a distance in seconds
     :param distance: Distance to be covered in meters
     :param e_profile: List of pitches the car must travel
+    :param min_velocity: Minimum allowable velocity
+    :param stop_profile: List of indices where car must stop
     """
     avg_velocity = distance / time
     dist_step = distance / len(e_profile)
@@ -58,26 +64,33 @@ def generate_initial_profile(time, distance, e_profile, min_velocity):
         old_v = initial_profile[point - 1]
         timestep = dist_step / old_v
         max_v = car.max_velocity(old_v, theta=pitch, timestep=timestep)
-        if max_v >= avg_velocity:
-            initial_profile.append(avg_velocity)
-        elif max_v >= min_velocity:
-            initial_profile.append(max_v)
+        if stop_profile != [] and stop_profile[0] == point+1:
+            initial_profile.append(min(max_v, max_stop_velocity))
+            stop_profile.remove(stop_profile[0])
         else:
-            initial_profile.append(min_velocity)
+            if max_v >= avg_velocity:
+                initial_profile.append(avg_velocity)
+            elif max_v >= min_velocity:
+                initial_profile.append(max_v)
+            else:
+                initial_profile.append(min_velocity)
     # Here we generate the naive solution
     # traveling at the average velocity required
     return initial_profile
 
 if __name__ == "__main__":
-    
-    elev_profile = load_course_map()
+
+    map_data = load_course_map()
+    elev_profile = map_data[0]
+    stop_profile = map_data[1]
     # Load in the distance and necessary time for a lap
     distance = args.distance
     dist_step = args.step
     time = args.time  # max allowable time in s
     min_velocity = args.min_velocity
     max_velocity = 25
-    init_profile = generate_initial_profile(time, distance, elev_profile, min_velocity)
+    max_stop_velocity = 8
+    init_profile = generate_initial_profile(time, distance, elev_profile, min_velocity, stop_profile.copy(), max_stop_velocity)
 
     def objective(v_profile):
         energy = car.energy_used(v_profile, elev_profile, distance=dist_step)
@@ -91,7 +104,7 @@ if __name__ == "__main__":
         error = 0
         for i in range(len(v_profile) - 1):
             timestep = distance / v_profile[i]
-            max_velocity = car.max_velocity(v_profile[i],timestep=timestep)
+            max_velocity = car.max_velocity(v_profile[i], timestep=timestep)
             if v_profile[i] > max_velocity:
                 error += max_velocity - v_profile[i]
         return error
@@ -101,15 +114,19 @@ if __name__ == "__main__":
     print('Initial SSE Objective: ' + str(objective(v0)))
     
     # bounds
-    b = (min_velocity, max_velocity)
     elements = len(v0)
-    bounds = (b,) * elements
-    
+    bounds = [(min_velocity, max_velocity)] * elements
+    for stop in stop_profile:
+        bounds[stop-1] = (2, max_stop_velocity)
+    # b = (min_velocity, max_velocity)
+    # elements = len(v0)
+    # bounds = (b,) * elements
+
     # constraints
     condition1 = {'type': 'ineq', 'fun': time_constraint}
     condition2 = {'type': 'ineq', 'fun': speed_constraint}
     conditions = ([condition1, condition2])
-    solution = minimize(objective,v0,method='SLSQP',bounds=bounds,constraints=conditions)
+    solution = minimize(objective, v0, method='SLSQP', bounds=bounds, constraints=conditions)
 
     v = solution.x
     print(v)
