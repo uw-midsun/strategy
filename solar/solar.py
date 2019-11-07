@@ -2,35 +2,25 @@
 # Specifically the energy coming into the solar panels
 from math import cos, sin, pi, acos, tan, asin
 from numpy import linspace
-from openpyxl import Workbook
 
-
-# # Creating an Excel Workbook
-# wb = Workbook()
-# ws = wb.active
-# ws.title = 'Solar Power Output'
-#
-# ws['A1'] = 'Energy Received'
-# ws['B1'] = 'Insol'
-# ws['C1'] = 'Energy'
-#
-# filename = 'Solar-Power-Calculations.xlsx'
-# row = 2
 
 def to_rad(angle):
     rad = angle * 2 * pi / 360
     return rad
 
-def integrate(x,y):
+
+def integrate(x, y):
     # Given an X and Y data set, numerically integrate
     integral = 0
     for i in range(len(x) - 1):
         integral += (x[i + 1] - x[i]) * (y[i + 1] + y[i]) / 2
     return integral
 
+
 class SolarDay:
 
-    def __init__(self, day, latitude, longitude, timezone, cloudiness, module_angle):
+    def __init__(self, day, latitude, longitude,
+                 timezone, cloudiness, module_angle):
         self.day = day
         self.lat = latitude
         self.long = longitude
@@ -40,11 +30,13 @@ class SolarDay:
         # Given as an integer of the difference between us and UTC
         self.points = []
         self.time = timezone
+        # the module angle is the panel angle wrt the horizontal plane.
+        # 0 degrees/rad faces North (front of car)
         self.mod_angle = module_angle
 
     def declination_angle(self):
         # Declination angle is the angle the sun sits in the sky at noon
-        d = -23.45 * cos((to_rad(360) / 365) * (self.day + 10))
+        d = -23.45 * cos(to_rad(360 / 365) * (self.day + 10))
         return d
 
     def time_correction(self):
@@ -56,13 +48,15 @@ class SolarDay:
         return TC
 
     def sunrise(self):
-        sunrise = 12 - (1 / to_rad(15)) * acos(-1 * tan(to_rad(self.declination_angle()))\
-                * tan(to_rad(self.lat))) - self.time_correction() / 60
+        sunrise = (12 - (1 / to_rad(15))
+                   * acos(-1 * tan(to_rad(self.declination_angle()))
+                   * tan(to_rad(self.lat))) - self.time_correction() / 60)
         return sunrise
 
     def sunset(self):
-        sunset =  12 + (1 / to_rad(15)) * acos(-1 * tan(to_rad(self.declination_angle()))\
-                * tan(to_rad(self.lat))) - self.time_correction() / 60
+        sunset = (12 + (1 / to_rad(15))
+                  * acos(-1 * tan(to_rad(self.declination_angle()))
+                  * tan(to_rad(self.lat))) - self.time_correction() / 60)
         return sunset
 
     def day_length(self):
@@ -70,17 +64,22 @@ class SolarDay:
 
     def solar_insolation(self, HRA):
         # gives value in kW/m^2
-        ID = 1.353 * 0.7 ** (self.AM(HRA) * 0.678) # Direct solar radiation component/incident radiation
+        ID = 1.353 * 0.7 ** (self.AM(HRA) ** 0.678)  # Incident radiation
         elevation = to_rad(90 - self.lat + self.declination_angle())
-        IM = ID * sin(to_rad(self.mod_angle) + elevation) # Perpendicular solar radiation component
+        IM = ID * sin(to_rad(self.mod_angle) + elevation)
         return IM
 
-    # AM is the airmass, which is a factor that allows us to take into account the effect of the angle of the sun in the sky and the time of day
+    # AM is the airmass, which is a factor that allows us to take into account
+    # the effect of the angle of the sun in the sky and the time of day
     def AM(self, HRA):
-        elevation = asin(sin(to_rad(self.declination_angle())) * sin(to_rad(self.lat))\
-                + cos(to_rad(self.declination_angle())) * cos(to_rad(self.lat)) * cos(HRA))
-        azimuth = acos(sin(to_rad(self.declination_angle())) * cos(to_rad(self.lat))\
-                - cos(to_rad(self.declination_angle()) * sin(to_rad(self.lat)) * cos(HRA))) / cos(elevation)
+        elevation = (asin(sin(to_rad(self.declination_angle()))
+                     * sin(to_rad(self.lat))
+                     + cos(to_rad(self.declination_angle()))
+                     * cos(to_rad(self.lat)) * cos(HRA)))
+        azimuth = (acos(sin(to_rad(self.declination_angle()))
+                   * cos(to_rad(self.lat))
+                   - cos(to_rad(self.declination_angle()))
+                   * sin(to_rad(self.lat)) * cos(HRA)) / cos(elevation))
         if HRA > 0:
             azimuth = 2 * pi - azimuth
         zenith = (pi / 2) - elevation
@@ -88,29 +87,16 @@ class SolarDay:
         return AM
 
     # HRA is the solar time at the car location
-    def time_to_HRA(self,time):
+    def time_to_HRA(self, time):
         LST = time + self.time_correction() / 60
         HRA = to_rad(15) * (LST - 12)
         return HRA
 
     def energy_received(self):
-       points = linspace(self.sunrise(), self.sunset(), 1000, endpoint = False).tolist()
-       energy = []
-       for i in range(len(points)):
-           energy.append(self.solar_insolation(self.time_to_HRA(points[i])))
-       self.total_energy = integrate(points,energy)
-       return(energy, points)
-
-if __name__ == '__main__':
-     d = SolarDay(182, 30.28, 97.73, 8, 0.5, 45)
-     print(d.energy_received())
-     # ws['A2'] = d.energy_received()
-     insol = integrate(d.energy_received()[1], d.energy_received()[0])
-     print(insol)
-     # ws['B2'] = insol
-     energy = insol * 5 * 0.17
-     print(energy)
-     # ws['C2'] = energy
-
-
-# wb.save(filename = filename)
+        points = linspace(self.sunrise(),
+                          self.sunset(), 1000, endpoint=False).tolist()
+        energy = []
+        for i in range(len(points)):
+            energy.append(self.solar_insolation(self.time_to_HRA(points[i])))
+        self.total_energy = integrate(points, energy) * self.cloud
+        return(energy, points)

@@ -4,15 +4,14 @@ from numpy import arctan
 
 class Car():
 
-    g = 9.81
-    rho = 1.225
+    g = 9.81  # Acceleration due to gravity in m/s^2
+    rho = 1.225  # Density of air at room temperature
 
-    def __init__(
-        self, m=720, Crr=0.0015, CdA=0.15, max_force=100):
+    def __init__(self, m=720, Crr=0.0015, CdA=0.15, max_force=100):
         self.m = m  # mass of car in kg
         self.Crr = Crr  # Rolling Resistance coefficient of the car
         self.CdA = CdA  # Drag coefficient of the car
-        self.max_force = max_force # Max force of motors in N
+        self.max_force = max_force  # Max force of motors in N (Note not real)
 
     def force_req(self, v, vwind=0, v_old=None, theta=0, timestep=30):
         """
@@ -35,21 +34,15 @@ class Car():
         return Fmotor
 
     def max_velocity(self, v_old, vwind=0, theta=0, timestep=30):
-        """ 
+        """
         :param v_old: speed of the car at the initial point
         :param vwind: velocity of the wind relative to the car (+ve with car)
         :param theta: angle that must be climbed by the car in radians
         :param timestep: time in s between measurement
         :return velocity: max velocity that the car can travel in m/s
         """
-        # We need to solve the quadratic for an isolated v
-        a = 0.5 * self.rho * self.CdA
-        b = (self.m / timestep) + vwind * self.rho * self.CdA
-        Ffric = self.m * self.g * cos(theta) * self.Crr
-        Fg = self.m * self.g * sin(theta)
-        c = Ffric + Fg - self.max_force - self.m * v_old / timestep
-        v = (-b + sqrt(b ** 2 - 4 * a * c)) / (2 * a)
-        return v
+        max_v = v - self.force_req(v, vwind=vwind, theta=theta) + self.max_force * timestep
+        return max_v
 
     def energy_used(self, v_profile, e_profile, distance=100, wind=0):
         """
@@ -66,12 +59,16 @@ class Car():
         for point in range(num_points - 1):
             v_new = v_profile[point + 1]
             v_old = v_profile[point]
-            e_new = e_profile[point + 1]
-            e_old = e_profile[point]
+            e_new = e_profile[point + 1][0]
+            # pytest fails here because e_profile from
+            # pytest does not use variable distances
+            e_old = e_profile[point][0]
             e_gain = e_new - e_old
-            theta = arctan(e_gain / distance)  # Calculate the angle of elev
+            dist = e_profile[point][1]
+            theta = arctan(e_gain / dist)  # Calculate the angle of elev
             v_avg = (v_new + v_old) / 2
-            timestep = distance / v_avg
-            energy_used = self.force_req(v_new, wind, v_old, theta, timestep) * distance
+            timestep = dist / v_avg
+            energy_used = self.force_req(v_new, wind, v_old,
+                                         theta, timestep) * dist
             energy += energy_used
         return energy
