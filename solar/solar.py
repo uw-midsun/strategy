@@ -2,13 +2,6 @@
 # Specifically the energy coming into the solar panels
 from math import cos, sin, pi, acos, tan, asin
 from numpy import linspace
-from openpyxl import Workbook
-
-from openpyxl import load_workbook
-
-wb = Workbook()
-ws = wb.active
-
 
 def to_rad(angle):
     rad = angle * 2 * pi / 360
@@ -75,7 +68,7 @@ class SolarDay:
         elevation = asin(sin(to_rad(self.declination_angle())) * sin(to_rad(self.lat))\
                 + cos(to_rad(self.declination_angle())) * cos(to_rad(self.lat)) * cos(HRA))
         azimuth = acos(sin(to_rad(self.declination_angle())) * cos(to_rad(self.lat))\
-                - cos(to_rad(self.declination_angle()) * sin(to_rad(self.lat)) * cos(HRA))) / cos(elevation)
+                - cos(to_rad(self.declination_angle())) * sin(to_rad(self.lat)) * cos(HRA)) / cos(elevation)
         if HRA > 0:
             azimuth = 2 * pi - azimuth
         zenith = (pi / 2) - elevation

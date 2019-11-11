@@ -2,19 +2,9 @@ from math import cos, sin, pi, acos, tan, asin
 from solar import SolarDay
 from cell import SolarCell
 from numpy import linspace
-from openpyxl import Workbook
-from openpyxl import load_workbook
+import csv
 
-from openpyxl import cell
-
-# Read Solar Cell Angles Sheet
-filename = 'MSXIV-Strategy-Cell-Angles.xlsx'
-wb = load_workbook(filename, data_only=True)
-ws = wb.active
-
-# Create new workbook for Energy Outputs
-wb1 = Workbook()
-ws1 = wb1.active
+filename = 'MSXIV-Strategy-Cell-Angles.csv'
 
 # To do:
 # Create 3D surface as a combination of all cells: i.e. takes the average energy from all cells
@@ -33,6 +23,15 @@ def integrate(x,y):
     return integral
 
 class SolarArray:
+    def data(self):
+        array = []
+        with open(filename, mode='r') as infile:
+            reader = csv.reader(infile)
+            for row in reader:
+                cell = {"Cell_ID" : row[0], "Angle" : row[4]}
+                array.append(cell)
+        # print(array)
+        return(array)
 
     def __init__(self, day, latitude, longitude, timezone, cloudiness):
         self.day = day
@@ -45,25 +44,14 @@ class SolarArray:
     # calculate and store total energy values
     def totalEnergy(self):
         total_energy = 0
-        row = 1
-        for row in range(2,309):
-            for column in "E":
-                cell = "{}{}".format(column, row)
-                module_angle = ws[cell].value
-                ws1['A' + str(row)] = module_angle
+        array = self.data()
+        for i in range(1,len(self.data())):
+            module_angle = float(array[i]['Angle'])
+            d = SolarDay(self.day, self.lat, self.long, self.time, self.cloud, module_angle)
+            insol = integrate(d.energy_received()[1], d.energy_received()[0])
+            energy = insol * 5 * 0.17
+            total_energy = total_energy + energy
 
-                d = SolarDay(self.day, self.lat, self.long, self.time, self.cloud, module_angle)
-                # d = SolarDay(day, latitude, longitude, timezone, cloudiness, module_angle)
-                insol = integrate(d.energy_received()[1], d.energy_received()[0])
-                ws1['B' + str(row)] = insol
-
-                energy = insol * 5 * 0.17
-                ws1['C' + str(row)] = energy
-
-                total_energy = total_energy + energy
-                row = row + 1
-        # print(total_energy)
-        wb1.save('energy.xlsx')
         return(total_energy)
 
 if __name__ == '__main__':
