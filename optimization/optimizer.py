@@ -20,7 +20,7 @@ def load_course_map(course_name="COTA"):
     :return elev_profile: map of the elevations on a course
     """
     if course_name == "COTA":
-        with open('COTAelevation.txt', 'r') as file:
+        with open('COTAelevation_var.txt', 'r') as file:
             line = file.readline()
             count = 1
             data = []
@@ -39,13 +39,12 @@ def load_course_map(course_name="COTA"):
         elev_profile = []
         stops = []
         for i in range(len(clean_data) - 1):
-            pitch = numpy.arctan(float(clean_data[i][1]) / 10)
-            elev_profile.append(pitch)
-            if len(clean_data[i]) > 2:
+            pitch = numpy.arctan(float(clean_data[i][1]) / 10)  # is 10 = 30/3? i.e. rise over run?
+            elev_profile.append((pitch, int(clean_data[i][2])))
+            if len(clean_data[i]) > 3:
                 stops.append(int(clean_data[i][0]))
     if course_name == "ASC":
         pass
-
     return (elev_profile, stops)
 
 def generate_initial_profile(time, distance, e_profile, min_velocity, stop_profile, max_stop_velocity):
@@ -56,11 +55,12 @@ def generate_initial_profile(time, distance, e_profile, min_velocity, stop_profi
     :param min_velocity: Minimum allowable velocity
     :param stop_profile: List of indices where car must stop
     """
-    avg_velocity = distance / time
-    dist_step = distance / len(e_profile)
+    avg_velocity = distance / time #should we have distance param? shouldnt we calculate from e/vprofile
+    #dist_step = distance / len(e_profile)
     initial_profile = [avg_velocity]
     for point in range(len(e_profile) - 1):  # We don't care about the endpoint
-        pitch = e_profile[point]
+        pitch = e_profile[point][0]
+        dist_step = e_profile[point][1]
         old_v = initial_profile[point - 1]
         timestep = dist_step / old_v
         max_v = car.max_velocity(old_v, theta=pitch, timestep=timestep)
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     time = args.time  # max allowable time in s
     min_velocity = args.min_velocity
     max_velocity = 25
-    max_stop_velocity = 8
+    max_stop_velocity = 7
     init_profile = generate_initial_profile(time, distance, elev_profile, min_velocity, stop_profile.copy(), max_stop_velocity)
 
     def objective(v_profile):
