@@ -19,17 +19,30 @@ class AuxSystem:
         """
         # two timepoints to determine energy loss of system over period
         self.time_old = self.time
-        self.time = time_new 
+
+        # negative time is not allowed
+        if time_new < 0:
+            self.time = self.time
+        else:
+            self.time = time_new 
 
         # current will be divided into two for an average between the two timepoints
-        # could be several points of time period in an array?
         self.current_old = self.current
-        self.current = new_current
+
+        # negative current is taken as an incorrect value, return the previous value instead
+        if new_current < 0:
+            self.current = self.current
+        else:
+            self.current = new_current
 
         # voltage will be divided into two for an average between the two timepoints
-        # could be several points of time  period in an array?
         self.voltage_old = self.voltage
-        self.voltage = new_voltage
+
+        # negative voltage is considered incorrect, return old value
+        if new_voltage < 0:
+            self.voltage = self.voltage
+        else:
+            self.voltage = new_voltage
         
         energy_consumed = ((self.current + self.current_old)/2) * ((self.voltage + self.voltage_old)/2) * (self.time - self.time_old)
         return energy_consumed
