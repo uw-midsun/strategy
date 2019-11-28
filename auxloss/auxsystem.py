@@ -5,6 +5,13 @@ class AuxSystem:
         """
         self.time = 0
         self.time_old = 0
+
+        if initial_current < 0:
+            initial_current = 0
+        
+        if initial_voltage < 0:
+            initial_voltage = 0
+
         self.current_old = initial_current
         self.voltage_old = initial_voltage
         self.current = initial_current # amount of current in amperes flowing through auxiliary system
