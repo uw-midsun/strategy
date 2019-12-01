@@ -12,6 +12,7 @@ parser.add_argument("-d", "--distance", type=int, default=5490, help="Distance t
 parser.add_argument("-t", "--time", type=int, default=450, help="Maximum allowable time (s)")
 parser.add_argument("-v", "--min_velocity", type=int, default=5, help="Minimum allowable velocity (m/s)")
 parser.add_argument("-s", "--step", type=int, default=30, help="Distance between elevation profile measurements")
+parser.add_argument("-st", "--stop_velocity", type=int, default=7, help="Maximum velocity for stops/turns")
 args = parser.parse_args()
 
 def load_course_map(course_name="COTA"):
@@ -27,6 +28,7 @@ def load_course_map(course_name="COTA"):
             while line and count < 3:
                 count += 1
                 line = file.readline()
+            ydir = float(line.split(" ")[1][0])
             while line:
                 line = file.readline()
                 data.append(line)
@@ -38,14 +40,16 @@ def load_course_map(course_name="COTA"):
         # Create the elevation profile
         elev_profile = []
         stops = []
+        total_dist = 0
         for i in range(len(clean_data) - 1):
-            pitch = numpy.arctan(float(clean_data[i][1]) / 10)  # is 10 = 30/3? i.e. rise over run?
+            pitch = numpy.arctan(float(clean_data[i][1]) / (float(clean_data[i][2])/ydir))
             elev_profile.append((pitch, int(clean_data[i][2])))
+            total_dist += int(clean_data[i][2])
             if len(clean_data[i]) > 3:
                 stops.append(int(clean_data[i][0]))
     if course_name == "ASC":
         pass
-    return (elev_profile, stops)
+    return (elev_profile, stops, total_dist)
 
 def generate_initial_profile(time, distance, e_profile, min_velocity, stop_profile, max_stop_velocity):
     """
@@ -55,8 +59,7 @@ def generate_initial_profile(time, distance, e_profile, min_velocity, stop_profi
     :param min_velocity: Minimum allowable velocity
     :param stop_profile: List of indices where car must stop
     """
-    avg_velocity = distance / time #should we have distance param? shouldnt we calculate from e/vprofile
-    #dist_step = distance / len(e_profile)
+    avg_velocity = distance / time
     initial_profile = [avg_velocity]
     for point in range(len(e_profile) - 1):  # We don't care about the endpoint
         pitch = e_profile[point][0]
@@ -83,13 +86,14 @@ if __name__ == "__main__":
     map_data = load_course_map()
     elev_profile = map_data[0]
     stop_profile = map_data[1]
+    distance = map_data[2]
+
     # Load in the distance and necessary time for a lap
-    distance = args.distance
     dist_step = args.step
     time = args.time  # max allowable time in s
     min_velocity = args.min_velocity
     max_velocity = 25
-    max_stop_velocity = 7
+    max_stop_velocity = args.stop_velocity
     init_profile = generate_initial_profile(time, distance, elev_profile, min_velocity, stop_profile.copy(), max_stop_velocity)
 
     def objective(v_profile):
@@ -118,9 +122,6 @@ if __name__ == "__main__":
     bounds = [(min_velocity, max_velocity)] * elements
     for stop in stop_profile:
         bounds[stop-1] = (2, max_stop_velocity)
-    # b = (min_velocity, max_velocity)
-    # elements = len(v0)
-    # bounds = (b,) * elements
 
     # constraints
     condition1 = {'type': 'ineq', 'fun': time_constraint}
