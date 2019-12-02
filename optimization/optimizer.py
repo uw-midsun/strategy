@@ -23,12 +23,7 @@ def load_course_map(course_name="COTA"):
     if course_name == "COTA":
         with open('COTAelevation_var.txt', 'r') as file:
             line = file.readline()
-            count = 1
             data = []
-            while line and count < 3:
-                count += 1
-                line = file.readline()
-            ydir = float(line.split(" ")[1][0])
             while line:
                 line = file.readline()
                 data.append(line)
@@ -42,7 +37,7 @@ def load_course_map(course_name="COTA"):
         stops = []
         total_dist = 0
         for i in range(len(clean_data) - 1):
-            pitch = numpy.arctan(float(clean_data[i][1]) / (float(clean_data[i][2])/ydir))
+            pitch = numpy.arctan(float(clean_data[i][1]) / float(clean_data[i][2]))
             elev_profile.append((pitch, int(clean_data[i][2])))
             total_dist += int(clean_data[i][2])
             if len(clean_data[i]) > 3:
