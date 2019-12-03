@@ -66,12 +66,14 @@ class Car():
         for point in range(num_points - 1):
             v_new = v_profile[point + 1]
             v_old = v_profile[point]
-            e_new = e_profile[point + 1]
-            e_old = e_profile[point]
+            e_new = e_profile[point + 1][0]
+            # pytest fails here because e_profile from pytest does not use variable distances
+            e_old = e_profile[point][0]
             e_gain = e_new - e_old
-            theta = arctan(e_gain / distance)  # Calculate the angle of elev
+            dist = e_profile[point][1]
+            theta = arctan(e_gain / dist)  # Calculate the angle of elev
             v_avg = (v_new + v_old) / 2
-            timestep = distance / v_avg
-            energy_used = self.force_req(v_new, wind, v_old, theta, timestep) * distance
+            timestep = dist / v_avg
+            energy_used = self.force_req(v_new, wind, v_old, theta, timestep) * dist
             energy += energy_used
         return energy
