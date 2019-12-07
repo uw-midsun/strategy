@@ -8,12 +8,18 @@ global car
 car = Car()
 
 parser = argparse.ArgumentParser(description="Add parameters to model")
-parser.add_argument("-d", "--distance", type=int, default=5490, help="Distance to travel (m)")
-parser.add_argument("-t", "--time", type=int, default=450, help="Maximum allowable time (s)")
-parser.add_argument("-v", "--min_velocity", type=int, default=5, help="Minimum allowable velocity (m/s)")
-parser.add_argument("-s", "--step", type=int, default=30, help="Distance between elevation profile measurements")
-parser.add_argument("-st", "--stop_velocity", type=int, default=7, help="Maximum velocity for stops/turns")
+parser.add_argument("-d", "--distance", type=int, default=5490,
+                    help="Distance to travel (m)")
+parser.add_argument("-t", "--time", type=int, default=450,
+                    help="Maximum allowable time (s)")
+parser.add_argument("-v", "--min_velocity", type=int, default=5,
+                    help="Minimum allowable velocity (m/s)")
+parser.add_argument("-s", "--step", type=int, default=30,
+                    help="Distance between elevation profile measurements")
+parser.add_argument("-st", "--stop_velocity", type=int, default=7,
+                    help="Maximum velocity for stops/turns")
 args = parser.parse_args()
+
 
 def load_course_map(course_name="COTA"):
     """
@@ -37,7 +43,8 @@ def load_course_map(course_name="COTA"):
         stops = []
         total_dist = 0
         for i in range(len(clean_data) - 1):
-            pitch = numpy.arctan(float(clean_data[i][1]) / float(clean_data[i][2]))
+            pitch = numpy.arctan(float(clean_data[i][1])
+                                 / float(clean_data[i][2]))
             elev_profile.append((pitch, int(clean_data[i][2])))
             total_dist += int(clean_data[i][2])
             if len(clean_data[i]) > 3:
@@ -46,7 +53,9 @@ def load_course_map(course_name="COTA"):
         pass
     return (elev_profile, stops, total_dist)
 
-def generate_initial_profile(time, distance, e_profile, min_velocity, stop_profile, max_stop_velocity):
+
+def generate_initial_profile(time, distance, e_profile, min_velocity,
+                             stop_profile, max_stop_velocity):
     """
     :param time: Maximum allowable time to cover a distance in seconds
     :param distance: Distance to be covered in meters
@@ -76,6 +85,7 @@ def generate_initial_profile(time, distance, e_profile, min_velocity, stop_profi
     # traveling at the average velocity required
     return initial_profile
 
+
 if __name__ == "__main__":
 
     map_data = load_course_map()
@@ -89,12 +99,14 @@ if __name__ == "__main__":
     min_velocity = args.min_velocity
     max_velocity = 25
     max_stop_velocity = args.stop_velocity
-    init_profile = generate_initial_profile(time, distance, elev_profile, min_velocity, stop_profile.copy(), max_stop_velocity)
+    init_profile = generate_initial_profile(time, distance, elev_profile,
+                                            min_velocity, stop_profile.copy(),
+                                            max_stop_velocity)
 
     def objective(v_profile):
         energy = car.energy_used(v_profile, elev_profile, distance=dist_step)
         return energy / 1000000
-    
+
     def time_constraint(v_profile):
         time_used = [dist_step / v for v in v_profile[1:]]
         return time-sum(time_used)
@@ -111,7 +123,7 @@ if __name__ == "__main__":
     # initial guess
     v0 = numpy.asarray(init_profile)
     print('Initial SSE Objective: ' + str(objective(v0)))
-    
+
     # bounds
     elements = len(v0)
     bounds = [(min_velocity, max_velocity)] * elements
@@ -122,7 +134,8 @@ if __name__ == "__main__":
     condition1 = {'type': 'ineq', 'fun': time_constraint}
     condition2 = {'type': 'ineq', 'fun': speed_constraint}
     conditions = ([condition1, condition2])
-    solution = minimize(objective, v0, method='SLSQP', bounds=bounds, constraints=conditions)
+    solution = minimize(objective, v0, method='SLSQP',
+                        bounds=bounds, constraints=conditions)
 
     v = solution.x
     print(v)
