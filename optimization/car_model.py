@@ -4,15 +4,14 @@ from numpy import arctan
 
 class Car():
 
-    g = 9.81
-    rho = 1.225
+    g = 9.81  # Acceleration due to gravity in m/s^2
+    rho = 1.225  # Density of air at room temperature
 
-    def __init__(
-        self, m=720, Crr=0.0015, CdA=0.15, max_force=100):
+    def __init__(self, m=720, Crr=0.0015, CdA=0.15, max_force=100):
         self.m = m  # mass of car in kg
         self.Crr = Crr  # Rolling Resistance coefficient of the car
         self.CdA = CdA  # Drag coefficient of the car
-        self.max_force = max_force # Max force of motors in N
+        self.max_force = max_force  # Max force of motors in N
 
     def force_req(self, v, vwind=0, v_old=None, theta=0, timestep=30):
         """
@@ -35,7 +34,7 @@ class Car():
         return Fmotor
 
     def max_velocity(self, v_old, vwind=0, theta=0, timestep=30):
-        """ 
+        """
         :param v_old: speed of the car at the initial point
         :param vwind: velocity of the wind relative to the car (+ve with car)
         :param theta: angle that must be climbed by the car in radians
@@ -67,13 +66,15 @@ class Car():
             v_new = v_profile[point + 1]
             v_old = v_profile[point]
             e_new = e_profile[point + 1][0]
-            # pytest fails here because e_profile from pytest does not use variable distances
+            # pytest fails here because e_profile from
+            # pytest does not use variable distances
             e_old = e_profile[point][0]
             e_gain = e_new - e_old
             dist = e_profile[point][1]
             theta = arctan(e_gain / dist)  # Calculate the angle of elev
             v_avg = (v_new + v_old) / 2
             timestep = dist / v_avg
-            energy_used = self.force_req(v_new, wind, v_old, theta, timestep) * dist
+            energy_used = self.force_req(v_new, wind, v_old,
+                                         theta, timestep) * dist
             energy += energy_used
         return energy
