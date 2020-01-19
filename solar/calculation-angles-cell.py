@@ -1,58 +1,68 @@
 # This file calculates the angle per cell from the solar array
-# Take vertical (and horizontal (?)) angles
 # 0 rad/degrees is in reference to the tail of car
 from math import pi, atan
-from openpyxl import load_workbook
+import csv
 
-# Appending a file
-filename = 'MSXIV-Strategy-Cell-Angles.xlsx'
-wb = load_workbook(filename)
-ws = wb.active
 
-ws['A1'] = 'Cell ID'
-ws['B1'] = 'Angle (Radians)'
-ws['C1'] = 'Angle (Degrees)'
-# ws['D1'] = 'Notes'
+filename = 'MSXIV-Strategy-Cell-Angles.csv'
 
-row = int(input("Row Number (Default = 2): "))  # start at this row - editing
+# Write new file or append to file
+mode = input("New (n) or Append (a): ")
 
-try:
-    while True:
 
-        # Cell Locations
-        # row = 1 # always starts at row 1 of sheet
-        cell_id = 'A' + str(row)
-        rad_cell_id = 'B' + str(row)
-        deg_cell_id = 'C' + str(row)
-        # notes
+# Calculation formulas
+def to_deg(angle_rad):
 
-        # inputs
-        solar_cell_id = input("Solar Cell ID: ")  # STRING ID of cell
-        ws[cell_id] = solar_cell_id
+    deg = float(angle_rad * 180 / pi)
+    return deg
 
-        dy = float(input("dy value - opposite (mm): "))  # mm - in x-y plane
-        dz = float(input("dz value - adjacent (mm): "))  # mm
 
-        def to_deg(angle_rad):
-            deg = float(angle_rad * 180 / pi)
-            return deg
+# Average angle of the panel
+def calculate_angle(dy, dz, data):  # calculates angle from normal
 
-        # Average angle of the panel
-        def calculate_angle(dy_val, dz_val):  # calculates angle from normal
-            norm_angle = atan(dy/dz)
+    norm_angle = atan(dy/dz)
 
-            print("Normalized Angle:", norm_angle, "radians")
-            ws[rad_cell_id] = norm_angle
+    print("Normalized Angle:", norm_angle, "radians")
+    data.append(norm_angle)
 
-            print("Normalized Angle:", to_deg(norm_angle), "degrees")
-            ws[deg_cell_id] = to_deg(norm_angle)
+    norm_angle_deg = to_deg(norm_angle)
+    print("Normalized Angle:", norm_angle_deg, "degrees")
+    data.append(norm_angle_deg)
 
-        calculate_angle(dy, dz)
 
-        # Move to next row
-        row = row + 1
+# Writing a new file
+if mode == 'n':
+    # Adding headers to the file: W
+    headers = ['Cell ID', 'dy', 'dz', 'Angle (Radians)', 'Angle (Degrees)']
 
-except KeyboardInterrupt:  # Ctrl-C
-    pass
+    with open(filename, 'w', newline='\n') as csvfile:
+        wr = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        wr.writerow(headers)
 
-wb.save(filename=filename)
+
+# Appending to file
+with open(filename, 'a', newline='\n') as csvfile:
+    wr = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+    data = []
+
+    try:
+        # When complete, use Ctrl-C KeyboardInterrupt
+        while True:
+
+            solar_cell_id = input("Solar Cell ID: ")  # STRING ID of cell
+            data.append(solar_cell_id)
+
+            dy = float(input("dy value - opposite (mm): "))  # in x-y plane
+            data.append(dy)
+
+            dz = float(input("dz value - adjacent (mm): "))
+            data.append(dz)
+
+            calculate_angle(dy, dz, data)
+
+            wr.writerow(data)
+
+            data = []
+
+    except KeyboardInterrupt:  # Ctrl-C
+        pass
