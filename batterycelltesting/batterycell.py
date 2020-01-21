@@ -2,8 +2,13 @@ import pandas as pd
 from scipy.stats import linregress
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredText
+import argparse
 
-file_location = "/Volumes/LACIE DRIVE/Midnight Sun/Battery Cell Data/Results-Single-File"
+# Pass Folder Location as a Command Line Argument
+parser = argparse.ArgumentParser()
+parser.add_argument("fileLocation", help="folder location of the cell data files")
+args = parser.parse_args()
+file_location = args.fileLocation
 
 
 def generate_graphs():
