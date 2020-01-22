@@ -6,7 +6,7 @@ import argparse
 
 # Pass Folder Location as a Command Line Argument
 parser = argparse.ArgumentParser()
-parser.add_argument("fileLocation", help="folder location of the cell data files")
+parser.add_argument("fileLocation", help="folder location of the cell data files", required=True)
 args = parser.parse_args()
 file_location = args.fileLocation
 
