@@ -3,6 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import os
+import argparse
+import zipfile 
+
 def weighting (current, valid_current):
    low = min(valid_current)
    high = max(valid_current)
@@ -14,6 +17,7 @@ def weighting (current, valid_current):
 
 def graphing (filename):
    ax = plt.axes()
+   filename = filename[0:len(filename)-4]
    plt.title(filename + " OCV Visualization")
 
    plt.xlim(min(current),max(current))
@@ -27,7 +31,7 @@ def graphing (filename):
    ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%.6f'))
 
    plt.scatter(current,voltage)
-   plt.savefig((filename) + '.png', bbox_inches='tight') ##Creating a new file each
+   plt.savefig('OCVGraphs/'+ (filename) + '.png', bbox_inches='tight') ##Creating a new file each
    plt.clf()
    
 def calculation():
@@ -46,28 +50,81 @@ def calculation():
 
 
    for x in valid_current:
-       Weights.append(weighting(x,valid_current)) #Adds a weighting based on current
+      Weights.append(weighting(x,valid_current)) #Adds a weighting based on current
        
-   weightedsumV = 0
+   weighted_sum_voltage = 0
    for i in range(0, len(valid_voltage)):
-      weightedsumV = weightedsumV + valid_voltage[i] * Weights[i]
+      weighted_sum_voltage = weighted_sum_voltage + valid_voltage[i] * Weights[i]
       
-   weightavgV = [weightedsumV / sum(Weights)] 
-   return weightavgV
-   print("Weighted Average for Filtered Voltages: %s"  % weightavgV)
+   weight_avg_voltage = [weighted_sum_voltage / sum(Weights)] 
+   return weight_avg_voltage
+   print("Weighted Average for Filtered Voltages: %s"  % weight_avg_voltage)
    
 
 
-outputs = []
-for filename in os.listdir():
-    if filename.endswith("OCVData.csv"):
-      df = pd.read_csv(filename) #Reading the CSV File, 1000 entries
+parser = argparse.ArgumentParser(description='Makes weighted averages from OCV data')
+parser.add_argument(
+   '--file',
+   '-f',
+   default = 'empty', #Making two ways to run the script, with a file or zip.
+   type=str,
+   help='.csv file containing OCV Data. First column should be \'voltage\' and the second \'current\'')
 
-      voltage= (df['voltage']) #Storing each column into a DataFrame
-      current= (df['current']).multiply(10000000000) #Multiplied by 10billion or e10
+parser.add_argument(
+    '--zip',
+    '-z',
+    default = 'empty',
+    help='.zip file with CSV files containing OCV Data. First column should be \'voltage\' and the second \'current\''
+)
+args = parser.parse_args()
+
+# Checks to make sure only 1 arguement is used.
+if args.file == 'empty' and args.zip == 'empty':
+   parser.error("Please input at least one type of file.")
+elif args.file != 'empty' and args.zip != 'empty':
+   parser.error("Please input only one type of file.")
+elif args.file[len(args.file)-4:len(args.file)] != ".csv":
+   parser.error("Please input a .csv file")
+elif args.zip[len(args.zip)-4:len(args.zip)] != ".zip":
+   parser.error("Please input a .zip file")
+   
+outputs = []
+
+
+# Create target graphs folder if it doesn't already exist.
+if not os.path.exists('OCVGraphs'):
+    os.mkdir('OCVGraphs')
+if not os.path.exists('OutputCSV'):
+    os.mkdir('OutputCSV')
+# Checks if the zip argument was not used. 
+if args.zip == 'empty':
+   df = pd.read_csv(args.file)
+
+   
+   voltage= (df['voltage']) 
+   current= (df['current']).multiply(10000000000) 
       
-      outputs.append(calculation())
-      graphing(filename)
-      
+   outputs.append(calculation())
+   graphing(args.file)
+   
+
+# Otherwise, unzip the zip file into a new folder and iterate through them.
+else:
+   
+    
+   with zipfile.ZipFile(args.zip, 'r') as zip_ref:
+    zip_ref.extractall('CSVFolder')
+    
+   for filename in os.listdir('CSVFolder'):
+       if filename.endswith('.csv'):
+         df = pd.read_csv('CSVFolder/' + filename) 
+
+         voltage= (df['voltage']) 
+         current= (df['current']).multiply(10000000000) 
+         
+         outputs.append(calculation())
+         graphing(filename)
+         
+
 df = pd.DataFrame(outputs)
-df.to_csv("OutPuts.csv")
+df.to_csv("OutputCSV/Outputs.csv")
