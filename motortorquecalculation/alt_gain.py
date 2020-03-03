@@ -1,7 +1,7 @@
 import pandas as pd
 from haversine import haversine, Unit
 from numpy import arctan, geomspace, linspace
-from math import sin, cos, ceil
+from math import sin, cos, ceil, pi
 import matplotlib.pyplot as plt
 from statistics import mean
 import argparse
@@ -11,13 +11,13 @@ def kph_to_ms(kph):
     return kph * 0.277778
 
 
-def angle_to_rad(angle):
-    rad = angle / 57.2958
+def degree_to_rad(angle):
+    rad = angle * (pi / 180)
     return rad
 
 
-def rad_to_angle(rad):
-    angle = rad * 57.2958
+def rad_to_degree(rad):
+    angle = rad * (180 / pi)
     return angle
 
 
@@ -87,8 +87,8 @@ class Car:
         @return: Total force on the car
         @rtype: float
         """
-        Fg = self.mass * self.gravity * sin(angle_to_rad(angle))
-        Ff = self.mass * self.gravity * self.Crr * cos(angle_to_rad(angle))
+        Fg = self.mass * self.gravity * sin(degree_to_rad(angle))
+        Ff = self.mass * self.gravity * self.Crr * cos(degree_to_rad(angle))
         Fdrag = 0.5 * velocity ** 2 * self.CdA * self.rho
         Ft = Fg + Ff + Fdrag
         return Ft
@@ -135,8 +135,8 @@ class Car:
         """
         velocitysquared = (
             (torque * 2 / self.wheel_radius)
-            - (self.mass * self.gravity * sin(angle_to_rad(angle)))
-            - (self.mass * self.gravity * self.Crr * cos(angle_to_rad(angle)))
+            - (self.mass * self.gravity * sin(degree_to_rad(angle)))
+            - (self.mass * self.gravity * self.Crr * cos(degree_to_rad(angle)))
         ) / (0.5 * self.CdA * self.rho)
         return velocitysquared
 
@@ -169,7 +169,39 @@ class Car:
             return min_speed, required_torque
 
 
+def generate_parameters(alt, lat, lon):
+    """
+    Given the raw data, generate parameters (distances, delta altitude, angles and climb.
+    @param alt: Altitude data (
+    @type alt: List[float]
+    @param lat: Latitude
+    @type lat: List[float]
+    @param lon: Longitudes
+    @type lon: List[float]
+    @return: Distances, delta in altitudes, angles and climb.
+    @rtype:(List[float], List[float], List[float], List[float])
+    """
+    dist = [0]
+    # TODO: Unused variable: dalt.
+    dalt = [0]
+    climb = [0]
+    angles = [0]
+    for i in range(len(alt) - 1):
+        dist.append(
+            haversine((lat[i], lon[i]), (lat[i + 1], lon[i + 1]), unit=Unit.METERS)
+            + dist[i]
+        )
+        dalt = alt[i + 1] - alt[i]
+        angle = dalt / (dist[i + 1] - dist[i])
+        angles.append(angle)
+        climb.append((180 / pi) * arctan(angle))
+    return dist, dalt, climb, angles
+
+
 def main():
+    """
+    Plots a graph detailing range (km) over added energy use (W).
+    """
     parser = argparse.ArgumentParser(
         description="Choose a map",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -200,22 +232,9 @@ def main():
 
     car = Car(args.weight, 0.15, 0.0015)
 
-    dist = [0]
-    # TODO: Unused variable: dalt.
-    dalt = [0]
-    climb = [0]
-    angles = [0]
-    for i in range(len(alt) - 1):
-        dist.append(
-            haversine((lat[i], lon[i]), (lat[i + 1], lon[i + 1]), unit=Unit.METERS)
-            + dist[i]
-        )
-        dalt = alt[i + 1] - alt[i]
-        angle = dalt / (dist[i + 1] - dist[i])
-        angles.append(angle)
-        climb.append(57.2958 * arctan(angle))
-    avg = mean(x for x in climb if x > -57.2958 * 0.0085035)
-    print("Car torque required (Nm): ", car.torque_req(avg, speed_req))
+    dist, _, climb, angles = generate_parameters(alt, lat, lon)
+    avg = mean(x for x in climb if x > -(180 / pi) * 0.0085035)
+    print("Car torque required per wheel (Nm): ", car.torque_req(avg, speed_req))
 
     # TODO: Another unused variable: torques. It is overwritten to [] in the loop below right away.
     torques = []
