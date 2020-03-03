@@ -122,8 +122,13 @@ class Car:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Choose a map")
-    parser.add_argument("--map", help="Required: Map to pick to race on", required=True)
+    parser = argparse.ArgumentParser(
+        description="Choose a map",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--map", help="Required: Map to pick to race on: [WSC|ASC]", required=True
+    )
     parser.add_argument(
         "--solar", help="Energy we receive from the solar panel", default=0, type=float
     )
