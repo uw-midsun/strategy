@@ -119,7 +119,7 @@ class Car:
 
 def main():
     parser = argparse.ArgumentParser(description="Choose a map")
-    parser.add_argument("--map", help="Map to pick to race on")
+    parser.add_argument("--map", help="Required: Map to pick to race on", required=True)
     parser.add_argument(
         "--solar", help="Energy we receive from the solar panel", default=0, type=float
     )
@@ -128,7 +128,6 @@ def main():
     )
     args = parser.parse_args()
 
-    min_speed = 7  # minimum allowable speed
     if args.map == "WSC":
         csv_file = pd.read_csv("wsc_elevation.csv")
         lon = csv_file.Longitude.to_list()
@@ -142,7 +141,6 @@ def main():
         alt = csv_file.alt.to_list()
         speed_req = 16.6  # 60 kph in m/s
 
-    #
     car = Car(args.weight, 0.15, 0.0015)
 
     dist = [0]
@@ -175,19 +173,21 @@ def main():
         wattage = wattages[i]
         torque_obj.generate_curve()
         efficiencies = torque_obj.curve
-        torquess = []
+        torques = []
         eff = []
         for j in range(len(efficiencies)):
-            torquess.append(efficiencies[j][0])
+            torques.append(efficiencies[j][0])
             eff.append(efficiencies[j][1])
 
         data = [(0, 0)]
+        min_speed = 7  # minimum allowable speed
         for point in range(len(dist)):
             data.append(
                 car.speed_torque_calculator(
                     climb[point], speed_req, min_speed, set_torque
                 )
             )
+
         total_energy = 0
         full_length = True
         for point in range(2, len(data)):

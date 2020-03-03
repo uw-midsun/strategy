@@ -1,7 +1,10 @@
-numpy==1.16.4
-pandas==0.24.2
-scipy==1.3.0
-matplotlib==3.1.0
-pytest==5.0.1
-flake8
-haversine
+cycler==0.10.0
+haversine==2.2.0
+kiwisolver==1.1.0
+matplotlib==3.1.3
+numpy==1.18.1
+pandas==1.0.1
+pyparsing==2.4.6
+python-dateutil==2.8.1
+pytz==2019.3
+six==1.14.0
