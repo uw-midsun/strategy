@@ -7,6 +7,10 @@ from statistics import mean
 import argparse
 
 
+def kph_to_ms(kph):
+    return kph * 0.277778
+
+
 def angle_to_rad(angle):
     rad = angle / 57.2958
     return rad
@@ -133,13 +137,13 @@ def main():
         lon = csv_file.Longitude.to_list()
         lat = csv_file.Latitude.to_list()
         alt = csv_file["Elevation (m)"].to_list()
-        speed_req = 22.2  # 80kph in m/s
+        speed_req = kph_to_ms(80)
     elif args.map == "ASC":
         csv_file = pd.read_csv("ASC2018.csv")
         lon = csv_file.lon.to_list()
         lat = csv_file.lat.to_list()
         alt = csv_file.alt.to_list()
-        speed_req = 16.6  # 60 kph in m/s
+        speed_req = kph_to_ms(60)
 
     car = Car(args.weight, 0.15, 0.0015)
 
