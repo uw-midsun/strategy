@@ -1,7 +1,7 @@
 import pandas as pd
 from haversine import haversine, Unit
 from numpy import arctan, geomspace, linspace
-from math import sin, cos, sqrt, ceil
+from math import sin, cos, ceil
 import matplotlib.pyplot as plt
 from statistics import mean
 import argparse
@@ -34,6 +34,11 @@ class TorqueCurve:
     peak_efficiency = 0.96
 
     def __init__(self, nominal_torque):
+        """
+        Container object.
+        @param nominal_torque: TODO
+        @type nominal_torque: float
+        """
         self.torque = nominal_torque
         self.curve = []
         self.torque_list = []
@@ -45,7 +50,7 @@ class TorqueCurve:
         for point in range(len(torques)):
             self.curve.append((torques[point], efficiencies[point]))
             self.torque_list.append(torques[point])
-        # The we generate the top half
+        # Then we generate the top half
         efficiencies = geomspace(self.peak_efficiency, 0.8, 1000)
         torques = linspace(self.torque, 100, 1000)
         for point in range(len(torques)):
@@ -73,6 +78,15 @@ class Car:
         self.Crr = Crr
 
     def force(self, angle, velocity):
+        """
+        Get the total force given the angle and velocity of the car model.
+        @param angle: Angle in degrees.
+        @type angle: float
+        @param velocity: Velocity of the car in m/s
+        @type velocity: float
+        @return: Total force on the car
+        @rtype: float
+        """
         Fg = self.mass * self.gravity * sin(angle_to_rad(angle))
         Ff = self.mass * self.gravity * self.Crr * cos(angle_to_rad(angle))
         Fdrag = 0.5 * velocity ** 2 * self.CdA * self.rho
@@ -80,13 +94,28 @@ class Car:
         return Ft
 
     def energy_use(self, distance, angle, velocity):
+        """
+        Get the total energy used by the car given the angle and velocity.
+        @param angle: Angle in degrees.
+        @type angle: float
+        @param velocity: Velocity of the car in m/s
+        @type velocity: float
+        @return: Energy used by the car
+        @rtype: float
+        """
         Ft = self.force(angle, velocity)
         E = Ft * distance
         return E
 
     def torque_req(self, angle, velocity):
         """
-        returns the torque required per wheel
+        Returns the torque required per wheel
+        @param angle: Angle in degrees.
+        @type angle: float
+        @param velocity: Velocity of the car in m/s
+        @type velocity: float
+        @return: Energy used by the car
+        @rtype: float
         """
         torque_per_wheel = self.force(angle, velocity) * self.wheel_radius / 2
         return torque_per_wheel
@@ -97,6 +126,12 @@ class Car:
         F = tau * 2 / wheel_radius
         F = mgsin(theta) + mgCrrcos(theta) + 0.5v^2CdArho
         sqrt((F - mgsin(theta) - mgCrrCos(theta))/(0.5CdArho)) = v
+        @param angle: Angle in degrees.
+        @type: float
+        @param torque: torque in Nm
+        @type float
+        @return the speed traveled given a certain torque
+        @rtype: float
         """
         velocitysquared = (
             (torque * 2 / self.wheel_radius)
@@ -106,6 +141,19 @@ class Car:
         return velocitysquared
 
     def speed_torque_calculator(self, angle, given_speed, min_speed, torque):
+        """
+        TODO: @Clarke What does this do?
+        @param angle: Angle in degrees
+        @type angle: float
+        @param given_speed:
+        @type given_speed: float
+        @param min_speed:
+        @type min_speed: float
+        @param torque:
+        @type torque: float
+        @return: Speed, torque
+        @rtype: (float, float)
+        """
         if self.torque_req(angle, given_speed) <= torque:
             return given_speed, self.torque_req(angle, given_speed)
         elif self.speed_req(
@@ -153,6 +201,7 @@ def main():
     car = Car(args.weight, 0.15, 0.0015)
 
     dist = [0]
+    # TODO: Unused variable: dalt.
     dalt = [0]
     climb = [0]
     angles = [0]
@@ -166,17 +215,19 @@ def main():
         angles.append(angle)
         climb.append(57.2958 * arctan(angle))
     avg = mean(x for x in climb if x > -57.2958 * 0.0085035)
-    print(car.torque_req(avg, speed_req))
+    print("Car torque required (Nm): ", car.torque_req(avg, speed_req))
+
+    # TODO: Another unused variable: torques. It is overwritten to [] in the loop below right away.
     torques = []
-    breakpoint = []
     for angle in climb:
         torques.append(car.torque_req(angle, speed_req))
     torques = linspace(5, 30, 20)
+
+    breakpoints = []
     baseline = -1 * ceil(args.solar)
     wattages = linspace(baseline, baseline + 500, 50)
     total_energies = []
     for i in range(50):
-
         set_torque = 14  # Nm of torque we want from the motor
         torque_obj = TorqueCurve(set_torque)
         wattage = wattages[i]
@@ -189,7 +240,7 @@ def main():
             eff.append(efficiencies[j][1])
 
         data = [(0, 0)]
-        min_speed = 7  # minimum allowable speed
+        min_speed = 7  # minimum allowable speed (m/s)
         for point in range(len(dist)):
             data.append(
                 car.speed_torque_calculator(
@@ -205,6 +256,7 @@ def main():
             )
 
             if above(torque_obj.torque_list, data[point][1]) != -1:
+                # TODO: efficiency is unused, is it useful?
                 efficiency = efficiencies[
                     above(torque_obj.torque_list, data[point][1])
                 ][1]
@@ -215,17 +267,19 @@ def main():
                 + wattage * (dist[point - 1] - dist[point - 2]) / data[point][0]
             )
             if total_energy > 5.04 * 10 ** 7:
-                breakpoint.append(dist[point - 1])
+                breakpoints.append(dist[point - 1])
                 full_length = False
                 break
         total_energies.append(total_energy)
         if full_length:
-            breakpoint.append(dist[-1])
-    break_in_km = [x / 1000 for x in breakpoint]
+            breakpoints.append(dist[-1])
+
+    break_in_km = [x / 1000 for x in breakpoints]
     normalized_wattages = [x - baseline for x in wattages]
     plt.plot(normalized_wattages, break_in_km)
     plt.xlabel("Added Energy Use (W)")
     plt.ylabel("Range (km)")
+    plt.savefig("plot.png")
     plt.show()
 
 
