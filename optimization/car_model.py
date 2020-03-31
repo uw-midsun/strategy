@@ -41,7 +41,7 @@ class Car():
         :param timestep: time in s between measurement
         :return velocity: max velocity that the car can travel in m/s
         """
-        max_v = v - self.force_req(v, vwind=vwind, theta=theta) + self.max_force * timestep
+        max_v = v_old - self.force_req(v_old, vwind=vwind, theta=theta) + self.max_force * timestep
         return max_v
 
     def energy_used(self, v_profile, e_profile, distance=100, wind=0):
