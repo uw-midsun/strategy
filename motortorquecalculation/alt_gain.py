@@ -97,20 +97,27 @@ class Car:
             return min_speed, required_torque
 
 parser = argparse.ArgumentParser(description='Choose a map')
-parser.add_argument('--map', help='Map to pick to race on')
+parser.add_argument('--map', help='Map to pick to race on', default='ASC')
 parser.add_argument('--solar', help='Energy we receive from the solar panel', default=0, type=float)
 parser.add_argument('--weight', help='Weight of the car in kg', default=720, type=float)
+parser.add_argument('--dir', help='Location where your strategy directory is located', type=str)
 args = parser.parse_args()
 car = Car(args.weight, 0.15, 0.0015)
 min_speed = 7 # minimum allowable speed
 if args.map == 'WSC':
-    csv_file = pd.read_csv('wsc_elevation.csv')
+    try:
+        csv_file = pd.read_csv(args.dir + '/routemodel/routes/wsc_elevation.csv')
+    except:
+        raise('You must pass in your strategy directory location')
     lon = csv_file.Longitude.to_list()
     lat = csv_file.Latitude.to_list()
     alt = csv_file['Elevation (m)'].to_list()
     speed_req = 22.2 # 80kph in m/s
 elif args.map == 'ASC':
-    csv_file = pd.read_csv('ASC2018.csv')
+    try:
+        csv_file = pd.read_csv(args.dir + '/routemodel/routes/ASC2018.csv')
+    except:
+        raise('You must pass in your strategy directory location')
     lon = csv_file.lon.to_list()
     lat = csv_file.lat.to_list()
     alt = csv_file.alt.to_list()
