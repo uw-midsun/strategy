@@ -74,5 +74,5 @@ if __name__ == '__main__':
         next_v = (v[t - 1] - ((Crrmeas * 660 * 9.81)
                   + (CdAmeas * 1.225 * (next_v_half ** 2))) * (dt / 660))
         v.append(next_v)
-    print('The mesasured Crr is: ' + Crrmeas,
-          'The measured CdA is : ' + CdAmeas)
+    print('The mesasured Crr is: ' + str(Crrmeas),
+          'The measured CdA is : ' + str(CdAmeas))
