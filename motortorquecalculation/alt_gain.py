@@ -51,6 +51,7 @@ class Car:
     gravity = 9.81
     rho = 1.225
     wheel_radius = 0.26
+    battery_size = 3.888 * 10 ** 7 # Car energy capacity in Joules
     def __init__(self, mass, CdA, Crr):
         self.mass = mass # in kg
         self.CdA = CdA
@@ -133,7 +134,7 @@ for i in range(len(alt) - 1):
     angles.append(angle)
     climb.append(57.2958 * arctan(angle))
 avg = mean(x for x in climb if x > -57.2958 * 0.0085035)
-print(car.torque_req(avg, speed_req))
+#print(car.torque_req(avg, speed_req))
 torques = []
 breakpoint = []
 for angle in climb:
@@ -168,7 +169,7 @@ for i in range(50):
         else:
             efficiency = 0 
         total_energy += pre_eff_energy + wattage * (dist[point - 1] - dist[point - 2]) / data[point][0]
-        if total_energy > 5.04 * 10 ** 7:
+        if total_energy > Car.battery_size:
             breakpoint.append(dist[point - 1])
             full_length = False
             break
@@ -177,7 +178,8 @@ for i in range(50):
         breakpoint.append(dist[-1])
 break_in_km = [x / 1000 for x in breakpoint]
 normalized_wattages = [x - baseline for x in wattages]
-plt.plot(normalized_wattages, break_in_km)
 plt.xlabel('Added Energy Use (W)')
 plt.ylabel('Range (km)')
+plt.title(args.map)
+plt.plot(normalized_wattages, break_in_km)
 plt.show()
