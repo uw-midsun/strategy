@@ -20,7 +20,7 @@ class PackEfficiency:
 	
 	
 	def __init__(self):
-		_pack_resistance = 0.055
+		self._pack_resistance = 0.055
 	
 	#if we want say 1000W at the motors, we will need to draw more power (1050W) from the cells
 	def draw_power(self, power_outside_pack_W):
@@ -28,10 +28,9 @@ class PackEfficiency:
 		
 		#solve quadratic equation to find current
 		#I^2Ri - IVo + Po = 0
-		current_draw = (pack_ocv - cmath.sqrt((pack_ocv**2) - (4 * self._pack_resistance * power_outside_pack_W))) / 2*(self._pack_resistance)
-		
+		current_draw = (pack_ocv - cmath.sqrt((pack_ocv ** 2) - (4 * self._pack_resistance * power_outside_pack_W))) / (2 * (self._pack_resistance))
 		#this power loss is wasted as heat through the resistive elements
-		power_loss = (current_draw**2)*self._pack_resistance
+		power_loss = (current_draw ** 2) * self._pack_resistance
 		
 		#the power drawn from the cell itself (before resistive losses from internal resistance), the actual power draw for SoC estimation
 		power_inside_pack = power_outside_pack_W + power_loss
@@ -40,3 +39,6 @@ class PackEfficiency:
 		efficiency = (power_inside_pack - power_loss) / power_inside_pack
 		
 		return power_inside_pack
+
+def get_pack_ocv():
+		return 0.0
