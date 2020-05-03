@@ -26,7 +26,7 @@ A repository of the models and race strategy developed for MSXIV (and beyond!)
  - If your PR has not been reviewed within 24 hours, copy the link and paste it into the gen-strategy channel on Slack
 
 ## Questions?
-Message Clarke VandenHoven or Shalin Patel on Slack.
+Message Clarke VandenHoven on Slack.
 
 ## Resources
 - https://githowto.com/
