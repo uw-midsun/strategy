@@ -24,6 +24,16 @@ def test_calculateSOCValues_nonzero_values():
 
     assert(expected_result == calculateSOCValues(velocities, elevations, distances, initial_soc))
 
+def test_calculateSOCValues_initial_soc_non_1():
+    velocities = [5, 7, 9, 13, 9.5, 7.5, 5]
+    elevations = [(-1, 100), (1, 100), (3, 100), (3, 100), (1, 100), (1, 100), (1.5, 100)]
+    distances = [10000, 10000, 20000, 30000, 30000, 30000, 20000]
+    initial_soc = 0.9
+
+    expected_result = [0.9, 0.8999995851481777, 0.8999991160493324, 0.8999985299598554, 0.8999992236028236, 0.8999994058571505, 0.8999995157405268, 0.8999994937072884]
+
+    assert(expected_result == calculateSOCValues(velocities, elevations, distances, initial_soc))
+
 def test_calculateSOCValues_zero_length_inputs():
     with pytest.raises(IndexError):
         calculateSOCValues([], [], [], 1)
