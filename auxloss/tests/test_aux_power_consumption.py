@@ -1,14 +1,14 @@
 import sys
 import os.path
-sys.path.append(os.path.dirname(sys.path[0]))
+sys.path.append(os.path.join(sys.path[0], '../../'))
 import csv
 import pytest
 from unittest import mock
-from aux_power_consumption import AuxPowerConsumption
+import auxloss
 
-budget_file = "../MSXIV Power Budget.csv"
+budget_file = os.path.join(sys.path[0], '../', 'MSXIV Power Budget.csv')
 global auxpc
-auxpc = AuxPowerConsumption(budget_file)
+auxpc = auxloss.aux_power_consumption.AuxPowerConsumption(budget_file)
 
 def test_expected_components_stored_as_keys():
     with open(budget_file, "r") as file:
@@ -53,15 +53,15 @@ def test_calculate_instantaneous_power_unexpected_input_format():
         assert(auxpc.calculate_instantaneous_power({"test2": ["hello"]}))
 
 def test_calculate_energy_usage_zero_power():
-    with mock.patch('aux_power_consumption.AuxPowerConsumption.calculate_instantaneous_power', return_value=0):
+    with mock.patch('auxloss.aux_power_consumption.AuxPowerConsumption.calculate_instantaneous_power', return_value=0):
         assert(auxpc.calculate_energy_usage({"components":[]}, 10) == 0)
 
 def test_calculate_energy_usage_zero_time():
-    with mock.patch('aux_power_consumption.AuxPowerConsumption.calculate_instantaneous_power', return_value=1.0):
+    with mock.patch('auxloss.aux_power_consumption.AuxPowerConsumption.calculate_instantaneous_power', return_value=1.0):
         assert(auxpc.calculate_energy_usage("test", 0) == 0)
 
 def test_calculate_energy_usage():
-    with mock.patch('aux_power_consumption.AuxPowerConsumption.calculate_instantaneous_power', return_value=1.0):
+    with mock.patch('auxloss.aux_power_consumption.AuxPowerConsumption.calculate_instantaneous_power', return_value=1.0):
         assert(auxpc.calculate_energy_usage("test", 100) == 100)
-    with mock.patch('aux_power_consumption.AuxPowerConsumption.calculate_instantaneous_power', return_value=14.5):
+    with mock.patch('auxloss.aux_power_consumption.AuxPowerConsumption.calculate_instantaneous_power', return_value=14.5):
         assert(round(auxpc.calculate_energy_usage("test", 87), 3) == round(87 * 14.5, 3))
