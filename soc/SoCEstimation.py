@@ -21,11 +21,11 @@ class CoulombCounter:
 		
 	def set_SoC(self, soc):
 		self._SoC = soc
-		self._energy_available = soc *  self._pack_energy
+		self._energy_available = soc * _pack_energy
 		
 	def set_energy(self, energy):
 		self._energy_available = energy
-		self._SoC = self._energy_available / self._pack_energy
+		self._SoC = _energy_available / _pack_energy
 		
 	def get_soc(self):
 		return self._SoC
@@ -38,14 +38,14 @@ class CoulombCounter:
 	#dirOUT true for discharge, false for charge
 	def discharge(self, power_W, time_S, dirOUT):
 		#total energy in kWh
-		energy = power_W * time_S / 3600 / 1000
+		energy = power_W * time_S/3600
 		
-		if dirOUT:
-			#discharge
-			self._energy_available -= energy
-		else:
+		if(dirOUT)
 			#charge
 			self._energy_available += energy
+		else
+			#discharge
+			self._energy_available -= energy
 			
 		#update SoC
-		self._SoC = self._energy_available / self._pack_energy
+		self._SoC = _energy_available / _pack_energy
