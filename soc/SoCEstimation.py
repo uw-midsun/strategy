@@ -16,36 +16,36 @@ class CoulombCounter:
 	'''
 	def __init__(self):
 		self._energy_available = 0
-		self._pack_energy = 36*36*3.45*3.635
+		self._pack_energy = 36 * 36 * 3.45 * 3.635
 		self._SoC = self._energy_available / self._pack_energy
 		
 	def set_SoC(self, soc):
 		self._SoC = soc
-		self._energy_available = soc * _pack_energy
+		self._energy_available = soc * self._pack_energy
 		
 	def set_energy(self, energy):
 		self._energy_available = energy
-		self._SoC = _energy_available / _pack_energy
+		self._SoC = self._energy_available / self._pack_energy
 		
 	def get_soc(self):
 		return self._SoC
 	
 	#given telemetry updates, discharge the cells
 	def telemetry_discharge(self, telemetry_pack_current, telemetry_pack_voltage, telemetry_interval_ms):
-		discharge(self, telemetry_pack_current * telemetry_pack_voltage, telemetry_interval_ms*1000)
+		self.discharge(self, telemetry_pack_current * telemetry_pack_voltage, telemetry_interval_ms*1000)
 	
 	#use a certain amount of power for a certain amount of time
 	#dirOUT true for discharge, false for charge
 	def discharge(self, power_W, time_S, dirOUT):
 		#total energy in kWh
-		energy = power_W * time_S/3600
+		energy = power_W * time_S / 3600 / 1000
 		
-		if(dirOUT)
-			#charge
-			self._energy_available += energy
-		else
+		if dirOUT:
 			#discharge
 			self._energy_available -= energy
+		else:
+			#charge
+			self._energy_available += energy
 			
 		#update SoC
-		self._SoC = _energy_available / _pack_energy
+		self._SoC = self._energy_available / self._pack_energy
