@@ -64,5 +64,5 @@ with open(filename, 'a', newline='\n') as csvfile:
 
             data = []
 
-    except KeyboardInterrupt:  # Ctrl-C
+    except (KeyboardInterrupt,EOFError):  # Ctrl-C Ctrl-D
         pass

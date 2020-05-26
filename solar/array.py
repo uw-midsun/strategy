@@ -1,8 +1,11 @@
 from math import pi
 from solar import SolarDay
 import csv
+import os
 
+str = ('python3.7 calculation-angles-cell.py')
 filename = 'MSXIV-Strategy-Cell-Angles.csv'
+#os.system(str)
 
 # To do:
 # Create 3D surface as a combination of all cells:
