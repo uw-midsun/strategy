@@ -20,39 +20,42 @@ import {
 import {Header} from 'react-native-elements';
 
 const data = [
-  {id: "velocity", displayName: "Velocity", value: "10"},
-  {id: "recommendedVelocity", displayName: "Recommended Velocity", value: "11"},
-  {id: "elevation", displayName: "Elevation", value: "12"}
+  {id: "velocity", displayName: "Velocity (km/h)", value: 10},
+  {id: "recommendedVelocity", displayName: "Recommended Velocity (km/h)", value: 11},
+  {id: "elevation", displayName: "Elevation (km)", value: 12}
 ];
 const numColumns = 2;
 const sizeOfBoxes = Dimensions.get('window').width / numColumns * 0.75;
 const heightOfPage = Dimensions.get('window').height;
 
-const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <Header
-        centerComponent={{text: "STRATEGY", style: {color: "#FFFFFF", fontSize: 20}}}
-      />
-      <SafeAreaView>
-        <View style={styles.carDisplay}>
-          <Text>Insert some graphic here</Text>
-        </View>
-        <FlatList
-          data = {data}
-          renderItem={({item}) => (
-            <View style={styles.itemStyles}>
-              <Text style={styles.item}>{item.value}{"\n"}{item.displayName}</Text>
-            </View>
-          )}
-          keyExtractor={item => item.id}
-          numColumns = {numColumns}
-          style={styles.listStyles}
+export default class App extends React.Component {
+  render() {
+    return (
+      <>
+        <StatusBar barStyle="dark-content" />
+        <Header
+          centerComponent={{text: "STRATEGY", style: {color: "#FFFFFF", fontSize: 18}}}
         />
-      </SafeAreaView>
-    </>
-  );
+        <SafeAreaView>
+          <View style={styles.carDisplay}>
+            <Text>Insert some graphic here</Text>
+          </View>
+          <FlatList
+            data = {data}
+            renderItem={({item}) => (
+              <View style={styles.itemStyles}>
+                <Text style={styles.item}>{item.value}{"\n"}{item.displayName}</Text>
+              </View>
+            )}
+            keyExtractor={item => item.id}
+            numColumns = {numColumns}
+            style={styles.listStyles}
+          />
+        </SafeAreaView>
+      </>
+    );
+  }
+  
 };
 
 const styles = StyleSheet.create({
@@ -60,7 +63,7 @@ const styles = StyleSheet.create({
     height: heightOfPage / 5,
   },
   listStyles: {
-
+    alignSelf: "center",
   },
   itemStyles: {
     width: sizeOfBoxes,
@@ -75,5 +78,3 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
   }
 });
-
-export default App;
