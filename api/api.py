@@ -1,8 +1,7 @@
-import flask
-from flask import request, jsonify
+from flask import Flask, jsonify
 import processing
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 app.config['DEBUG'] = True
 
 # current_data = [
