@@ -42,7 +42,7 @@ def test_navigation_parse_good_response():
     parsed = navi_data.parse_navigation_data(response.json_data)
     assert(parsed == True)
     assert(response.status_code == 200)
-    filepath = '../optimization/navigation.csv'
+    filepath = os.path.join(sys.path[0], '../../optimization/navigation.csv')
     assert(os.path.isfile(filepath) == True)
     os.remove(filepath)
     
@@ -72,7 +72,7 @@ def test_elevation_parse_good_response():
     parsed = elev_data.parse_elevation_data(response.json_data)
     assert(parsed == True)
     assert(response.status_code == 200)
-    filepath = '../optimization/elevations.csv'
+    filepath = os.path.join(sys.path[0], '../../optimization/elevations.csv')
     assert(os.path.isfile(filepath) == True)
     os.remove(filepath)
 
