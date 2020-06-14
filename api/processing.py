@@ -5,7 +5,7 @@ import sys
 import os
 sys.path.append('../')
 from optimization.car_model import Car
-from api.log_entry import Log, LogSchema
+from api.log_models import Log, LogSchema
 
 DATA_API_ENDPOINT = 'http://api.open-notify.org/iss-now.json'
 
@@ -20,8 +20,8 @@ car = Car()
 db = SQLAlchemy()
 ma = Marshmallow()
 
-log_schema = LogSchema(strict=True)
-logs_schema = LogSchema(strict=True, many=True)
+log_schema = LogSchema()
+logs_schema = LogSchema(many=True)
 
 def getMobileData():
 
