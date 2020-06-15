@@ -34,4 +34,4 @@ Message Clarke VandenHoven on Slack.
 - https://githowto.com/
 - https://www.python.org/about/gettingstarted/
 - https://docs.scipy.org/doc/numpy/user/quickstart.html
-- https://uwmidsun.atlassian.net/wiki
+- https://uwmidsun.atlassian.net/wiki 
