@@ -1,44 +1,12 @@
-from flask import Flask, jsonify
-import requests
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
+from flask import jsonify
 import sys
 import os.path
 sys.path.append('../')
+from api import app, db, ma, DATA_API_ENDPOINT
 from optimization.car_model import Car
-from datetime import datetime
+import requests
 
-DATABASE_NAME = 'db.sqlite'
-DATA_API_ENDPOINT = 'http://api.open-notify.org/iss-now.json'
-
-app = Flask(__name__)
-app.config['DEBUG'] = True
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + os.path.join(basedir, DATABASE_NAME)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
-
-# from api.log_models import Log, LogSchema
-
-class Log(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    entry_time = db.Column(db.DateTime, default=datetime.utcnow)
-    velocity = db.Column(db.Float)
-    recommended_velocity = db.Column(db.Float)
-    elevation = db.Column(db.Float)
-
-    def __init__(self, velocity, recommended_velocity, elevation):
-        self.velocity = velocity
-        self.recommended_velocity = recommended_velocity
-        self.elevation = elevation
-
-class LogSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        # fields=('id', 'entry_time', 'velocity', 'recommended_velocity', 'elevation')
-        model = Log
-    id = ma.auto_field()
+from api.models import Log, LogSchema
 
 log_schema = LogSchema()
 logs_schema = LogSchema(many=True)
@@ -53,8 +21,14 @@ def init_db():
 def home():
     return 'success'
 
+# expected_data_format = [{
+#         'velocity': 0,
+#         'recommended_velocity': 0,
+#         'elevation': 10
+# }]
+
 @app.route('/mobile', methods=['GET'])
-def mobileData():
+def getMobileData():
     current_data = requests.get(DATA_API_ENDPOINT)
     
     if (current_data.status_code != 200):
@@ -71,7 +45,9 @@ def mobileData():
     db.session.add(new_entry)
     db.session.commit()
 
-    return jsonify([response])
-    # return jsonify(api.processing.getMobileData())
+    response_query = Log.query.order_by(Log.id.desc()).first()
+    return log_schema.jsonify(response_query)
+
+    # return jsonify([response])
 
 app.run()
