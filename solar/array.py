@@ -5,7 +5,7 @@ import os
 
 str = ('python3.7 calculation-angles-cell.py')
 filename = 'MSXIV-Strategy-Cell-Angles.csv'
-#os.system(str)
+os.system(str)
 
 # To do:
 # Create 3D surface as a combination of all cells:
