@@ -34,7 +34,7 @@ import {Header} from 'react-native-elements';
 const numColumns = 2;
 const sizeOfBoxes = Dimensions.get('window').width / numColumns * 0.75;
 const heightOfPage = Dimensions.get('window').height;
-const STRATEGY_ENDPOINT = "10.0.2.2";
+const STRATEGY_ENDPOINT = "http://10.0.2.2:5000/mobile"; 
 
 export default class App extends React.Component {
   state = {
@@ -53,7 +53,7 @@ export default class App extends React.Component {
             current["id"] = ele;
             current["value"] = data[ele];
 
-            usable_form.append(current);
+            usable_form.push(current);
         }
 
         console.log(usable_form);

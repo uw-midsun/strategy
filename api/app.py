@@ -6,6 +6,7 @@ from api import app, db, ma, DATA_API_ENDPOINT
 from optimization.car_model import Car
 import requests
 import time
+from datetime import datetime, timedelta
 import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -49,9 +50,19 @@ def home():
     return 'success'
 
 @app.route('/mobile', methods=['GET'])
-def getMobileData():
+def get_current_data():
     response_query = Log.query.order_by(Log.id.desc()).first()
     return log_schema.jsonify(response_query)
+
+@app.route('/velocity/<time_in_minutes>', methods=['GET'])
+def get_data_over_last(time_in_minutes=60):
+    # all values for last time_in_minutes
+    # ordered earlier -> later
+    if time_in_minutes < 1:
+        time_in_minutes = 1
+
+    response = Log.query.filter(datetime.utcnow() - timedelta(minutes=float(time_in_minutes)) < Log.entry_time)
+    return logs_schema.jsonify(response)
 
 if __name__ == "__main__":
     app.run()
