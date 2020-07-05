@@ -49,17 +49,17 @@ def init():
 def home():
     return 'success'
 
-@app.route('/mobile', methods=['GET'])
+@app.route('/current', methods=['GET'])
 def get_current_data():
     response_query = Log.query.order_by(Log.id.desc()).first()
     return log_schema.jsonify(response_query)
 
-@app.route('/velocity/<time_in_minutes>', methods=['GET'])
+@app.route('/previous/<time_in_minutes>', methods=['GET'])
 def get_data_over_last(time_in_minutes=60):
     # all values for last time_in_minutes
     # ordered earlier -> later
     if time_in_minutes < 1:
-        time_in_minutes = 1
+        time_in_minutes = 1.5
 
     response = Log.query.filter(datetime.utcnow() - timedelta(minutes=float(time_in_minutes)) < Log.entry_time)
     return logs_schema.jsonify(response)
