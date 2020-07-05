@@ -31,10 +31,13 @@ import {Header} from 'react-native-elements';
 //   "recommended_velocity": -39.8884, 
 //   "velocity": 17.096
 // }
-const numColumns = 2;
-const sizeOfBoxes = Dimensions.get('window').width / numColumns * 0.75;
+const numColumns = 1;
+// const sizeOfBoxes = Dimensions.get('window').width / numColumns * 0.75;
+const widthOfBoxes = Dimensions.get('window').width * 0.85;
 const heightOfPage = Dimensions.get('window').height;
-const STRATEGY_ENDPOINT = "http://10.0.2.2:5000/mobile"; 
+const heightOfBoxes = heightOfPage / 8;
+
+const URL_ENDPOINT = "http://10.0.2.2:5000/current"; 
 
 export default class App extends React.Component {
   state = {
@@ -43,28 +46,16 @@ export default class App extends React.Component {
 
   async componentDidMount() {
     setInterval(async () => {
-      fetch(STRATEGY_ENDPOINT)
+      fetch(URL_ENDPOINT)
       .then(res => res.json())
       .then(data => {
-        //transform array somehow into form we want
         usable_form = [];
-        for (ele in data) {
-            current = {};
-            current["id"] = ele;
-            current["value"] = data[ele];
-
-            usable_form.push(current);
-        }
-
-        console.log(usable_form);
-
-        this.setState((state) => {
-          return {carData: usable_form};
-        });
+        for (ele in data) 
+          usable_form.push({"id": ele, "value": data[ele]});
+    
+        this.setState({carData: usable_form});
       })
-      .catch((error) => {
-        console.log(`Something went wrong... ${error}`);
-      });
+      .catch((error) => console.log(`Something went wrong... ${error}`));
     }, 3000);
   }
 
@@ -74,6 +65,7 @@ export default class App extends React.Component {
         <StatusBar barStyle="dark-content" />
         <Header
           centerComponent={{text: "STRATEGY", style: {color: "#FFFFFF", fontSize: 18}}}
+          containerStyle={styles.headerColour}
         />
         <SafeAreaView>
           <View style={styles.carDisplay}>
@@ -88,7 +80,7 @@ export default class App extends React.Component {
             )}
             keyExtractor={item => item.id}
             numColumns = {numColumns}
-            style={styles.listStyles}
+            style={styles.listStyle}
           />
         </SafeAreaView>
       </>
@@ -98,15 +90,18 @@ export default class App extends React.Component {
 };
 
 const styles = StyleSheet.create({
+  headerColour: {
+    backgroundColor:'#FFFFFF',
+  },
   carDisplay: {
     height: heightOfPage / 5,
   },
-  listStyles: {
+  listStyle: {
     alignSelf: "center",
   },
   itemStyles: {
-    width: sizeOfBoxes,
-    height: sizeOfBoxes,
+    width: widthOfBoxes,
+    height: heightOfBoxes,
   },
   item: {
     flex: 1,
