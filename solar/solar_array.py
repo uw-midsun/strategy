@@ -1,8 +1,11 @@
 from math import pi
 from solar import SolarDay
 import csv
+import os
 
-filename = 'MSXIV-Strategy-Cell-Angles.csv'
+#Opening the file like this creates an absolute path to the file so it is not dependent on
+#the working directory, aka no matter where you pytest it will work.
+filename = os.path.realpath(__file__)[:-len("solar_array.py")] + 'MSXIV-Strategy-Cell-Angles.csv'
 
 # To do:
 # Create 3D surface as a combination of all cells:
