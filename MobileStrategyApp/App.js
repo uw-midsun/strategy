@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -7,83 +8,33 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  Dimensions,
-  FlatList,
-} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
 import {Header} from 'react-native-elements';
+import {StyleSheet} from 'react-native';
 
-// const data = [
-//   {id: "velocity", displayName: "Velocity (km/h)", value: 10},
-//   {id: "recommendedVelocity", displayName: "Recommended Velocity (km/h)", value: 11},
-//   {id: "elevation", displayName: "Elevation (km)", value: 12}
-// ];
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import CurrentData from './src/screens/CurrentData';
+import PastData from './src/screens/PastData';
 
-//api_form = {
-//   "elevation": 2.33051380781163e+17, 
-//   "entry_time": "2020-06-20T17:43:22.981400", 
-//   "recommended_velocity": -39.8884, 
-//   "velocity": 17.096
-// }
-const numColumns = 1;
-// const sizeOfBoxes = Dimensions.get('window').width / numColumns * 0.75;
-const widthOfBoxes = Dimensions.get('window').width * 0.85;
-const heightOfPage = Dimensions.get('window').height;
-const heightOfBoxes = heightOfPage / 8;
+import logo from './src/assets/midsun_logo.png';
 
-const URL_ENDPOINT = "http://10.0.2.2:5000/current"; 
+const Tab = createMaterialTopTabNavigator();
 
 export default class App extends React.Component {
-  state = {
-    carData: []
-  }
-
-  async componentDidMount() {
-    setInterval(async () => {
-      fetch(URL_ENDPOINT)
-      .then(res => res.json())
-      .then(data => {
-        usable_form = [];
-        for (ele in data) 
-          usable_form.push({"id": ele, "value": data[ele]});
-    
-        this.setState({carData: usable_form});
-      })
-      .catch((error) => console.log(`Something went wrong... ${error}`));
-    }, 3000);
-  }
-
   render() {
     return (
-      <>
-        <StatusBar barStyle="dark-content" />
+      <NavigationContainer>
         <Header
-          centerComponent={{text: "STRATEGY", style: {color: "#FFFFFF", fontSize: 18}}}
+          centerComponent={{text: "STRATEGY", style: {color: "#000000", fontSize: 18}}}
           containerStyle={styles.headerColour}
+          // backgroundImage={logo}
+          // backgroundImageStyle={styles.imageStyle}
         />
-        <SafeAreaView>
-          <View style={styles.carDisplay}>
-            <Text>Insert some graphic here</Text>
-          </View>
-          <FlatList
-            data = {this.state.carData}
-            renderItem={({item}) => (
-              <View style={styles.itemStyles}>
-                <Text style={styles.item}>{item.value}{"\n"}{item.id}</Text>
-              </View>
-            )}
-            keyExtractor={item => item.id}
-            numColumns = {numColumns}
-            style={styles.listStyle}
-          />
-        </SafeAreaView>
-      </>
+        <Tab.Navigator initialRouteName="Current" backBehavior="history">
+          <Tab.Screen name="Current" component={CurrentData}/>
+          <Tab.Screen name="Past" component={PastData}/>
+        </Tab.Navigator>
+      </NavigationContainer>
     );
   }
   
@@ -92,23 +43,5 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   headerColour: {
     backgroundColor:'#FFFFFF',
-  },
-  carDisplay: {
-    height: heightOfPage / 5,
-  },
-  listStyle: {
-    alignSelf: "center",
-  },
-  itemStyles: {
-    width: widthOfBoxes,
-    height: heightOfBoxes,
-  },
-  item: {
-    flex: 1,
-    margin: 3,
-    backgroundColor: "#FFFFFF",
-    fontSize: 20,
-    textAlign: "center",
-    textAlignVertical: "center",
   }
 });
