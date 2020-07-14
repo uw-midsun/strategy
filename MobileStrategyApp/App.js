@@ -9,14 +9,14 @@ import 'react-native-gesture-handler';
 
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {Header} from 'react-native-elements';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
 
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import CurrentData from './src/screens/CurrentData';
 import PastData from './src/screens/PastData';
 
 import logo from './src/assets/midsun_logo.png';
+import * as Constants from './src/constants';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -24,12 +24,9 @@ export default class App extends React.Component {
   render() {
     return (
       <NavigationContainer>
-        <Header
-          centerComponent={{text: "STRATEGY", style: {color: "#000000", fontSize: 18}}}
-          containerStyle={styles.headerColour}
-          // backgroundImage={logo}
-          // backgroundImageStyle={styles.imageStyle}
-        />
+        <View style={styles.carDisplay}>
+          <Image style = {styles.imageStyling} source={logo}/>
+        </View>
         <Tab.Navigator initialRouteName="Current" backBehavior="history">
           <Tab.Screen name="Current" component={CurrentData}/>
           <Tab.Screen name="Past" component={PastData}/>
@@ -43,5 +40,15 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   headerColour: {
     backgroundColor:'#FFFFFF',
+  },
+  imageStyling: {
+    width: Constants.widthOfBoxes * 0.6,
+    height: Constants.heightOfBoxes * 0.6,
+    alignSelf: 'center',
+    marginTop: '5%',
+  }, 
+  carDisplay: {
+    height: Constants.heightOfBoxes,
+    backgroundColor: '#FFFFFF'
   }
 });
