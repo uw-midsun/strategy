@@ -55,9 +55,10 @@ def get_current_data():
     return log_schema.jsonify(response_query)
 
 @app.route('/previous/<time_in_minutes>', methods=['GET'])
-def get_data_over_last(time_in_minutes=60):
+def get_data_over_last(time_in_minutes='60'):
     # all values for last time_in_minutes
     # ordered earlier -> later
+    time_in_minutes = float(time_in_minutes)
     if time_in_minutes < 1:
         time_in_minutes = 1.5
 

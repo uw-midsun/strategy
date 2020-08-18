@@ -1,7 +1,15 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Button} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import * as Constants from '../constants';
+import DropDownPicker from 'react-native-dropdown-picker';
+import Icon from 'react-native-vector-icons/Feather';
+
+var minuteOptions = [];
+for (var i = 0; i < 1000; i++) {
+    minuteOptions.push({label: toString(i), value: toString(i), icon: () => <Icon name="flag" size={18} color="#900"/>});
+}
+
 
 export default class PastData extends React.Component {
 
@@ -9,11 +17,12 @@ export default class PastData extends React.Component {
         labels: ["test1", "test2"],
         data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         lastUpdate: "",
-        type: "velocity"
+        type: "velocity",
+        time_in_mins: "60"
     }
 
-    fetchCurrentData = async (time_in_mins) => {
-        await fetch(Constants.BASE_URL + Constants.PAST_ENDPOINT + time_in_mins)
+    fetchGraphData = async () => {
+        await fetch(Constants.BASE_URL + Constants.PAST_ENDPOINT + this.state.time_in_mins)
         .then(res => res.json())
         .then(data => {
             var newLabels = [], newData = [];
@@ -33,7 +42,7 @@ export default class PastData extends React.Component {
     }
 
     async componentDidMount() {
-        this.focusListener = this.props.navigation.addListener('focus', async() => this.fetchCurrentData(60));
+        this.focusListener = this.props.navigation.addListener('focus', async() => this.fetchGraphData());
     }
 
     componentWillUnmount() {
@@ -43,7 +52,7 @@ export default class PastData extends React.Component {
     render() {
         return (
         <View style={styles.main}>
-          <Text style={styles.text}>Past Data{"\n"}Last updated: {this.state.lastUpdate}</Text>
+          <Text style={styles.text}>Past Data: Previous {this.state.time_in_mins} minutes{"\n"}Last updated: {this.state.lastUpdate}</Text>
           <LineChart
             data = {{
                 labels: this.state.labels, 
@@ -71,10 +80,31 @@ export default class PastData extends React.Component {
                   stroke: "#000000"
                 }
             }}
+            backgroundColor="transparent"
             style={styles.chartStyles}
             bezier={true}
           />
-          <Text style={styles.text}>Hell{"\n"}More infohere</Text>
+          <View style={styles.bottomSection}>
+            <DropDownPicker
+                items={minuteOptions}
+
+                defaultValue={toString(this.state.time_in_mins)}
+                containerStyle={{height: 40}}
+                style={{backgroundColor: "#fafafa"}}
+                itemStyle={{justifyContent: "flex-start"}}
+                dropDownStyle={{backgroundColor: "#fafafa"}}
+
+                searchable={true}
+                searchablePlaceholder="Search for an item"
+                searchablePlaceholderTextColor="gray"
+                seachableStyle={{}}
+                searchableError={() => <Text>Not Found</Text>}
+
+                onChangeItem={item => this.setState({time_in_mins: item.value})}
+            />
+            {/* <Button onPress={this.fetchGraphData} title={"Update"} color="#2A2F41"/> */}
+          </View>
+          
         </View>
       );
     } 
@@ -95,5 +125,8 @@ const styles = StyleSheet.create({
     },
     chartStyles: {
         borderRadius: 10,
+    },
+    bottomSection: {
+        flex: 1
     }
 });

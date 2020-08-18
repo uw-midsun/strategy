@@ -9,4 +9,4 @@ export const BASE_URL = "http://10.0.2.2:5000/";
 export const CURRENT_ENDPOINT = "current";
 export const PAST_ENDPOINT = "previous/";
 
-export const graphTypes = ["velocity", "elevation"];
+// export const graphTypes = ["velocity", "elevation"];
