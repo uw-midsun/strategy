@@ -15,7 +15,7 @@ A repository of the models and race strategy developed for MSXIV (and beyond!)
 - To make sure everything is up and working, run `pytest` from the command line. This should run a number of tests. If they all pass, you're all set to go!
 - After making changes, be sure to run `pytest` before committing to make sure your changes haven't broken any tests. If they have, go fix them!
 - If you've never used Git/GitHub before, read through [this tutorial](https://githowto.com/). All changes are made locally in a branch, committed, and pushed to the remote repository once completed. Then, go to [Github](https://github.com/uw-midsun/strategy/pulls) and open a new pull request ([PR](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests)), which is requesting approval to merge the changes into the master branch. 
-- Message Emma Wai on [Slack](uwmidsun.slack.com) to say hello!
+- Message Emma Wai on [Slack](https://uwmidsun.slack.com/) to say hello!
 
 ## How do I contribute?
  - Clone the repository (if you're unsure about this part, message Clarke VandenHoven on Slack)
