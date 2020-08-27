@@ -13,4 +13,5 @@ ehthumbs.db
 Thumbs.db
 .idea/*
 
+# for API keys
 **/config.py
