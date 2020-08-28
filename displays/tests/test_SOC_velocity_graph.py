@@ -24,7 +24,7 @@ def test_calculateSOCValues_nonzero_values():
 
     expected_result = [1, 0.9999995851481777, 0.9999991160493323, 0.9999985299598554, 0.9999992236028236, 0.9999994058571505, 0.9999995157405268, 0.9999994937072884]
 
-    assert(expected_result == calculateSOCValues(velocities, elevations, distances, initial_soc))
+    assert(expected_result == calculateSOCValues(velocities, elevations, distances, initial_soc, min_speed=0, max_speed=1000))
 
 def test_calculateSOCValues_initial_soc_non_1():
     velocities = [5, 7, 9, 13, 9.5, 7.5, 5]
@@ -34,7 +34,7 @@ def test_calculateSOCValues_initial_soc_non_1():
 
     expected_result = [0.9, 0.8999995851481777, 0.8999991160493324, 0.8999985299598554, 0.8999992236028236, 0.8999994058571505, 0.8999995157405268, 0.8999994937072884]
 
-    assert(expected_result == calculateSOCValues(velocities, elevations, distances, initial_soc))
+    assert(expected_result == calculateSOCValues(velocities, elevations, distances, initial_soc, min_speed=0, max_speed=1000))
 
 def test_calculateSOCValues_zero_length_inputs():
     with pytest.raises(IndexError):
