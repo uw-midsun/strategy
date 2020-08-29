@@ -1,13 +1,21 @@
 import matplotlib.pyplot as plt
 import os.path
 import sys
-sys.path.append('../')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from optimization.car_model import Car
 from soc.SoCEstimation import CoulombCounter
 
-def calculateSOCValues(v_profile, e_profile, distance, initial_soc):
-    car_model = Car()
+def calculate_SOC_values(v_profile, e_profile, distance, initial_soc, min_speed=None, max_speed=None):
+    if min_speed is not None and max_speed is not None:
+        car_model = Car(speed_min_ms=min_speed, speed_max_ms=max_speed)
+    elif min_speed is not None:
+        car_model = Car(speed_min_ms=min_speed)
+    elif max_speed is not None:
+        car_model = Car(speed_max_ms=max_speed)
+    else:
+        car_model = Car()
+
     soc_est = CoulombCounter()
 
     soc_intervals = [initial_soc]
@@ -28,12 +36,12 @@ def calculateSOCValues(v_profile, e_profile, distance, initial_soc):
 
     return soc_intervals
 
-def generateSOCGraph(v_profile, e_profile, distance, initial_soc=1):
+def generate_SOC_graph(v_profile, e_profile, distance, initial_soc=1):
     x_axis = [0]
     for interval_distance in distance:
         x_axis.append(x_axis[len(x_axis) - 1] + interval_distance)
 
-    soc_values = calculateSOCValues(v_profile, e_profile, distance, initial_soc)
+    soc_values = calculate_SOC_values(v_profile, e_profile, distance, initial_soc)
     soc_percentages = [soc * 100 for soc in soc_values]
 
     # for purpose of graphing velocities as step, start at 0

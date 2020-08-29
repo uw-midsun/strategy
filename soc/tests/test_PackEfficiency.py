@@ -2,8 +2,7 @@ import sys
 import os.path
 sys.path.append(os.path.dirname(sys.path[0]))
 from PackEfficiency import PackEfficiency
-from unittest import mock
-
+import mock
 import pytest
 import math
 import cmath

@@ -3,7 +3,7 @@ import os.path
 sys.path.append(os.path.join(sys.path[0], '../../'))
 import csv
 import pytest
-from unittest import mock
+import mock
 import auxloss
 
 budget_file = os.path.join(sys.path[0], '../', 'MSXIV Power Budget.csv')
