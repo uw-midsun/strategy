@@ -4,7 +4,6 @@ import pytest
 import mock
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from car_model import Car
-# Tests to check that the variables are properly set
 
 @pytest.fixture
 def car_min_0_max_1000():
