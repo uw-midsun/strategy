@@ -50,6 +50,7 @@ Message Emma Wai or Michael Shiozaki on Slack.
 - https://docs.scipy.org/doc/numpy/user/quickstart.html
 - https://uwmidsun.atlassian.net/wiki
 
-### For learning Python:
-- https://www.codecademy.com/learn/learn-python
-- https://www.learnpython.org/
+## Onboarding Hello!
+List your name here:
+- Emma Wai
+- Aryaman Singh
