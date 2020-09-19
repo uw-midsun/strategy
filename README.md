@@ -36,3 +36,7 @@ Message Emma Wai on Slack.
 - https://www.python.org/about/gettingstarted/
 - https://docs.scipy.org/doc/numpy/user/quickstart.html
 - https://uwmidsun.atlassian.net/wiki
+
+## Onboarding Hello!
+List your name here:
+- Emma Wai
