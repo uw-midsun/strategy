@@ -61,6 +61,7 @@ List your name here:
 - Krishna Kalavadia
 - Kristin Wu
 - Janet Chen
+- Linna Luo
 =======
 ### For learning Python:
 - https://www.codecademy.com/learn/learn-python
