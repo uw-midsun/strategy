@@ -55,3 +55,4 @@ List your name here:
 - Emma Wai
 - Aryaman Singh
 - Krishna Kalavadia
+- Kristin Wu
