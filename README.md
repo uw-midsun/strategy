@@ -39,7 +39,11 @@ Follow the instructions in [this document](https://docs.google.com/document/d/1l
  - In your commit message, lead off with the ticket you're addressing (i.e. "STRAT-31 Creating a tutorial")
  - Push the changes to an upstream branch
  - Open a Pull Request to the strategy repository and detail your changes. The PR will be reviewed by other team members.
+<<<<<<< HEAD
  - If your PR has not been reviewed within 24 hours, copy the link and paste it into the gen-strategy channel on Slack.
+=======
+ - If your PR has not been reviewed within 24 hours, copy the link and paste it into the gen-strategy channel on Slack
+>>>>>>> upstream/master
 
 ## Questions?
 Message Emma Wai or Michael Shiozaki on Slack.
@@ -57,3 +61,7 @@ List your name here:
 - Krishna Kalavadia
 - Kristin Wu
 - Janet Chen
+=======
+### For learning Python:
+- https://www.codecademy.com/learn/learn-python
+- https://www.learnpython.org/
