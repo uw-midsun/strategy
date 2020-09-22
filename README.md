@@ -54,4 +54,5 @@ Message Emma Wai or Michael Shiozaki on Slack.
 List your name here:
 - Emma Wai
 - Aryaman Singh
-- Janet Chen
+- Krishna Kalavadia
+- Kristin Wu
