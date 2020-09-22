@@ -56,3 +56,4 @@ List your name here:
 - Aryaman Singh
 - Krishna Kalavadia
 - Kristin Wu
+- Janet Chen
