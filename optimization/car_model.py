@@ -7,11 +7,13 @@ class Car():
     g = 9.81  # Acceleration due to gravity in m/s^2
     rho = 1.225  # Density of air at room temperature
 
-    def __init__(self, m=720, Crr=0.0015, CdA=0.15, max_force=100):
+    def __init__(self, m=720, Crr=0.0015, CdA=0.15, max_force=100, speed_min_ms=15, speed_max_ms=45):
         self.m = m  # mass of car in kg
         self.Crr = Crr  # Rolling Resistance coefficient of the car
         self.CdA = CdA  # Drag coefficient of the car
         self.max_force = max_force  # Max force of motors in N (Note not real)
+        self.speed_min_ms = speed_min_ms # minimum speed to travel in m/s, default = = 15 m/s = 35km/h
+        self.speed_max_ms = speed_max_ms # maximum speed to travel in m/s, default = 45 m/s = 100km/h
 
     def force_req(self, v, vwind=0, v_old=None, theta=0, timestep=30):
         """
@@ -26,6 +28,12 @@ class Car():
         if v_old is None:
             v_old = v
 
+        if v > self.speed_max_ms or v < self.speed_min_ms:
+            v = self.speed_max_ms if v > self.speed_max_ms else self.speed_min_ms
+        
+        if v_old > self.speed_max_ms or v_old < self.speed_min_ms:
+            v_old = self.speed_max_ms if v_old > self.speed_max_ms else self.speed_min_ms
+        
         Ffric = self.m * self.g * cos(theta) * self.Crr
         Fdrag = 0.5 * self.rho * self.CdA * (v + vwind) ** 2
         Fg = self.m * self.g * sin(theta)
@@ -41,7 +49,11 @@ class Car():
         :param timestep: time in s between measurement
         :return velocity: max velocity that the car can travel in m/s
         """
-        max_v = v - self.force_req(v, vwind=vwind, theta=theta) + self.max_force * timestep
+        
+        if v_old > self.speed_max_ms or v_old < self.speed_min_ms:
+            v_old = self.speed_max_ms if v_old > self.speed_max_ms else self.speed_min_ms
+
+        max_v = v_old - self.force_req(v_old, vwind=vwind, theta=theta) + self.max_force * timestep
         return max_v
 
     def energy_used(self, v_profile, e_profile, distance=100, wind=0):
@@ -59,6 +71,13 @@ class Car():
         for point in range(num_points - 1):
             v_new = v_profile[point + 1]
             v_old = v_profile[point]
+
+            if v_new > self.speed_max_ms or v_new < self.speed_min_ms:
+                v_new = self.speed_max_ms if v_new > self.speed_max_ms else self.speed_min_ms
+            
+            if v_old > self.speed_max_ms or v_old < self.speed_min_ms:
+                v_old = self.speed_max_ms if v_old > self.speed_max_ms else self.speed_min_ms
+            
             e_new = e_profile[point + 1][0]
             # pytest fails here because e_profile from
             # pytest does not use variable distances

@@ -3,10 +3,9 @@ import json
 import pandas as pd
 import sys
 import os.path
-sys.path.append(os.path.dirname(sys.path[0]))
-
+sys.path.append(os.path.dirname(__file__))
+from config import API_KEY
 BASE_URL = 'https://dev.virtualearth.net/REST/v1/'
-API_KEY = 'An7vG9z_4w8X-6EM5WtJpP7dnIxDrZ97wLR5Ue0UAqq_aI4ZPJZPTrzNiEJj5buS'
 ELEVATIONS_FILE = os.path.join(sys.path[0], '../../optimization/elevations.csv')
 
 class ElevationDataRetrieval:
