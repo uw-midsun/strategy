@@ -124,7 +124,7 @@ class ElevationDataRetrieval:
         elevations = response
         # parse down to relevant information
 
-        print("Status Code: {}".format(elevations["statusCode"])
+        print("Status Code: {}".format(elevations["statusCode"]))
 
         try:
             elevations = elevations['resourceSets'][0]['resources'][0]['elevations']
