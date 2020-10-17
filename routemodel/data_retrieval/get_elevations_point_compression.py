@@ -4,35 +4,21 @@ import sys
 import os.path
 from csv import reader
 from config import API_KEY
-
 sys.path.append(os.path.dirname(sys.path[0]))
-
 BASE_URL = 'https://dev.virtualearth.net/REST/v1/'
 ELEVATIONS_FILE = os.path.join(sys.path[0], '../../routemodel/routes/heartland_elevations.csv')
 COORDINATES_FILE = os.path.join(sys.path[0], '../../routemodel/routes/heartland_coordinates.csv')
 
-# This just generates a dict object for the coordinates to resolve some type errors
-COORDINATES_LISTX = []
-COORDINATES_LISTY = []
-COORDINATES_LIST = []
-with open(COORDINATES_FILE, 'r') as read_obj:
-    # pass the file object to reader() to get the reader object
-    csv_reader = reader(read_obj)
-    # Iterate over each row in the csv using reader object
-    for row in csv_reader:
-        COORDINATES_LISTX.append(row[0])
-        COORDINATES_LISTY.append(row[1])
-    COORDINATES_LIST.append(dict(zip(COORDINATES_LISTX, COORDINATES_LISTY)))
-
-
 class ElevationDataRetrieval:
-    def __init__(self, wps: list, ht='sealevel'):
+    def __init__(self, wps: list, vwps: list, ht='sealevel'):
         """
         Initialize MapData
-        @param wps: dictionary of major waypoints inputted by user
+        @param wps: list of dictionaries of major waypoints inputted by user
+        @param vwps: list of dictionaries of minor waypoints inputted by user
         @param ht: elevations response height model option
         """
         self.waypts = wps
+        self.viawaypts = vwps
         self.heights = ht
 
     def point_compression(self):
@@ -98,12 +84,13 @@ class ElevationDataRetrieval:
 
         return compressed_points
 
-    def get_elevation_data(self, points):
+    def modified_get_elevation_data(self, points):
         """
-        Getting elevation data response from Bing Maps API.
+        Modified getting elevation data response from Bing Maps API.
         @param points: Compressed base 64 string containing coordinates data
         @return: Requests.response object from API call
         """
+        # Since we are passing in the compressed points, we need to build the request URL in a different way
         # append specified elevation URL details
         url = BASE_URL + 'Elevation/List?'
 
@@ -120,12 +107,9 @@ class ElevationDataRetrieval:
         @param response: Requests.response object from API call
         @return: boolean
         """
-        # convert response into dict
+        # This line is modified from the original module as we already converted response to dict earlier
         elevations = response
         # parse down to relevant information
-
-        print("Status Code: {}".format(elevations["statusCode"]))
-
         try:
             elevations = elevations['resourceSets'][0]['resources'][0]['elevations']
         except KeyError:
@@ -135,24 +119,39 @@ class ElevationDataRetrieval:
         headers = ['Latitude', 'Longitude', 'Elevation']
         elevation_df = pd.DataFrame(columns=headers)
 
-        # loop through waypoints
+        # loop through waypoints and viawaypoints
         # to write coordinates into DataFrame
         counter = 0
-        indexCheck = 0
+        # needed as there are duplicate points in waypoints that are not returned in elevations
+        index_check = 0
 
         for index, waypoint in enumerate(self.waypts):
             for key in waypoint.keys():
-
+                # added to ensure that loop is broken when the index goes past the end of elevations
+                # duplicate points caused self.waypts to have more points than returned elevations
                 try:
-                    indexCheck = elevations[counter]
+                     indexCheck = elevations[counter]
                 except:
-                    break
+                     break
 
                 elevation_df = elevation_df.append({'Latitude': key,
-                                                    'Longitude': self.waypts[-1][key],
+                                                    'Longitude': waypoint[key],
                                                     'Elevation': elevations[counter]},
-                                                   ignore_index=True)
+                                                     ignore_index = True)
                 counter += 1
+            try:
+                # added because we did not use the minor waypoints parameter
+                if self.viawaypts is None:
+                    break
+
+                for viawaypoints in self.viawaypts[index]:
+                    for key in viawaypoints.keys():
+                        elevation_df = elevation_df.append({'Latitude': key,
+                                                            'Longitude': viawaypoints[key],
+                                                            'Elevation': elevations[counter]}, ignore_index = True)
+                    counter += 1
+            except IndexError:
+                pass
 
         # write dataframe into csv and return true
         elevation_df.to_csv(ELEVATIONS_FILE)
@@ -160,6 +159,20 @@ class ElevationDataRetrieval:
         return True
 
 # method calls to generate the heartland elevations
-heartland_elevations = ElevationDataRetrieval(COORDINATES_LIST)
-api_response = heartland_elevations.get_elevation_data(heartland_elevations.point_compression())
-heartland_elevations.parse_elevation_data(api_response)
+if __name__ == '__main__':
+    # This generates a list of dictionaries for the coordinates
+    COORDINATES_LISTX = []
+    COORDINATES_LISTY = []
+    COORDINATES_LIST = []
+    with open(COORDINATES_FILE, 'r') as read_obj:
+        # pass the file object to reader() to get the reader object
+        csv_reader = reader(read_obj)
+        # Iterate over each row in the csv using reader object
+        for row in csv_reader:
+            COORDINATES_LISTX.append(row[0])
+            COORDINATES_LISTY.append(row[1])
+        COORDINATES_LIST.append(dict(zip(COORDINATES_LISTX, COORDINATES_LISTY)))
+
+    heartland_elevations = ElevationDataRetrieval(COORDINATES_LIST, None)
+    api_response = heartland_elevations.modified_get_elevation_data(heartland_elevations.point_compression())
+    heartland_elevations.parse_elevation_data(api_response)
