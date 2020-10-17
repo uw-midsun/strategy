@@ -7,12 +7,12 @@ sys.path.append(os.path.dirname(__file__))
 from config import API_KEY
 BASE_URL = "https://dev.virtualearth.net/REST/v1/Routes/"
 
-class SpeedlimitDataRetrieval: 
+class SpeedLimitDataRetrieval: 
     def __init__(self, pts: list, sp_unit="KPH"):
         """
-        Initialize SpeedlimitDataRetrieval
+        Initialize SpeedLimitDataRetrieval
         @param pts: list containing latitude and longitude pairs of points along route
-        @param sp_unit: speed unit response data option
+        @param sp_unit: speed unit response data option. Only other option is MPH afaik
         """
         
         self.points = pts
@@ -54,8 +54,5 @@ class SpeedlimitDataRetrieval:
         @param response: Requests.response object from API call
         @return: boolean
         """
-        # WIP
-        # convert response into dict
-        route = json.loads(response)
 
 

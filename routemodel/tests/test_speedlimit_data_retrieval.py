@@ -2,7 +2,7 @@ import sys
 import os.path
 sys.path.append(os.path.dirname(sys.path[0]))
 import json
-from data_retrieval.get_speedlimits import SpeedlimitDataRetrieval
+from data_retrieval.get_speedlimits import SpeedLimitDataRetrieval
 
 class MockResponse:
     def __init__(self):
@@ -21,11 +21,11 @@ class MockResponse:
 
 def test_speedlimit_getter_good_inputs():
     points = [{"35.686916": "-105.938140"}, {"35.686272": "-105.938292"}, {"35.685824": "-105.938451"}]
-    speedlimit = SpeedlimitDataRetrieval(points)
+    speedlimit = SpeedLimitDataRetrieval(points)
     response = speedlimit.get_speedlimit_data()
     assert(response.status_code == 200)
 
 def test_speedlimit_getter_bad_inputs():
-    speedlimit = SpeedlimitDataRetrieval([])
+    speedlimit = SpeedLimitDataRetrieval([])
     response = speedlimit.get_speedlimit_data()
     assert(response.status_code == 400)
