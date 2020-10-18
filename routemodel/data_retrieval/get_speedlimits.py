@@ -54,5 +54,4 @@ class SpeedLimitDataRetrieval:
         @param response: Requests.response object from API call
         @return: boolean
         """
-
-
+        pass
