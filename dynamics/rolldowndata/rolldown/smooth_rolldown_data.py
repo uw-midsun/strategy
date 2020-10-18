@@ -33,7 +33,7 @@ MAX_ACCEL = 9.81
 with open(MESSY_DATA_FILE, "r") as messyData:
     csv_reader = reader(messyData, delimiter = ',')
 
-    # skip first line
+    # skip first line (headers)
     next(csv_reader)
 
     for line in csv_reader:
