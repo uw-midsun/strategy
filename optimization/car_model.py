@@ -63,7 +63,10 @@ class Car():
         :param distance: distance between points in the profiles
         :return energy used: energy used in J for the path and velocity profile
         """
-        # TODO: Add error handling for len(v_profile) != len(e_profile)
+        # Checks if the length of the velocity array is NOT EQUAL TO the length of the elevation array
+        if len(v_profile) != len(e_profile):
+            raise IndexError('v_profile length and e_profile length do not match')
+            
         energy = 0
         num_points = len(v_profile)
         # Note we will end 1 before because we don't care about the distance

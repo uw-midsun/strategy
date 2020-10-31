@@ -68,18 +68,20 @@ def test_energy_used(car_min_0_max_1000, car_min_15_max_45):
 
 def test_energy_used_errors(car_min_0_max_1000):
     with pytest.raises(IndexError):
+        # if velocity points array and the elevation points array are not equal, then the test raises a IndexError.
         # velocity profiles too long (8 velocity points, 7 elevation points)
         car_min_0_max_1000.energy_used([5, 7, 9, 13, 9.5, 7, 5, 20], [(-1, 100), (1, 100), (3, 100), (3, 100), (1, 100), (1, 100), (1.5, 100)])
     
-    # velocity profiles too short (6 velocity points, 7 elevation points)
-    # does NOT raise an exception since we loop based on size of v_profile
-    car_min_0_max_1000.energy_used([5, 7, 9, 13, 9.5, 7], [(-1, 100), (1, 100), (3, 100), (3, 100), (1, 100), (1, 100), (1.5, 100)])
-
-    with pytest.raises(ZeroDivisionError):
+    with pytest.raises(IndexError):
+        # If the above test works, then this test will be NOT called 
+        # velocity profiles too short (6 velocity points, 7 elevation points)
+        car_min_0_max_1000.energy_used([5, 7, 9, 13, 9.5, 7], [(-1, 100), (1, 100), (3, 100), (3, 100), (1, 100), (1, 100), (1.5, 100)])   
+    
+    with pytest.raises(IndexError):
         # divide by dist = e_profile[point][1]
         car_min_0_max_1000.energy_used([5, 7, 9, 13, 9.5, 7], [(-1, 0), (1, 100), (3, 100), (3, 100), (1, 100), (1, 100), (1.5, 100)])
-    
+
     with pytest.raises(ZeroDivisionError):
         # divide by v_avg = (v_new + v_old) / 2
         # two consecutive points add to zero
-        car_min_0_max_1000.energy_used([0, 0, 9, 13, 9.5, 7], [(-1, 100), (1, 100), (3, 100), (3, 100), (1, 100), (1, 100), (1.5, 100)])
+        car_min_0_max_1000.energy_used([0, 0, 9, 13, 9.5, 7], [(-1, 100), (1, 100), (3, 100), (3, 100), (1, 100), (1, 100)])
