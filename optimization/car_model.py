@@ -8,6 +8,9 @@ class Car():
     rho = 1.225  # Density of air at room temperature
 
     def __init__(self, m=720, Crr=0.0015, CdA=0.15, max_force=100, speed_min_ms=15, speed_max_ms=45):
+        assert(speed_min_ms >= 0)
+        assert(speed_max_ms >= 0)
+
         self.m = m  # mass of car in kg
         self.Crr = Crr  # Rolling Resistance coefficient of the car
         self.CdA = CdA  # Drag coefficient of the car
@@ -24,9 +27,13 @@ class Car():
         :param timestep: time in s between measurements
         :return force: force in N required to power the car
         """
+        assert(v >= 0)
+
         # If we don't set v_old, we assume v has not changed
         if v_old is None:
             v_old = v
+        else:
+            assert(v_old >= 0)
 
         if v > self.speed_max_ms or v < self.speed_min_ms:
             v = self.speed_max_ms if v > self.speed_max_ms else self.speed_min_ms
@@ -49,6 +56,7 @@ class Car():
         :param timestep: time in s between measurement
         :return velocity: max velocity that the car can travel in m/s
         """
+        assert(v_old >= 0)
         
         if v_old > self.speed_max_ms or v_old < self.speed_min_ms:
             v_old = self.speed_max_ms if v_old > self.speed_max_ms else self.speed_min_ms
@@ -63,6 +71,9 @@ class Car():
         :param distance: distance between points in the profiles
         :return energy used: energy used in J for the path and velocity profile
         """
+
+        assert(all(v >= 0 for v in v_profile))
+
         # Checks if the length of the velocity array is NOT EQUAL TO the length of the elevation array
         if len(v_profile) != len(e_profile):
             raise IndexError('v_profile length and e_profile length do not match')
