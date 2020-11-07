@@ -46,9 +46,9 @@ jobs:
     # - name: Routemodel directory
     #   run: |
     #     cd routemodel && pytest && cd tests && pytest && cd ../..
-    - name: SOC directory
+    - name: SOC directory - deprecated
       run: |
-        cd soc && pytest && cd tests && pytest && cd ../..
+        cd soc && pytest && cd soc_deprecated/tests && pytest && cd ../../..
     - name: Solar directory
       run: |
         cd solar && pytest && cd tests && pytest && cd ../..
