@@ -8,6 +8,14 @@ class Car():
     rho = 1.225  # Density of air at room temperature
 
     def __init__(self, m=720, Crr=0.0015, CdA=0.15, max_force=100, speed_min_ms=15, speed_max_ms=45):
+        
+        # reject non-positive velocity
+        if (speed_min_ms < 0):
+            speed_min_ms = 15
+
+        if (speed_max_ms < speed_min_ms):
+            speed_max_ms = speed_min_ms
+        
         self.m = m  # mass of car in kg
         self.Crr = Crr  # Rolling Resistance coefficient of the car
         self.CdA = CdA  # Drag coefficient of the car
