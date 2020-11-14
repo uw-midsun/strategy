@@ -1,8 +1,8 @@
 import pandas as pd
-from haversine import haversine, Unit
+#from haversine import haversine, Unit
 from numpy import arctan, geomspace, linspace
 from math import sin, cos, sqrt, ceil
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from statistics import mean
 import argparse 
 
@@ -54,26 +54,27 @@ class Car:
     battery_size = 3.888 * 10 ** 7 # Car energy capacity in Joules
     def __init__(self, mass, CdA, Crr):
         self.mass = mass # in kg
-        self.CdA = CdA
-        self.Crr = Crr
+        self.CdA = CdA # drag area
+        self.Crr = Crr # rolling resistance
 
-    def force(self, angle, velocity):
+    def force(self, angle, velocity, timestep=30):
         Fg = self.mass * self.gravity * sin(angle_to_rad(angle))
         Ff = self.mass * self.gravity * self.Crr * cos(angle_to_rad(angle))
         Fdrag = 0.5 * velocity ** 2 * self.CdA * self.rho
-        Ft = Fg + Ff + Fdrag
+        Faccel = self.mass * (velocity / timestep) # force required to accelerate
+        Ft = Fg + Ff + Fdrag + Faccel
         return Ft
 
-    def energy_use(self, distance, angle, velocity):
-        Ft = self.force(angle, velocity)
+    def energy_use(self, distance, angle, velocity, timestep=30):
+        Ft = self.force(angle, velocity, timestep)
         E = Ft * distance
         return E
 
-    def torque_req(self, angle, velocity):
+    def torque_req(self, angle, velocity, timestep=30):
         """
         returns the torque required per wheel
         """
-        torque_per_wheel = self.force(angle, velocity) * self.wheel_radius / 2
+        torque_per_wheel = self.force(angle, velocity, timestep) * self.wheel_radius / 2
         return torque_per_wheel
 
     def speed_req(self, angle, torque):
@@ -97,6 +98,7 @@ class Car:
             required_torque = self.torque_req(angle, min_speed)
             return min_speed, required_torque
 
+"""
 parser = argparse.ArgumentParser(description='Choose a map')
 parser.add_argument('--map', help='Map to pick to race on', default='ASC')
 parser.add_argument('--solar', help='Energy we receive from the solar panel', default=0, type=float)
@@ -183,3 +185,4 @@ plt.ylabel('Range (km)')
 plt.title(args.map)
 plt.plot(normalized_wattages, break_in_km)
 plt.show()
+"""
