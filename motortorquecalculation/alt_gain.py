@@ -1,5 +1,5 @@
 import pandas as pd
-#from haversine import haversine, Unit
+from haversine import haversine, Unit
 from numpy import arctan, geomspace, linspace
 from math import sin, cos, sqrt, ceil
 import matplotlib.pyplot as plt
