@@ -1,8 +1,8 @@
 import pandas as pd
-#from haversine import haversine, Unit
+from haversine import haversine, Unit
 from numpy import arctan, geomspace, linspace
 from math import sin, cos, sqrt, ceil
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from statistics import mean
 import argparse 
 
@@ -98,7 +98,6 @@ class Car:
             required_torque = self.torque_req(angle, min_speed)
             return min_speed, required_torque
 
-"""
 parser = argparse.ArgumentParser(description='Choose a map')
 parser.add_argument('--map', help='Map to pick to race on', default='ASC')
 parser.add_argument('--solar', help='Energy we receive from the solar panel', default=0, type=float)
@@ -185,4 +184,3 @@ plt.ylabel('Range (km)')
 plt.title(args.map)
 plt.plot(normalized_wattages, break_in_km)
 plt.show()
-"""
