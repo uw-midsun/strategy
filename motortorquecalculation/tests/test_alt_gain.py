@@ -12,7 +12,7 @@ def car_default():
 def test_no_velocity(car_default):
     assert(round(car_default.force(0, 0, 1), 1) == 10.6)
     assert(round(car_default.energy_use(100, 0, 0, 30), 1) == 1059.5)
-    assert(round(car_default.torque_req(0, 0, 30), 1) == 56.5)
+    assert(round(car_default.torque_req(0, 0, 30), 1) == 1.4)
 
 def test_force_accel(car_default):
     assert(round(car_default.force(0, 16.6, 30), 1) == 434.3)
