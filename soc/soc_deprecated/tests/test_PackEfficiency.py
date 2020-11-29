@@ -1,6 +1,6 @@
 import sys
 import os.path
-sys.path.append(os.path.dirname(sys.path[0]))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from PackEfficiency import PackEfficiency
 import mock
 import pytest
