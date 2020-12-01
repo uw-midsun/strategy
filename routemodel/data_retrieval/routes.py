@@ -7,9 +7,8 @@ sys.path.append(os.path.dirname(__file__))
 
 from config import API_KEY, BASE_URL 
 
-def get_routing_data(waypoints: list, viawaypoints: list, route_attrs = 'routePath', dist_unit = 'km'):
+def points_query_builder(waypoints: list, viawaypoints: list):
     """
-    Getting navigation data response from Bing Maps API.
     @param waypoints: List of dictionaries of waypoints.
         Each dictionary can only have 1 waypoint.
         Up to 25 dictionaries/elements in full list.
@@ -19,6 +18,27 @@ def get_routing_data(waypoints: list, viawaypoints: list, route_attrs = 'routePa
         Full list should be one element shorter than list of waypoints,
         to a maximum of 24 elements.
         Format as: [{lat1: long1,... latN: longN},...{lat1: long1,... latN: longN}]
+    @return: a string of points for sending to API; pass to getter
+    """
+    counter = 0
+    params = str()
+    for index, waypoint in enumerate(waypoints):
+        for key in waypoint.keys():
+            params += 'wp.{}={},{}&'.format(counter, key, waypoint[key])
+            counter += 1
+        if index < len(waypoints) - 1:
+            for points in viawaypoints[index]:
+                for key in points.keys():
+                    params += 'vwp.{}={},{}&'.format(counter, key, points[key])
+                    counter += 1
+         
+    return params
+
+def get_routing_data(points: str, route_attrs = 'routePath', dist_unit = 'km'):
+    """
+    Getting navigation data response from Bing Maps API.
+    @param points: string of points formatted for requesting from Bing Maps API.
+        Use points_query_builder method to build string correctly.
     @param dist_unit (optional): Either 'km' or 'mi,' default to km since
         we're Canadian, eh.
     @param route_attrs (optional): 
@@ -26,10 +46,6 @@ def get_routing_data(waypoints: list, viawaypoints: list, route_attrs = 'routePa
     """
     # adjust url for Route API request
     url = BASE_URL + 'Routes?'
-    points = build_points(waypoints, viawaypoints)
-
-    # loop through waypoints and viawaypoints
-    # store into points string
 
     # add coordinates, route attribute option, distance unit, and API key
     # to url to be requested
@@ -37,24 +53,13 @@ def get_routing_data(waypoints: list, viawaypoints: list, route_attrs = 'routePa
            route_attrs, dist_unit, API_KEY)
     
     # get and return response
-    response = requests.get(url)
-    return response.json()
-
-def build_points(waypoints: list, viawaypoints: list):
-    counter = 0
-    params = str()
-    for index, waypoint in enumerate(waypoints):
-        for key in waypoint.keys():
-            params += 'wp.{}={},{}&'.format(counter, key, waypoint[key])
-            counter += 1
-        if index < 25:
-            for points in viawaypoints[index]:
-                for key in points.keys():
-                    params += 'vwp.{}={},{}&'.format(counter, key, points[key])
-                    counter += 1
-         
-    return params
-    
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as err:
+        print("An error occured:", err, "\nMessage:", err.response.text)
+        sys.exit()
+    return response.json()    
 
 def parse_routing_data(response: dict):
     """
@@ -80,8 +85,7 @@ def parse_routing_data(response: dict):
 
                     # ensure street name is found
                     if len(item['details']) > 1:
-                        find_street = item['details'][1].get('names')
-                        street = find_street[0]
+                        street = item['details'][1].get('names')[0]
                     else:
                         street = item['details'][0].get('names')[0]
                     
