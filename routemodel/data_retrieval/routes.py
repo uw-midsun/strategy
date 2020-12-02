@@ -14,10 +14,11 @@ def points_query_builder(waypoints: list, viawaypoints: list):
         Up to 25 dictionaries/elements in full list.
         Format as: [{lat1: long1}, {lat2: long2},... {latN: longN}]
     @param viawaypoints: List of dictionaries of viawaypoints. 
-        Each dictionary can have up to 10 viawaypoints.
+        Each dictionary can have 0 to 10 viawaypoints.
         Full list should be one element shorter than list of waypoints,
         to a maximum of 24 elements.
-        Format as: [{lat1: long1,... latN: longN},...{lat1: long1,... latN: longN}]
+        Format as: [{lat1: long1,... latN: longN},...{},...
+                    {lat1: long1,... latN: longN}]
     @return: a string of points for sending to API; pass to getter
     """
     counter = 0
