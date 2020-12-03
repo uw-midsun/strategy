@@ -31,14 +31,14 @@ def points_builder(coordinates: list):
     long = 0
     # Step 1: Start with a set of latitude and longitude values.
     for index, pair in enumerate(coordinates):
-        for key in pair.keys():
+        for key, value in pair.items():
             # Step 2: Multiply each value by 100000 and round each result to the nearest int
             new_lat = int(round(float(key) * 100000))
-            new_long = int(round(float(pair[key]) * 100000))
+            new_long = int(round(float(value) * 100000))
 
             # Step 3: Calculate the difference between every pair of values
-            dx = (new_lat - lat)
-            dy = (new_long - long)
+            dx = new_lat - lat
+            dy = new_long - long
             lat = new_lat
             long = new_long
 
@@ -60,11 +60,11 @@ def points_builder(coordinates: list):
             #         each remainder, stop when the quotient reaches zero
             rem = []
             while index > 0:
-                rem.append(int(index % 32))
-                index = int(index / 32)
+                rem.append(index % 32)
+                index = index // 32
 
             # Step 8: Add 32 to each number except for the last number in each list.
-            for i in range(0, len(rem) - 1):
+            for i in range(len(rem) - 1):
                 rem[i] += 32
 
             # Step 9: Form a string by converting each number to a character using the encoder_dict
@@ -98,9 +98,8 @@ def get_elevation_data(coordinates_str: str, method='default', sample_val=0, hei
             sys.exit()
         # append specified elevation URL details
         url = BASE_URL + 'Elevation/Polyline?'
-        sample = str(sample_val)
         # add parameters to URL
-        url += 'points={}&heights={}&samples={}&key={}'.format(coordinates_str, heights, sample, API_KEY)
+        url += 'points={}&heights={}&samples={}&key={}'.format(coordinates_str, heights, sample_val, API_KEY)
     else:
         print("Error, incorrect method parameter")
         sys.exit()
@@ -143,9 +142,9 @@ def parse_elevation_data(response: dict, coordinates: list, method='default'):
         # loop through coordinates and write coordinates into DataFrame
         counter = 0
         for index, pair in enumerate(coordinates):
-            for key in pair.keys():
+            for key, value in pair.items():
                 elevations_df = elevations_df.append({'Latitude': key,
-                                                      'Longitude': pair[key],
+                                                      'Longitude': value,
                                                       'Elevation': elevations[counter]},
                                                      ignore_index=True)
                 counter += 1
