@@ -1,8 +1,7 @@
-import requests
 import pandas as pd
 import sys
 import os.path
-from config import API_KEY, BASE_URL
+from config import API_KEY
 
 sys.path.append(os.path.dirname(__file__))
 
@@ -74,7 +73,7 @@ def points_builder(coordinates: list):
     return compressed_points
 
 
-def get_elevation_data(coordinates_str: str, method='default', sample_val=0, heights ='sealevel'):
+def format_elevations_query(coordinates_str: str, method='default', sample_val=0, heights ='sealevel'):
     """
     Retrieves elevation data response from Bing Maps API through one of these two methods:
         - default method:  Gets elevations for a set of coordinates
@@ -89,30 +88,23 @@ def get_elevation_data(coordinates_str: str, method='default', sample_val=0, hei
     """
     if method == 'default':
         # append specified elevation URL details
-        url = BASE_URL + 'Elevation/List?'
+        query = 'Elevation/List?'
         # add parameters to URL
-        url += 'points={}&heights={}&key={}'.format(coordinates_str, heights, API_KEY)
+        query += 'points={}&heights={}&key={}'.format(coordinates_str, heights, API_KEY)
     elif method == 'polyline':
         if sample_val <= 0:
             print("Error, sample_val must be greater than 0")
             sys.exit()
         # append specified elevation URL details
-        url = BASE_URL + 'Elevation/Polyline?'
+        query = 'Elevation/Polyline?'
         # add parameters to URL
-        url += 'points={}&heights={}&samples={}&key={}'.format(coordinates_str, heights, sample_val, API_KEY)
+        query += 'points={}&heights={}&samples={}&key={}'.format(coordinates_str, heights, sample_val, API_KEY)
     else:
         print("Error, incorrect method parameter")
         sys.exit()
 
     # request URL and return json-encoded content of a response
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-    except requests.exceptions.RequestException as err:
-        print("An error occurred:", err, "\nMessage:", err.response.text)
-        sys.exit()
-
-    return response.json()
+    return query
 
 
 def parse_elevation_data(response: dict, coordinates: list, method='default'):

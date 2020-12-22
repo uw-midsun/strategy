@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(__file__))
 
 from config import API_KEY
 
-def format_url_query(points, speed_unit = 'KPH'):
+def format_speedlimits_query(points, speed_unit = 'KPH'):
     """
     @param points: List of dictionaries of waypoints.
         Each dictionary can only have 1 point.
@@ -15,7 +15,7 @@ def format_url_query(points, speed_unit = 'KPH'):
     @return: a string of formatted parameters to query from API
     """
     # adjust url for speed limit API request
-    url = "Routes/SnapToRoad?"
+    query = "Routes/SnapToRoad?"
     query_params = ""
 
     # loop through points
@@ -29,9 +29,9 @@ def format_url_query(points, speed_unit = 'KPH'):
                 query_params += ";" 
     
     # add parameters to url to be requested
-    url += 'includeSpeedLimit=true&travelMode=driving&points={}&speedUnit={}&key={}'\
+    query += 'includeSpeedLimit=true&travelMode=driving&points={}&speedUnit={}&key={}'\
         .format(query_params, speed_unit, API_KEY)
-    return url
+    return query
 
 def parse_speedlimit_data(response): 
     """

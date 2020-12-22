@@ -34,7 +34,7 @@ def coordinates_query_builder(waypoints: list, viawaypoints: list):
          
     return params
 
-def format_url_query(points: str, route_attrs = 'routePath', dist_unit = 'km'):
+def format_routes_query(points: str, route_attrs = 'routePath', dist_unit = 'km'):
     """
     Getting navigation data response from Bing Maps API.
     @param points: string of points formatted for requesting from Bing Maps API.
@@ -55,14 +55,14 @@ def format_url_query(points: str, route_attrs = 'routePath', dist_unit = 'km'):
     @return: a string of formatted parameters to query from API
     """
     # adjust url for Route API request
-    url = 'Routes?'
+    query = ' Routes?'
 
     # add coordinates, route attribute option, distance unit, and API key
     # to url to be requested
-    url += '{}routeAttributes={}&distanceUnit={}&key={}'.format(points, \
+    query += '{}routeAttributes={}&distanceUnit={}&key={}'.format(points, \
            route_attrs, dist_unit, API_KEY)
     
-    return url  
+    return query  
 
 def parse_routing_data(response: dict):
     """

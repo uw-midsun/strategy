@@ -7,12 +7,12 @@ sys.path.append(os.path.dirname(__file__))
 from config import BASE_URL 
 
 # common getter for all files
-def get_API_data(params: str):
+def get_API_data(query: str):
     """
-    @param params: query parameters to be requested from API
+    @param query: formatted query to be requested from API
     #return: a JSON response from API
     """
-    url = BASE_URL + params
+    url = BASE_URL + query
      # get and return response
     try:
         response = requests.get(url)
