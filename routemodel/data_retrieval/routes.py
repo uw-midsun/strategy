@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(__file__))
 
 from config import API_KEY
 
-def coordinates_query_builder(waypoints: list, viawaypoints: list):
+def routes_points_builder(waypoints: list, viawaypoints: list):
     """
     @param waypoints: List of dictionaries of waypoints.
         Each dictionary can only have 1 waypoint.
@@ -55,7 +55,7 @@ def format_routes_query(points: str, route_attrs = 'routePath', dist_unit = 'km'
     @return: a string of formatted parameters to query from API
     """
     # adjust url for Route API request
-    query = ' Routes?'
+    query = 'Routes?'
 
     # add coordinates, route attribute option, distance unit, and API key
     # to url to be requested

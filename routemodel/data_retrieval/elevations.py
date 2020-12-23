@@ -17,7 +17,7 @@ ENCODER_DICT = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E", 5: "F", 6: "G", 7: "H",
                 57: "5", 58: "6", 59: "7", 60: "8", 61: "9", 62: "_", 63: "-"}
 
 
-def points_builder(coordinates: list):
+def elevations_points_builder(coordinates: list):
     """
     Compresses points to compressed string
     @param coordinates: list of dictionaries of coordinates Ex: [{lat1: long1}, {lat2: long2},... {latN: longN}]
