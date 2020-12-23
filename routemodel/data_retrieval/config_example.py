@@ -1,4 +1,6 @@
 # Instructions: Create "config.py" file in this folder
 # Add API_KEY as shown
-# get_elevations and get_navigation should be pass pytest once done! Make sure config.py never being pushed up.
+# Add BASE_URL as shown
+# elevations.py, routes.py, and speedlimits.py should be passing pytest once done! Make sure config.py is never being pushed up.
 API_KEY = ''
+BASE_URL = 'https://dev.virtualearth.net/REST/v1/'
