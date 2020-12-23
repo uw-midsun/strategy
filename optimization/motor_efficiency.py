@@ -74,7 +74,7 @@ class MotorEfficiency:
         power_values = np.array([math.pi / 30 * speed * torque for speed, torque in zip(speed_values, torque_values)])
 
         plt.plot(power_values, pred_efficiency, color='green', label='Additional points')
-        plt.scatter([math.pi / 30 * speed * torque for speed, torque in zip(dataset['Speed'], dataset['Torque'])], dataset['CalcEfficiency'], color='blue', label='Predicted')
+        plt.plot([math.pi / 30 * speed * torque for speed, torque in zip(dataset['Speed'], dataset['Torque'])], dataset['CalcEfficiency'], color='blue', label='Predicted')
         plt.scatter([math.pi / 30 * speed * torque for speed, torque in zip(dataset['Speed'], dataset['Torque'])], dataset['Efficiency'], color='red', label='Actual')
         # plt.scatter(dataset.index, dataset['Efficiency'], color='blue', label='True')
         # plt.scatter(dataset.index, dataset['CalcEfficiency'], color='red', label='Calculated')
