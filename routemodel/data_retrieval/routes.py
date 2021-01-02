@@ -4,8 +4,6 @@ import os.path
 
 sys.path.append(os.path.dirname(__file__))
 
-from config import API_KEY
-
 def routes_points_builder(waypoints: list, viawaypoints: list):
     """
     @param waypoints: List of dictionaries of waypoints.
@@ -24,12 +22,16 @@ def routes_points_builder(waypoints: list, viawaypoints: list):
     params = str()
     for index, waypoint in enumerate(waypoints):
         for key in waypoint.keys():
-            params += 'wp.{}={},{}&'.format(counter, key, waypoint[key])
+            params += 'wp.{}={},{}&'.format(counter, 
+                                            key,
+                                            waypoint[key])
             counter += 1
         if index < len(waypoints) - 1:
             for points in viawaypoints[index]:
                 for key in points.keys():
-                    params += 'vwp.{}={},{}&'.format(counter, key, points[key])
+                    params += 'vwp.{}={},{}&'.format(counter, 
+                                                     key, 
+                                                     points[key])
                     counter += 1
          
     return params
@@ -59,8 +61,9 @@ def format_routes_query(points: str, route_attrs = 'routePath', dist_unit = 'km'
 
     # add coordinates, route attribute option, distance unit, and API key
     # to url to be requested
-    query += '{}routeAttributes={}&distanceUnit={}&key={}'.format(points, \
-           route_attrs, dist_unit, API_KEY)
+    query += '{}routeAttributes={}&distanceUnit={}'.format(points, 
+                                                           route_attrs,
+                                                           dist_unit)
     
     return query  
 

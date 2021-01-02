@@ -1,7 +1,6 @@
 import pandas as pd
 import sys
 import os.path
-from config import API_KEY
 
 sys.path.append(os.path.dirname(__file__))
 
@@ -90,7 +89,8 @@ def format_elevations_query(coordinates_str: str, method='default', sample_val=0
         # append specified elevation URL details
         query = 'Elevation/List?'
         # add parameters to URL
-        query += 'points={}&heights={}&key={}'.format(coordinates_str, heights, API_KEY)
+        query += 'points={}&heights={}'.format(coordinates_str, 
+                                                      heights)
     elif method == 'polyline':
         if sample_val <= 0:
             print("Error, sample_val must be greater than 0")
@@ -98,7 +98,9 @@ def format_elevations_query(coordinates_str: str, method='default', sample_val=0
         # append specified elevation URL details
         query = 'Elevation/Polyline?'
         # add parameters to URL
-        query += 'points={}&heights={}&samples={}&key={}'.format(coordinates_str, heights, sample_val, API_KEY)
+        query += 'points={}&heights={}&samples={}'.format(coordinates_str, 
+                                                          heights, 
+                                                          sample_val)
     else:
         print("Error, incorrect method parameter")
         sys.exit()

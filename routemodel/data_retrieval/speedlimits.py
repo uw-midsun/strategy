@@ -4,15 +4,14 @@ import os.path
 
 sys.path.append(os.path.dirname(__file__))
 
-from config import API_KEY
-
 def speedlimits_points_builder(points: list):
     # loop through points
     # store into points string
     points_param = str()
     for index, point in enumerate(points):
         for key in point.keys():
-            points_param += "{},{}".format(key, point[key])
+            points_param += "{},{}".format(key, 
+                                           point[key])
             # prevents a semicolon from being appended to the last set of points
             # because that results in an error :P
             if index < len(points)-1: 
@@ -34,8 +33,9 @@ def format_speedlimits_query(points: str, speed_unit = 'KPH'):
     query = "Routes/SnapToRoad?"
     
     # add parameters to url to be requested
-    query += 'includeSpeedLimit=true&travelMode=driving&points={}&speedUnit={}&key={}'\
-        .format(points, speed_unit, API_KEY)
+    query += 'includeSpeedLimit=true&travelMode=driving&points={}&speedUnit={}'\
+        .format(points, 
+                speed_unit)
     return query
 
 def parse_speedlimit_data(response): 
