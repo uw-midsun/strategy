@@ -6,16 +6,31 @@ from sklearn import linear_model
 from scipy.optimize import curve_fit
 import numpy as np
 
+def log_func(self, x, a, b):
+    return a + b * np.log(x)
+
+def linear_func(self, x, a, b):
+    return a + b * x
+
+def exp_func(self, x, a, b, c):
+    return a * np.exp(b * x) + c
+
 class MotorEfficiency:
+
+    speed_torque_func = log_func
+
     def __init__(self, coil):
         self.coil = coil
-        dataset = pd.read_csv(coil + 'Data.csv')
+        self.dataset = pd.read_csv(coil + 'Data.csv')
+
+        if coil == "HI":
+            # remove outlier that exists in hi coil data 
+            self.dataset.drop(axis=0, index=11, inplace=True)
 
         # let us determine relationship between speed and torque with voltage*current
         # we will use this predicted value in place of actual current and voltage
-
-        x = dataset[['Speed', 'Torque']]
-        y = dataset['Voltage'] * dataset['Current']
+        x = self.dataset[['Speed', 'Torque']]
+        y = self.dataset['Voltage'] * self.dataset['Current']
         regr = linear_model.LinearRegression()
         regr.fit(x, y)
 
@@ -23,103 +38,69 @@ class MotorEfficiency:
         self.torque_k = regr.coef_[1]
         self.c = regr.intercept_
 
-    def log_func(self, x, a, b):
-        return a + b * np.log(x)
+        # generate fit of speed and torque points to generate data
+        # see speed_torque_func for function used
+        self.rotational_speed = self.dataset['Speed'].values
+        self.torque = self.dataset['Torque'].values
 
-    def linear_func(self, x, a, b):
-        return a + b * x
-    
-    def exp_func(self, x, a, b, c):
-        return a * np.exp(b * x) + c
+        self.start_pars, cov = curve_fit(f=self.speed_torque_func, xdata=self.rotational_speed, ydata=self.torque)
 
-    func_to_fit = log_func
+    def calc_efficiency(self, rotational_speed, torque):
+        # formula: efficiency (%)
+        # = power from torque and rotational_speed / power from bus voltage and current
+        # = [pi / 30 * rotational_speed * torque] / [voltage * current] * 100
+        return (math.pi / 30 * rotational_speed * torque) / (self.speed_k * rotational_speed + self.torque_k * torque + self.c) * 100
 
-    def create_points(self, coil):
-        dataset = pd.read_csv(coil + 'Data.csv')
+    def power_draw_needed(self, car_speed, torque, required_power):
+        # if pi / 30 * rotational_speed = car_speed, then rotational_speed = car_speed / pi * 30
+        return required_power / (self.calc_efficiency(car_speed / math.pi * 30, torque) * 0.01)
 
-        self.speed = dataset['Speed'].values
-        self.torque = dataset['Torque'].values
+    def graph_generated_points(self):
+        generated_x = np.linspace(self.rotational_speed[0], self.rotational_speed[-1], 100)
+        generated_y = self.speed_torque_func(generated_x, *self.start_pars)
 
-        self.start_pars, cov = curve_fit(f=self.func_to_fit, xdata=self.speed, ydata=self.torque)
-        # print(cov)
+        # If want to show speed vs. power:
+        plt.plot(self.rotational_speed, math.pi / 30 * self.rotational_speed * self.torque, 'r+')
+        plt.plot(generated_x, math.pi / 30 * generated_x * generated_y, 'green')
+        plt.ylabel("Calculated Power (W)")
+        
+        # If want to show speed vs. torque: 
+        # plt.plot(self.rotational_speed, self.torque, 'b+')
+        # plt.plot(generated_x, generated_y, 'green')
+        # plt.ylabel("Torque (Nm)")
+        
+        plt.xlabel("Rotational Speed (Nrpm)")
+        plt.title("Generated Points")
+
+    def graph_predicted_efficiency(self):
+        self.dataset['CalcEfficiency'] = self.dataset.apply(lambda x: self.calc_efficiency(x.Speed, x.Torque), axis=1)
+        # generate 100 points to demonstrate fit
+        speed_values = np.linspace(self.rotational_speed[0], self.rotational_speed[-1], 100)
+        torque_values = self.speed_torque_func(speed_values, *self.start_pars)
+
+        # Eliminate torque values that aren't greater than 0 (which will be at start of array)
+        # and corresponding values on the speed array
+        torque_values = torque_values[torque_values > 0]
+        speed_values = speed_values[len(speed_values) - len(torque_values):]
+
+        pred_efficiency = np.array([self.calc_efficiency(speed, torque) for speed, torque in zip(speed_values, torque_values)])
+        power_values = np.array([math.pi / 30 * speed * torque for speed, torque in zip(speed_values, torque_values)])
+
+        plt.plot(power_values, pred_efficiency, color='green', label='Additional points')
+        plt.plot(math.pi / 30 * self.rotational_speed * self.torque, self.dataset['CalcEfficiency'], 'b+', label='Predicted')
+        plt.scatter(math.pi / 30 * self.rotational_speed * self.torque, self.dataset['Efficiency'], color='red', label='Actual')
+
+        plt.legend()
+        plt.title("Efficiency Calculation Comparions (" + self.coil + " Coil)")
+        plt.xlabel("Power (W)")
+        plt.ylabel("Efficiency (%)")
 
     def graph(self):
-        generated_x = np.linspace(self.speed[0], self.speed[-1], 100)
-        generated_y = self.func_to_fit(generated_x, *self.start_pars)
-        plt.plot(self.speed, self.torque, 'b+')
-        plt.plot(generated_x, generated_y, 'green')
-        plt.xlabel("Speed")
-        plt.ylabel("Torque")
-        plt.show()
-
-    def calc_efficiency(self, speed, torque):
-        # formula: efficiency (%) = [pi/30 * speed * torque] / [voltage * current] * 100
-        return (math.pi/30 * speed * torque) / (self.speed_k * speed + self.torque_k * torque + self.c) * 100
-
-    def power_draw_needed(self, speed, torque, expected_power):
-        return expected_power / (self.calc_efficiency(speed, torque) * 0.01)
-    
-    def graph_default(self):
-        dataset = pd.read_csv(self.coil + 'Data.csv')
-        dataset['CalcEfficiency'] = dataset.apply(lambda x: self.calc_efficiency(x.Speed, x.Torque), axis=1)
-        speed_values = np.linspace(self.speed[0], self.speed[-1], 100)
-        torque_values = self.func_to_fit(speed_values, *self.start_pars)
-
-        # will eliminate torque values that aren't greater than 0
-        # eliminate corresponding values on the speed array
-        torque_values = torque_values[torque_values > 0]
-        speed_values = speed_values[len(speed_values) - len(torque_values):]
-        assert(len(torque_values) == len(speed_values))
-
-        pred_efficiency = np.array([self.calc_efficiency(speed, torque) for speed, torque in zip(speed_values, torque_values)])
-        power_values = np.array([math.pi / 30 * speed * torque for speed, torque in zip(speed_values, torque_values)])
-
-        plt.plot(power_values, pred_efficiency, color='green', label='Additional points')
-        plt.plot([math.pi / 30 * speed * torque for speed, torque in zip(dataset['Speed'], dataset['Torque'])], dataset['CalcEfficiency'], 'b+', label='Predicted')
-        plt.scatter([math.pi / 30 * speed * torque for speed, torque in zip(dataset['Speed'], dataset['Torque'])], dataset['Efficiency'], color='red', label='Actual')
-        # plt.scatter(dataset.index, dataset['Efficiency'], color='blue', label='True')
-        # plt.scatter(dataset.index, dataset['CalcEfficiency'], color='red', label='Calculated')
-        plt.legend()
-        plt.title("Efficiency Calculation Comparions (" + self.coil + " Coil)")
-        plt.xlabel("Power")
-        plt.ylabel("Efficiency (%)")
-        plt.show()
-
-    def graph_both(self):
         plt.subplot(1, 2, 1)
-        generated_x = np.linspace(self.speed[0], self.speed[-1], 100)
-        generated_y = self.func_to_fit(generated_x, *self.start_pars)
-        plt.plot(self.speed, math.pi / 30 * self.speed * self.torque, 'r+')
-        plt.plot(generated_x, math.pi / 30 * generated_x * generated_y, 'green')
-        # plt.plot(self.speed, self.torque, 'b+')
-        # plt.plot(generated_x, generated_y, 'green')
-
-        plt.xlabel("Speed")
-        plt.ylabel("Power")
-
-        dataset = pd.read_csv(self.coil + 'Data.csv')
-        dataset['CalcEfficiency'] = dataset.apply(lambda x: self.calc_efficiency(x.Speed, x.Torque), axis=1)
-        speed_values = np.linspace(self.speed[0], self.speed[-1], 100)
-        torque_values = self.func_to_fit(speed_values, *self.start_pars)
-
-        # will eliminate torque values that aren't greater than 0
-        # eliminate corresponding values on the speed array
-        torque_values = torque_values[torque_values > 0]
-        speed_values = speed_values[len(speed_values) - len(torque_values):]
-        assert(len(torque_values) == len(speed_values))
-
-        pred_efficiency = np.array([self.calc_efficiency(speed, torque) for speed, torque in zip(speed_values, torque_values)])
-        power_values = np.array([math.pi / 30 * speed * torque for speed, torque in zip(speed_values, torque_values)])
+        self.graph_generated_points()
 
         plt.subplot(1, 2, 2)
-        plt.plot(power_values, pred_efficiency, color='green', label='Additional points')
-        plt.plot([math.pi / 30 * speed * torque for speed, torque in zip(dataset['Speed'], dataset['Torque'])], dataset['CalcEfficiency'], 'blue', label='Predicted')
-        plt.scatter([math.pi / 30 * speed * torque for speed, torque in zip(dataset['Speed'], dataset['Torque'])], dataset['Efficiency'], color='red', label='Actual')
-
-        plt.legend()
-        plt.title("Efficiency Calculation Comparions (" + self.coil + " Coil)")
-        plt.xlabel("Power")
-        plt.ylabel("Efficiency (%)")
+        self.graph_predicted_efficiency()
         plt.show()
 
 if __name__ == "__main__":
@@ -127,15 +108,11 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--coil', help='Select HI or LO coil', default="LO")
     args = parser.parse_args()
 
-    if args.coil.upper() != "LO" and args.coil.upper() != "HI":
-        print("Choose HI or LO please")
+    if args.coil.upper() == "LO":
+        lo_motor_eff_curve = MotorEfficiency(args.coil.upper())
+        lo_motor_eff_curve.graph()
+    elif args.coil.upper() == "HI":
+        hi_motor_eff_curve = MotorEfficiency(args.coil.upper())
+        hi_motor_eff_curve.graph()
     else:
-        motor_efficiency_curve = MotorEfficiency(args.coil.upper())
-        # make sure we are creating the parameters for speed, torque values
-        motor_efficiency_curve.create_points(args.coil.upper())
-        # motor_efficiency_curve.graph_default()
-        # motor_efficiency_curve.graph()
-        motor_efficiency_curve.graph_both()
-
-# compare LO and HI
-# fit points -> LO only, HI only
+        print("Invalid argument, choose HI or LO please")
