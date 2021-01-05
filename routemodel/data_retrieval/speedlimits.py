@@ -38,7 +38,7 @@ def format_speedlimits_query(points: str, speed_unit = 'KPH'):
                 speed_unit)
     return query
 
-def parse_speedlimit_data(response): 
+def parse_speedlimits_data(response): 
     """
     Parsing through Routes API call response.
     @param response: Requests.response object from API call
