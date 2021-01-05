@@ -109,7 +109,7 @@ def format_elevations_query(coordinates_str: str, method='default', sample_val=0
     return query
 
 
-def parse_elevation_data(response: dict, coordinates: list = [], method='default'):
+def parse_elevations_data(response: dict, coordinates: list = [], method='default'):
     """
     Parsing through Elevations API call response.
         - if API call was done using polyline method, set method in parse_elevation_data to 'polyline'
