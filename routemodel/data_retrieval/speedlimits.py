@@ -71,4 +71,4 @@ def parse_speedlimits_data(response):
     except Exception as error:
         print(f'An error occurred: {error}')
         sys.exit()
-    return speedlimits
+    return speedlimits_df
