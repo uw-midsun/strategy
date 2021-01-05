@@ -90,7 +90,7 @@ def format_elevations_query(coordinates_str: str, method='default', sample_val=0
         query = 'Elevation/List?'
         # add parameters to URL
         query += 'points={}&heights={}'.format(coordinates_str, 
-                                                      heights)
+                                               heights)
     elif method == 'polyline':
         if sample_val <= 0:
             print("Error, sample_val must be greater than 0")
@@ -109,12 +109,14 @@ def format_elevations_query(coordinates_str: str, method='default', sample_val=0
     return query
 
 
-def parse_elevation_data(response: dict, coordinates: list, method='default'):
+def parse_elevation_data(response: dict, coordinates: list = [], method='default'):
     """
     Parsing through Elevations API call response.
         - if API call was done using polyline method, set method in parse_elevation_data to 'polyline'
     @param response: Requests.response.json() object from API call
-    @param coordinates: list of dictionaries of coordinates Ex: [{lat1: long1}, {lat2: long2},... {latN: longN}]
+    @param coordinates: list of dictionaries of coordinates 
+        Not required for polyline method.
+        Ex: [{lat1: long1}, {lat2: long2},... {latN: longN}]
     @param method (optional): string, either 'default' or 'polyline'
     @return: dataframe containing elevation data
     """
@@ -140,7 +142,7 @@ def parse_elevation_data(response: dict, coordinates: list, method='default'):
                 elevations_df = elevations_df.append({'Latitude': key,
                                                       'Longitude': value,
                                                       'Elevation': elevations[counter]},
-                                                     ignore_index=True)
+                                                      ignore_index=True)
                 counter += 1
 
         return elevations_df
@@ -150,7 +152,8 @@ def parse_elevation_data(response: dict, coordinates: list, method='default'):
         elevations_df = pd.DataFrame(columns=headers)
         # input elevations into dataframe
         for val in elevations:
-            elevations_df = elevations_df.append({'Elevation': val}, ignore_index=True)
+            elevations_df = elevations_df.append({'Elevation': val}, 
+                                                 ignore_index=True)
 
         return elevations_df
     else:

@@ -27,7 +27,7 @@ def routes_points_builder(waypoints: list, viawaypoints: list):
                                             waypoint[key])
             counter += 1
         if index < len(waypoints) - 1:
-            for points in viawaypoints[index]:
+            for i, points in enumerate(viawaypoints):
                 for key in points.keys():
                     params += 'vwp.{}={},{}&'.format(counter, 
                                                      key, 
