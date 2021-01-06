@@ -43,9 +43,9 @@ jobs:
     - name: Optimization directory
       run: |
         cd optimization && pytest && cd tests && pytest && cd ../..
-    # - name: Routemodel directory
-    #   run: |
-    #     cd routemodel && pytest && cd tests && pytest && cd ../..
+    - name: Routemodel directory
+      run: |
+        cd routemodel && pytest && cd tests && pytest && cd ../..
     - name: SOC directory - deprecated
       run: |
         cd soc && pytest && cd soc_deprecated/tests && pytest && cd ../../..
