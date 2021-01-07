@@ -43,7 +43,7 @@ class MotorEfficiency:
         self.rotational_speed = self.dataset['Speed'].values
         self.torque = self.dataset['Torque'].values
 
-        self.start_pars, cov = curve_fit(f=self.speed_torque_func, xdata=self.rotational_speed, ydata=self.torque)
+        self.start_pars, _ = curve_fit(f=self.speed_torque_func, xdata=self.rotational_speed, ydata=self.torque)
 
     def calc_efficiency(self, rotational_speed, torque):
         # formula: efficiency (%)
@@ -55,24 +55,25 @@ class MotorEfficiency:
         # if pi / 30 * rotational_speed = car_speed, then rotational_speed = car_speed / pi * 30
         return required_power / (self.calc_efficiency(car_speed / math.pi * 30, torque) * 0.01)
 
-    def graph_generated_points(self):
+    def graph_generated_points(self, ax, left_graph):
         generated_x = np.linspace(self.rotational_speed[0], self.rotational_speed[-1], 100)
         generated_y = self.speed_torque_func(generated_x, *self.start_pars)
 
-        # If want to show speed vs. power:
-        plt.plot(self.rotational_speed, math.pi / 30 * self.rotational_speed * self.torque, 'r+')
-        plt.plot(generated_x, math.pi / 30 * generated_x * generated_y, 'green')
-        plt.ylabel("Calculated Power (W)")
+        if left_graph == "TORQUE":
+            # Speed vs. torque graph
+            ax.plot(self.rotational_speed, self.torque, 'b+')
+            ax.plot(generated_x, generated_y, 'green')
+            ax.ylabel("Torque (Nm)")
+        else:
+            # Speed vs. power graph
+            ax.plot(self.rotational_speed, math.pi / 30 * self.rotational_speed * self.torque, 'r+')
+            ax.plot(generated_x, math.pi / 30 * generated_x * generated_y, 'green')
+            ax.set_ylabel("Calculated Power (W)")
         
-        # If want to show speed vs. torque: 
-        # plt.plot(self.rotational_speed, self.torque, 'b+')
-        # plt.plot(generated_x, generated_y, 'green')
-        # plt.ylabel("Torque (Nm)")
-        
-        plt.xlabel("Rotational Speed (Nrpm)")
-        plt.title("Generated Points")
+        ax.set_xlabel("Rotational Speed (Nrpm)")
+        ax.set_title("Generated Points")
 
-    def graph_predicted_efficiency(self):
+    def graph_predicted_efficiency(self, ax):
         self.dataset['CalcEfficiency'] = self.dataset.apply(lambda x: self.calc_efficiency(x.Speed, x.Torque), axis=1)
         # generate 100 points to demonstrate fit
         speed_values = np.linspace(self.rotational_speed[0], self.rotational_speed[-1], 100)
@@ -86,33 +87,41 @@ class MotorEfficiency:
         pred_efficiency = np.array([self.calc_efficiency(speed, torque) for speed, torque in zip(speed_values, torque_values)])
         power_values = np.array([math.pi / 30 * speed * torque for speed, torque in zip(speed_values, torque_values)])
 
-        plt.plot(power_values, pred_efficiency, color='green', label='Additional points')
-        plt.plot(math.pi / 30 * self.rotational_speed * self.torque, self.dataset['CalcEfficiency'], 'b+', label='Predicted')
-        plt.scatter(math.pi / 30 * self.rotational_speed * self.torque, self.dataset['Efficiency'], color='red', label='Actual')
+        ax.plot(power_values, pred_efficiency, color='green', label='Additional points')
+        ax.plot(math.pi / 30 * self.rotational_speed * self.torque, self.dataset['CalcEfficiency'], 'b+', label='Predicted')
+        ax.scatter(math.pi / 30 * self.rotational_speed * self.torque, self.dataset['Efficiency'], color='red', label='Actual')
 
-        plt.legend()
-        plt.title("Efficiency Calculation Comparions (" + self.coil + " Coil)")
-        plt.xlabel("Power (W)")
-        plt.ylabel("Efficiency (%)")
+        ax.legend()
+        ax.set_title("Efficiency Calculation Comparions (" + self.coil + " Coil)")
+        ax.set_xlabel("Power (W)")
+        ax.set_ylabel("Efficiency (%)")
 
-    def graph(self):
-        plt.subplot(1, 2, 1)
-        self.graph_generated_points()
+    def graph(self, left_graph):
+        '''
+        Graphs information on the motor coil predictions and test data
+        Left graph is speed vs. power or speed vs. torque fit
+        Right graph is generated predictions, test predictions, and test points for the motor efficiency coil
 
-        plt.subplot(1, 2, 2)
-        self.graph_predicted_efficiency()
+        @param left_graph: changes left side plot, either "power" for speed vs. power or "torque" for speed vs. power
+        '''
+        _, (ax1, ax2) = plt.subplots(1, 2)
+        self.graph_generated_points(ax1, left_graph)
+        self.graph_predicted_efficiency(ax2)
         plt.show()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="See coil fit graphs")
     parser.add_argument('-c', '--coil', help='Select HI or LO coil', default="LO")
+    parser.add_argument('-r', '--left', help='Show speed vs. power or speed vs. torque graphs', default="POWER")
     args = parser.parse_args()
+
+    left_graph = args.left.upper() if args.left.upper() == "TORQUE" else "POWER"
 
     if args.coil.upper() == "LO":
         lo_motor_eff_curve = MotorEfficiency(args.coil.upper())
-        lo_motor_eff_curve.graph()
+        lo_motor_eff_curve.graph(left_graph)
     elif args.coil.upper() == "HI":
         hi_motor_eff_curve = MotorEfficiency(args.coil.upper())
-        hi_motor_eff_curve.graph()
+        hi_motor_eff_curve.graph(left_graph)
     else:
-        print("Invalid argument, choose HI or LO please")
+        print("Invalid argument, choose coil and left graph arguments")
