@@ -33,7 +33,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Strategy repository
       run: |
-        pytest --ignore=routemodel/tests
+        pytest
     - name: Auxloss directory
       run: |
         cd auxloss && pytest && cd tests && pytest && cd ../..
