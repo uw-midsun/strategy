@@ -10,7 +10,9 @@ Connects and receives responses from Bing Maps APIs to form route / navigation a
 
 + `routes.py`: Methods to query Routes endpoint, collecting information on latitude, longitude, maneuver instructions, distance to maneuver, distance, and street
 + `elevations.py`: Methods to query Elevations endpoint, forming an elevation profile from a set of coordinates
-+ `speedlimits.py`: Methods to query Routes endpoint, collecting information around speed limit changes. Separate call from `routes.py` due to specific route points constraints.
++ `speedlimits.py`: Methods to query Routes endpoint, collecting information around speed limit changes. Separate call from `routes.py` due to specific route points constraints
++ `common.py`: Common code to execute query on any of the above endpoints and catch errors
++ `config_example.py`: Sample API key file. To use, create a duplicate of this file callled `config.py` and fill in the `API_KEY` field
 
 ### Routes Module
 
