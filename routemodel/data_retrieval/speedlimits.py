@@ -4,7 +4,7 @@ import os.path
 
 sys.path.append(os.path.dirname(__file__))
 
-def speedlimits_points_builder(points: list):
+def build_speedlimits_points(points: list):
     # loop through points
     # store into points string
     points_param = str()

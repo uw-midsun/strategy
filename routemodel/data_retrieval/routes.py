@@ -4,7 +4,7 @@ import os.path
 
 sys.path.append(os.path.dirname(__file__))
 
-def routes_points_builder(waypoints: list, viawaypoints: list):
+def build_routes_points(waypoints: list, viawaypoints: list):
     """
     @param waypoints: List of dictionaries of waypoints.
         Each dictionary can only have 1 waypoint.

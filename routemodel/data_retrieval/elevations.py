@@ -16,7 +16,7 @@ ENCODER_DICT = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E", 5: "F", 6: "G", 7: "H",
                 57: "5", 58: "6", 59: "7", 60: "8", 61: "9", 62: "_", 63: "-"}
 
 
-def elevations_points_builder(coordinates: list):
+def build_elevations_points(coordinates: list):
     """
     Compresses points to compressed string
     @param coordinates: list of dictionaries of coordinates Ex: [{lat1: long1}, {lat2: long2},... {latN: longN}]
@@ -112,7 +112,7 @@ def format_elevations_query(coordinates_str: str, method='default', sample_val=0
 def parse_elevations_data(response: dict, coordinates: list = [], method='default'):
     """
     Parsing through Elevations API call response.
-        - if API call was done using polyline method, set method in parse_elevation_data to 'polyline'
+        - if API call was done using polyline method, set method parameter in parse_elevations_data to 'polyline'
     @param response: Requests.response.json() object from API call
     @param coordinates: list of dictionaries of coordinates 
         Not required for polyline method.
