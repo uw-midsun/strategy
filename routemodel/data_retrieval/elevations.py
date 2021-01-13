@@ -137,7 +137,7 @@ def parse_elevations_data(response: dict, coordinates: list = [], method='defaul
 
         # loop through coordinates and write coordinates into DataFrame
         counter = 0
-        for index, pair in enumerate(coordinates):
+        for pair in coordinates:
             for key, value in pair.items():
                 elevations_df = elevations_df.append({'Latitude': key,
                                                       'Longitude': value,
