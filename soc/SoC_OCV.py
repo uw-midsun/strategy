@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import itertools
-from sklearn import datasets, linear_model, metrics
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.pipeline import make_pipeline
+
+#from sklearn import datasets, linear_model, metrics
+#from sklearn.preprocessing import PolynomialFeatures
+#from sklearn.pipeline import make_pipeline
 
 #To fix - still energy left at 0% - 2.85V at end due to IR voltage drop
 #This requires a more precise cell cycling profile generated with a SMU
@@ -25,7 +26,7 @@ class SoC_OCV:
 		#This is the Resistance present when the chg-discharge curve was done, not the pack resistance
 		#Should be eplicitly tested on the setup. This is a rough estimate of what I expect it was, as we never measured it.
 		IR = 0.085
-		
+		self.temp = []
 		#read data from txt files generated during discharge test
 		with open(fName) as f_in:
 			#fill matrices with data from file
@@ -38,10 +39,11 @@ class SoC_OCV:
 		#for now, fitting a 5th degree polynomial, but should use splines with interpolation
 		soc = soc.reshape(-1,1)
 		voltage = voltage.reshape(-1,1)
-		poly_model = make_pipeline(PolynomialFeatures(5), linear_model.Ridge())
-		poly_model.fit(soc, v_ocv)
+		#poly_model = make_pipeline(PolynomialFeatures(5), linear_model.Ridge())
+		#poly_model.fit(soc, v_ocv)
+		self.temp.append((soc, v_ocv))
 		
-		self.voltage_predict = poly_model.predict(soc)
+		#self.voltage_predict = poly_model.predict(soc)
 	
 	#similar to the map function in Arduino
 	def valmap(self, value, istart, istop, ostart, ostop):
@@ -56,6 +58,9 @@ class SoC_OCV:
 			loc = 0
 		#return int(loc)
 		return self.voltage_predict[int(loc)]
+	
+	def get_points(self):
+		return self.temp
 		
 class test_SoC_OCV:
 	def __init__(self):
@@ -65,9 +70,23 @@ class test_SoC_OCV:
 		print(self.SoCOCV.get_cell_ocv(75))
 		print(self.SoCOCV.get_cell_ocv(25))
 		print(self.SoCOCV.get_cell_ocv(0))
+	
+	def get_points(self):
+		return self.SoCOCV.get_points()
 		
 if __name__ == "__main__":
 	#just print out to console and make sure that we get reasonable values
-	testing_soc_ocv = test_SoC_OCV()
-	testing_soc_ocv.test()
+#	testing_soc_ocv = test_SoC_OCV()
+#	testing_soc_ocv.test()
+	ocd = SoC_OCV()
+	temp_list = ocd.get_points()
+	lst1 = temp_list[0][0]
+	lst2 = temp_list[0][1]
+	print("The length of the first file is: " + str(len(lst1)))
+	print(lst1)
+	print("The length of the second file is: " + str(len(lst2)))
+	print(lst2)
+
+	plt.plot(lst1, lst2)
+	plt.show()
 	
