@@ -64,7 +64,26 @@ class SoC_OCV:
 	def get_soc_and_v_ocv(self):
 		return self.soc, self.v_ocv
 	
-	
+	# 
+	def check_in_graph(self, number):
+		if (number > self.soc[len(self.soc) - 1] or number < self.soc[0]):
+			return "Value is out of predicted range", "Value is out of predicted range"
+		lower_number = 0
+		higher_number = 0
+		index_one = 0
+		index_two = 0
+		for index in range(len(self.soc)):
+			if (self.soc[index] == number):
+				return number, self.v_ocv[index]
+			elif (self.soc[index] < number):
+				lower_number = self.soc[index]
+				index_one = index
+			elif ((self.soc[index] > number)):
+				higher_number = self.soc[index]	
+				index_two = index
+				break
+		value = (((higher_number - lower_number) * (number - index_one)) / (index_two - index_one)) + lower_number	
+		return number, value
 
 			
 class test_SoC_OCV:
