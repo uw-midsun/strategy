@@ -24,7 +24,6 @@ print(elevations)
 print(distances)
 
 plt.plot([d / 1000 for d in distances], elevations)
-# plt.grid(b=True)
 plt.title("Draft ASC 2021 route")
 plt.xlabel("Distance travelled (km)")
 plt.ylabel("Current elevation")

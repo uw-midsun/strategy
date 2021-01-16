@@ -22,8 +22,10 @@ class SolarCell:
         self.temperature = temperature
 
     def total_efficiency_decrease(self):
-        # returns modified efficiency percentage if temperature is above 25
-        # otherwise returns normal efficiency of cell
+        """
+        Returns efficiency of cell, making adjustments for temperature above 25 degrees C
+        """
+
         if self.temperature > 25:
             efficiency = (self.efficiency - self.temp_coefficient
                           * (self.temperature - 25))
@@ -31,5 +33,8 @@ class SolarCell:
         return self.efficiency
 
     def energy_converted(self):
-        # returns product of solar insolation and efficiency
+        """
+        Returns product of solar insolation and efficiency
+        """
+
         return SolarDay.energy_received() * self.total_efficiency_decrease()
