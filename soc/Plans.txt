@@ -19,3 +19,11 @@ Figure out how to plot the points and the slope
 -   numphy
 
 Decide which where the implementation will be easier
+
+Make it work first 
+
+    Use linear approximation to figure out what the inter-values are on the array
+
+Ideas:
+
+1. U

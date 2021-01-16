@@ -12,6 +12,8 @@ import itertools
 
 import sys
 import os.path
+
+from numpy.lib.shape_base import _make_along_axis_idx
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 fName = "CellDataFileTestMJ1.txt"
 
@@ -29,21 +31,21 @@ class SoC_OCV:
 		self.temp = []
 		#read data from txt files generated during discharge test
 		with open(fName) as f_in:
-			#fill matrices with data from file
-			voltage, current, soc = np.loadtxt(itertools.islice(f_in, 1, None, 2), delimiter = '\t', usecols = (1,3,9), unpack = True)
+			#fill matrices with data from file (all are lists)
+			self.voltage, self.current, self.soc = np.loadtxt(itertools.islice(f_in, 1, None, 2), delimiter = '\t', usecols = (1,3,9), unpack = True)
 		
 		#Estimate the ocv of the cell, only taking the internal resistance into account (assuming no voltage relaxation or recovery)
-		v_ocv = voltage + IR * current
+		self.v_ocv = self.voltage + IR * self.current
 		
 		#generate model for SoC_OCV curve
 		#for now, fitting a 5th degree polynomial, but should use splines with interpolation
-		soc = soc.reshape(-1,1)
-		voltage = voltage.reshape(-1,1)
+		self.soc = self.soc.reshape(-1,1)
+		#voltage = self.voltage.reshape(-1,1)
 		#poly_model = make_pipeline(PolynomialFeatures(5), linear_model.Ridge())
-		#poly_model.fit(soc, v_ocv)
-		self.temp.append((soc, v_ocv))
+		#poly_model.fit(self.soc, self.v_ocv)
+		self.temp.append((self.soc, self.v_ocv))
 		
-		#self.voltage_predict = poly_model.predict(soc)
+		#self.voltage_predict = poly_model.predict(self.soc)
 	
 	#similar to the map function in Arduino
 	def valmap(self, value, istart, istop, ostart, ostop):
@@ -59,9 +61,12 @@ class SoC_OCV:
 		#return int(loc)
 		return self.voltage_predict[int(loc)]
 	
-	def get_points(self):
-		return self.temp
-		
+	def get_soc_and_v_ocv(self):
+		return self.soc, self.v_ocv
+	
+	
+
+			
 class test_SoC_OCV:
 	def __init__(self):
 		self.SoCOCV = SoC_OCV()
@@ -70,23 +75,21 @@ class test_SoC_OCV:
 		print(self.SoCOCV.get_cell_ocv(75))
 		print(self.SoCOCV.get_cell_ocv(25))
 		print(self.SoCOCV.get_cell_ocv(0))
-	
-	def get_points(self):
-		return self.SoCOCV.get_points()
 		
 if __name__ == "__main__":
 	#just print out to console and make sure that we get reasonable values
 #	testing_soc_ocv = test_SoC_OCV()
 #	testing_soc_ocv.test()
 	ocd = SoC_OCV()
-	temp_list = ocd.get_points()
-	lst1 = temp_list[0][0]
-	lst2 = temp_list[0][1]
-	print("The length of the first file is: " + str(len(lst1)))
+	
+	lst1, lst2 = ocd.get_soc_and_v_ocv()
+	print("The f length of the firstile is: " + str(len(lst1)))
 	print(lst1)
 	print("The length of the second file is: " + str(len(lst2)))
 	print(lst2)
 
-	plt.plot(lst1, lst2)
+	plt.scatter(lst1, lst2)
 	plt.show()
+
+
 	
