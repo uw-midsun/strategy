@@ -4,36 +4,41 @@ import os.path
 
 sys.path.append(os.path.dirname(__file__))
 
-from config import API_KEY
+def build_speedlimits_points(points: list):
+    # loop through points
+    # store into points string
+    points_param = str()
+    for index, point in enumerate(points):
+        for key in point.keys():
+            points_param += "{},{}".format(key, 
+                                           point[key])
+            # prevents a semicolon from being appended to the last set of points
+            # because that results in an error :P
+            if index < len(points)-1: 
+                points_param += ";" 
+    
+    return points_param
 
-def format_url_query(points, speed_unit = 'KPH'):
+def format_speedlimits_query(points: str, speed_unit = 'KPH'):
     """
     @param points: List of dictionaries of waypoints.
         Each dictionary can only have 1 point.
         Up to 100 dictionaries/elements in full list.
         Format as: [{lat1: long1}, {lat2: long2},... {latN: longN}]
+    @param speed_unit: specify a unit for speed to be returned.
+        Default is 'KPH'
     @return: a string of formatted parameters to query from API
     """
     # adjust url for speed limit API request
-    url = "Routes/SnapToRoad?"
-    query_params = ""
-
-    # loop through points
-    # store into points string
-    for index, point in enumerate(points):
-        for key in point.keys():
-            query_params += "{},{}".format(key, point[key])
-            # prevents a semicolon from being appended to the last set of points
-            # because that results in an error :P
-            if index < len(points)-1: 
-                query_params += ";" 
+    query = "Routes/SnapToRoad?"
     
     # add parameters to url to be requested
-    url += 'includeSpeedLimit=true&travelMode=driving&points={}&speedUnit={}&key={}'\
-        .format(query_params, speed_unit, API_KEY)
-    return url
+    query += 'includeSpeedLimit=true&travelMode=driving&points={}&speedUnit={}'\
+        .format(points, 
+                speed_unit)
+    return query
 
-def parse_speedlimit_data(response): 
+def parse_speedlimits_data(response): 
     """
     Parsing through Routes API call response.
     @param response: Requests.response object from API call
@@ -66,4 +71,4 @@ def parse_speedlimit_data(response):
     except Exception as error:
         print(f'An error occurred: {error}')
         sys.exit()
-    return speedlimits
+    return speedlimits_df
