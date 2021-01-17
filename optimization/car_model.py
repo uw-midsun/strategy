@@ -8,6 +8,14 @@ class Car():
     rho = 1.225  # Density of air at room temperature
 
     def __init__(self, m=720, Crr=0.0015, CdA=0.15, max_force=100, speed_min_ms=15, speed_max_ms=45):
+        
+        # reject negative velocity
+        if speed_min_ms < 0:
+            speed_min_ms = 15
+
+        if speed_max_ms < speed_min_ms:
+            speed_max_ms = speed_min_ms
+        
         self.m = m  # mass of car in kg
         self.Crr = Crr  # Rolling Resistance coefficient of the car
         self.CdA = CdA  # Drag coefficient of the car
@@ -63,7 +71,10 @@ class Car():
         :param distance: distance between points in the profiles
         :return energy used: energy used in J for the path and velocity profile
         """
-        # TODO: Add error handling for len(v_profile) != len(e_profile)
+        # Checks if the length of the velocity array is NOT EQUAL TO the length of the elevation array
+        if len(v_profile) != len(e_profile):
+            raise IndexError('v_profile length and e_profile length do not match')
+            
         energy = 0
         num_points = len(v_profile)
         # Note we will end 1 before because we don't care about the distance

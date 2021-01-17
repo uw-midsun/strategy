@@ -4,8 +4,6 @@ sys.path.append(os.path.join(sys.path[0], '../../'))
 import pytest
 import mock
 from displays.SOC_velocity_graph import calculate_SOC_values
-from matplotlib.testing.decorators import check_figures_equal
-import matplotlib.pyplot as plt
 
 def test_calculate_SOC_values_zero_values():
     velocities = [0, 0, 0]
@@ -41,7 +39,7 @@ def test_calculate_SOC_values_zero_length_inputs():
         calculate_SOC_values([], [], [], 1)
 
 def test_calculate_SOC_values_single_element_inputs():
-    with mock.patch("soc.SoCEstimation.CoulombCounter.get_soc", return_value=0.9):
+    with mock.patch("soc.soc_deprecated.SoCEstimation.CoulombCounter.get_soc", return_value=0.9):
         expected_result = [1, 0.9]
         assert(expected_result == (calculate_SOC_values([1], [(1, 1)], [1], 1)))
 

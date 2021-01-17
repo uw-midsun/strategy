@@ -1,0 +1,47 @@
+/*
+These are a list of unique CSS items specific to the Dashboard, as opposed
+to base.css that is external and is a strong template for most items. 
+*/
+
+:root {
+    --bg-color: #f7f8fc;
+    --theme-color: #d2e7f8;
+}
+  
+body {
+    background-color: var(--bg-color);
+    overflow-x: hidden;
+}
+
+.index-logo {
+    height: 50px;
+    margin: 10px;
+}
+
+.index-navbar {
+    border-bottom: 1px solid lightgrey;
+    justify-content: center;
+}
+
+.index-tabs {
+    box-shadow: 2px 0px 2px darkgrey;
+    height: 100vh;
+    padding-top: 50px;
+}
+
+.index-tab{
+    background-color: var(--bg-color) !important;
+    border: 0px !important;
+    text-justify: newspaper !important;
+}
+
+.index-tab--selected{
+    background-color: var(--theme-color) !important;
+    border-left: 5px solid #5cade3 !important;
+}
+
+.pretty_container {
+    margin-top: 30px;
+    margin-left: 30px;
+    padding-left: 15px;
+  }

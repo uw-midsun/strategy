@@ -7,3 +7,4 @@ flake8
 haversine
 requests
 mock==4.0.1
+sklearn
