@@ -11,11 +11,3 @@ class BatteryPower:
     def calc_power(self, current, voltage):
         power = voltage * current
         return power
-
-class TestBatteryPower:   
-    #testing using sample data from can_messages.csv
-    def test(self):
-        battery_test = BatteryPower()
-        #ask about units??
-        print(battery_test.calc_power(2339805638, 171683203))
-        print(battery_test.calc_power(2662553934, 3548668148))
