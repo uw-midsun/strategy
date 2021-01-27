@@ -9,7 +9,7 @@ class SolarCell:
         self.area = area
 
         # efficiency of solar energy conversion to electrical energy
-        self.efficiency = .237
+        self.efficiency = .243
 
         # temp_coeff is the percentage decrease
         # in the cells' efficiency for every degree above 25C
