@@ -55,4 +55,3 @@ Message Emma Wai or Michael Shiozaki on Slack.
 - https://www.learnpython.org/
 - https://dabeaz-course.github.io/practical-python/
 
-Rodrigo says hello!
