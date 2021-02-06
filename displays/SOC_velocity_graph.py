@@ -3,7 +3,7 @@ import os.path
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from optimization.car_model import Car
+from dynamics.car_model import Car
 from soc.soc_deprecated.SoCEstimation import CoulombCounter
 
 def calculate_SOC_values(v_profile, e_profile, distances, initial_soc, min_speed=None, max_speed=None):
