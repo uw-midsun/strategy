@@ -12,7 +12,7 @@ def gen_vectors(points):
     vectors = []
     last_point = (0, 0)
 
-    for index, val in enumerate(points):
+    for val in points:
         for key, value in val.items():
             # Create vectors between adjacent coordinates
             current_point = (float(key), float(value))
@@ -20,8 +20,8 @@ def gen_vectors(points):
             vectors.append(current_vector)
             last_point = current_point
 
-    # Remove the first vector as it will just be the first coordinate
-    vectors.remove(vectors[0])
+    # delete the first vector as it will just be the first coordinate
+    del vectors[0]
     return vectors
 
 
