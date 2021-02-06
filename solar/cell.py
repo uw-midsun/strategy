@@ -27,7 +27,7 @@ class SolarCell:
         """
 
         if self.temperature > 25:
-            efficiency = (self.efficiency - self.temp_coefficient
+            efficiency = (self.efficiency + self.temp_coefficient
                           * (self.temperature - 25))
             return efficiency
         return self.efficiency

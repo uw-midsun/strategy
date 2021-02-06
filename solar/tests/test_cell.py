@@ -6,7 +6,7 @@ from cell import SolarCell
 
 def test_efficiency_decrease_under_25():
     cell = SolarCell(0,0)
-    assert(cell.total_efficiency_decrease() == .237)
+    assert(cell.total_efficiency_decrease() == .243)
 
 def test_efficiency_decrease_over_25():
     cell = SolarCell(0,100)
