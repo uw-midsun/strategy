@@ -13,20 +13,16 @@ output_file  = os.path.join(os.path.dirname(__file__), 'test_elevation_output.cs
 
 def test_elevations_points_builder_and_query(points: list):
     points_encoded = elevs.build_elevations_points(points)
-    query = elevs.format_elevations_query(points_encoded)
-    query_polyline = elevs.format_elevations_query(points_encoded, 'polyline', 10)
-    query_ellipsoid = elevs.format_elevations_query(points_encoded, heights='ellipsoid')
-    
-    response_default = commons.get_API_data(query)
-    
-    parsed_response = elevs.parse_elevations_data(response_default, points, method='default')
-    print(parsed_response)
+    #query = elevs.format_elevations_query(points_encoded)
+    query_polyline = elevs.format_elevations_query(points_encoded, 'polyline', 50)
+    #query_ellipsoid = elevs.format_elevations_query(points_encoded, heights='ellipsoid')
     
     response_polyline = commons.get_API_data(query_polyline)
-    response_ellipsoid = commons.get_API_data(query_ellipsoid)
+    parsed_response_polyline = elevs.parse_elevations_data(response_polyline, points, method='polyline')
+    print(parsed_response_polyline)
             
-    #elevations_data = [response_default, response_polyline, response_ellipsoid]
-    #write_csv_file(elevations_data)
+    elevations_data = [parsed_response_polyline]
+    write_csv_file(elevations_data)
 
 def write_csv_file(elevations_data: list):
     with open(output_file, mode='a', newline='') as write_file:
@@ -37,7 +33,6 @@ def reset_csv_file():
     with open('test_elevation_output.csv', mode='w', newline='') as clear_file:
         clear_file.truncate()
         file_writer = csv.writer(clear_file, delimiter=",")
-        file_writer.writerow(['points_encoded', 'query', 'query_polyline', 'query_ellipsoid'])
 
 with open(data_file, "r") as file:
     reader = csv.reader(file)
@@ -45,7 +40,7 @@ with open(data_file, "r") as file:
     count = 0
     reset_csv_file()
     for row in reader:
-        if (row[1] == 'latitude'):
+        if (count == 0):
             continue
         points.append({row[1]:row[2]})
         count += 1

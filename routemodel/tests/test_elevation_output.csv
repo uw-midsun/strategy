@@ -1,11 +1,51 @@
-points_encoded,query,query_polyline,query_ellipsoid
-7-tq0qlr2KvO3nBgQxbiLqvBi4Cj9C0T,Elevation/List?points=7-tq0qlr2KvO3nBgQxbiLqvBi4Cj9C0T&heights=sealevel,Elevation/Polyline?points=7-tq0qlr2KvO3nBgQxbiLqvBi4Cj9C0T&heights=sealevel&samples=10,Elevation/List?points=7-tq0qlr2KvO3nBgQxbiLqvBi4Cj9C0T&heights=ellipsoid
-ywsqjykr2Ky1ChwE2tB0WguB-DtlCjuC04F,Elevation/List?points=ywsqjykr2Ky1ChwE2tB0WguB-DtlCjuC04F&heights=sealevel,Elevation/Polyline?points=ywsqjykr2Ky1ChwE2tB0WguB-DtlCjuC04F&heights=sealevel&samples=10,Elevation/List?points=ywsqjykr2Ky1ChwE2tB0WguB-DtlCjuC04F&heights=ellipsoid
-_yi6soyr2K56H96UwjSynN5qHu0QuiIpxF6jH,Elevation/List?points=_yi6soyr2K56H96UwjSynN5qHu0QuiIpxF6jH&heights=sealevel,Elevation/Polyline?points=_yi6soyr2K56H96UwjSynN5qHu0QuiIpxF6jH&heights=sealevel&samples=10,Elevation/List?points=_yi6soyr2K56H96UwjSynN5qHu0QuiIpxF6jH&heights=ellipsoid
-m1io1kts2Kp3C89Ds7oBm6TutzCl92BzlUw3JkjrB,Elevation/List?points=m1io1kts2Kp3C89Ds7oBm6TutzCl92BzlUw3JkjrB&heights=sealevel,Elevation/Polyline?points=m1io1kts2Kp3C89Ds7oBm6TutzCl92BzlUw3JkjrB&heights=sealevel&samples=10,Elevation/List?points=m1io1kts2Kp3C89Ds7oBm6TutzCl92BzlUw3JkjrB&heights=ellipsoid
-gwwx-j1r2K-i0C16-CnpvCqo9CkhpNp05HnmjCo8mC0slC,Elevation/List?points=gwwx-j1r2K-i0C16-CnpvCqo9CkhpNp05HnmjCo8mC0slC&heights=sealevel,Elevation/Polyline?points=gwwx-j1r2K-i0C16-CnpvCqo9CkhpNp05HnmjCo8mC0slC&heights=sealevel&samples=10,Elevation/List?points=gwwx-j1r2K-i0C16-CnpvCqo9CkhpNp05HnmjCo8mC0slC&heights=ellipsoid
-4wzmu90r2Kl31C4hxBvh1Ms2sJg6-B1p5CtnatiiCgstE,Elevation/List?points=4wzmu90r2Kl31C4hxBvh1Ms2sJg6-B1p5CtnatiiCgstE&heights=sealevel,Elevation/Polyline?points=4wzmu90r2Kl31C4hxBvh1Ms2sJg6-B1p5CtnatiiCgstE&heights=sealevel&samples=10,Elevation/List?points=4wzmu90r2Kl31C4hxBvh1Ms2sJg6-B1p5CtnatiiCgstE&heights=ellipsoid
-vwhzmp2u2KmrgK_tnLnx0C2_zB82yBshvCmvvFij5YpunH,Elevation/List?points=vwhzmp2u2KmrgK_tnLnx0C2_zB82yBshvCmvvFij5YpunH&heights=sealevel,Elevation/Polyline?points=vwhzmp2u2KmrgK_tnLnx0C2_zB82yBshvCmvvFij5YpunH&heights=sealevel&samples=10,Elevation/List?points=vwhzmp2u2KmrgK_tnLnx0C2_zB82yBshvCmvvFij5YpunH&heights=ellipsoid
-x6tp1-1z2Ko4vDntzJqi-B4gxCr-pBi1rB9znBxqkByha,Elevation/List?points=x6tp1-1z2Ko4vDntzJqi-B4gxCr-pBi1rB9znBxqkByha&heights=sealevel,Elevation/Polyline?points=x6tp1-1z2Ko4vDntzJqi-B4gxCr-pBi1rB9znBxqkByha&heights=sealevel&samples=10,Elevation/List?points=x6tp1-1z2Ko4vDntzJqi-B4gxCr-pBi1rB9znBxqkByha&heights=ellipsoid
-nh4oxkh12K7v3Brw7Bon0HhrPzvRy8iBm6gBp4QlnJ,Elevation/List?points=nh4oxkh12K7v3Brw7Bon0HhrPzvRy8iBm6gBp4QlnJ&heights=sealevel,Elevation/Polyline?points=nh4oxkh12K7v3Brw7Bon0HhrPzvRy8iBm6gBp4QlnJ&heights=sealevel&samples=10,Elevation/List?points=nh4oxkh12K7v3Brw7Bon0HhrPzvRy8iBm6gBp4QlnJ&heights=ellipsoid
-ihppi2g22K2_Ds6MlpLjqU8uNrjKksKmmGx5C,Elevation/List?points=ihppi2g22K2_Ds6MlpLjqU8uNrjKksKmmGx5C&heights=sealevel,Elevation/Polyline?points=ihppi2g22K2_Ds6MlpLjqU8uNrjKksKmmGx5C&heights=sealevel&samples=10,Elevation/List?points=ihppi2g22K2_Ds6MlpLjqU8uNrjKksKmmGx5C&heights=ellipsoid
+"   Elevation
+0        211
+1        210
+2        196
+3        234
+4        231
+5        217
+6        272
+7        259
+8        318
+9        325
+10       355
+11       331
+12       392
+13       400
+14       428
+15       436
+16       456
+17       462
+18       492
+19       514
+20       541
+21       571
+22       608
+23       666
+24       703
+25       751
+26       781
+27       833
+28       877
+29       930
+30       919
+31       967
+32      1031
+33      1103
+34      1177
+35      1244
+36      1336
+37      1481
+38      1608
+39      1802
+40      1968
+41      2013
+42      1837
+43      1875
+44      2100
+45      2021
+46      2052
+47      2100
+48      2103
+49      2173"
