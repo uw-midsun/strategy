@@ -58,7 +58,7 @@ def format_routes_query(points: str, route_attrs = 'routePath', dist_unit = 'km'
     # adjust url for Route API request
     query = 'Routes?'
 
-    # add coordinates, route attribute option, distance unit, and API key
+    # add coordinates, route attribute option, distance unit,  and API key
     # to url to be requested
     query += '{}routeAttributes={}&distanceUnit={}'.format(points, 
                                                            route_attrs,
