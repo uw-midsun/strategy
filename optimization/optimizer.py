@@ -1,4 +1,8 @@
-from car_model import Car
+import sys
+import os.path
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+from dynamics.car_model import Car
 import numpy
 from scipy.optimize import minimize
 import argparse

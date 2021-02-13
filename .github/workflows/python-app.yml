@@ -40,9 +40,9 @@ jobs:
     - name: Displays directory
       run: |
         cd displays && pytest && cd tests && pytest && cd ../..
-    - name: Optimization directory
+    - name: Dynamics directory
       run: |
-        cd optimization && pytest && cd tests && pytest && cd ../..
+        cd dynamics && pytest && cd tests && pytest && cd ../..
     - name: Routemodel directory
       run: |
         cd routemodel && pytest && cd tests && pytest && cd ../..
