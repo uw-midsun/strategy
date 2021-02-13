@@ -7,7 +7,7 @@ import common
 
 sys.path.append(os.path.dirname(__file__))
 input_file = os.path.join(os.path.dirname(__file__), '..', 'routes', 'ASC2021','ASC2021_draft.csv')
-output_file  = os.path.join(os.path.dirname(__file__), 'generated_speedlimits.csv')
+output_file  = os.path.join(os.path.dirname(__file__), '..', 'routes', 'ASC2021', 'generated_speedlimits.csv')
 
 
 def generate_speedlimits(points: list):
