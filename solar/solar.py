@@ -19,44 +19,55 @@ def integrate(x, y):
 
 class SolarDay:
 
-    def __init__(self, day, latitude, longitude,
-                 timezone, cloudiness, module_angle):
+    def __init__(self, day, latitude, longitude, timezone, cloudiness, module_angle):
+        # Integer as the number of days since the start of the year (0 indexed)
         self.day = day
         self.lat = latitude
         self.long = longitude
         # Cloudiness is the percentage of solar insolation
         # Not being blocked by clouds (i.e. between 0 and 1)
         self.cloud = cloudiness
-        # Given as an integer of the difference between us and UTC
         self.points = []
+        # Given as an integer of the difference between us and UTC (Greenwich time)
         self.time = timezone
         # the module angle is the panel angle wrt the horizontal plane.
         # 0 degrees/rad faces North (front of car)
         self.mod_angle = module_angle
 
     def declination_angle(self):
-        # Declination angle is the angle the sun sits in the sky at noon
+        """
+        :return: Declination angle in degree's
+        Declination angle is the angle the sun sits in the sky at noon
+        """
         d = -23.45 * cos(to_rad(360 / 365) * (self.day + 10))
         return d
 
     def time_correction(self):
         # Measurement of the difference in angle between us and UTC
+        # LSTM = Local standard time meridian (in degrees) runs through the center of each time zone
         LSTM = 15 * self.time
-        B = 360/365 * self.day * -81
+        B = 360 / 365 * self.day * -81
+        # Eot = the time difference between apparent solar time and mean time
         EoT = 9.87 * sin(2 * B) - 7.53 * cos(B) - 1.5 * sin(B)
         TC = 4 * (self.long - LSTM) + EoT
         return TC
 
     def sunrise(self):
+        """
+        :return: time of sunset (24 hour time) using the hour angle and the sunrise equation
+        """
         sunrise = (12 - (1 / to_rad(15))
                    * acos(-1 * tan(to_rad(self.declination_angle()))
-                   * tan(to_rad(self.lat))) - self.time_correction() / 60)
+                          * tan(to_rad(self.lat))) - self.time_correction() / 60)
         return sunrise
 
     def sunset(self):
+        """
+        :return: time of sunset (24 hour time) using the hour angle and the sunset equation
+        """
         sunset = (12 + (1 / to_rad(15))
                   * acos(-1 * tan(to_rad(self.declination_angle()))
-                  * tan(to_rad(self.lat))) - self.time_correction() / 60)
+                         * tan(to_rad(self.lat))) - self.time_correction() / 60)
         return sunset
 
     def day_length(self):
@@ -73,13 +84,13 @@ class SolarDay:
     # the effect of the angle of the sun in the sky and the time of day
     def AM(self, HRA):
         elevation = (asin(sin(to_rad(self.declination_angle()))
-                     * sin(to_rad(self.lat))
-                     + cos(to_rad(self.declination_angle()))
-                     * cos(to_rad(self.lat)) * cos(HRA)))
+                          * sin(to_rad(self.lat))
+                          + cos(to_rad(self.declination_angle()))
+                          * cos(to_rad(self.lat)) * cos(HRA)))
         azimuth = (acos(sin(to_rad(self.declination_angle()))
-                   * cos(to_rad(self.lat))
-                   - cos(to_rad(self.declination_angle()))
-                   * sin(to_rad(self.lat)) * cos(HRA)) / cos(elevation))
+                        * cos(to_rad(self.lat))
+                        - cos(to_rad(self.declination_angle()))
+                        * sin(to_rad(self.lat)) * cos(HRA)) / cos(elevation))
         if HRA > 0:
             azimuth = 2 * pi - azimuth
         zenith = (pi / 2) - elevation
@@ -99,4 +110,4 @@ class SolarDay:
         for i in range(len(points)):
             energy.append(self.solar_insolation(self.time_to_HRA(points[i])))
         self.total_energy = integrate(points, energy) * self.cloud
-        return(energy, points)
+        return (energy, points)
