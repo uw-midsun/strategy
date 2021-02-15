@@ -19,7 +19,7 @@ def integrate(x, y):
 
 class SolarDay:
 
-    def __init__(self, day, latitude, longitude, timezone, cloudiness, module_angle):
+    def __init__(self, day, latitude, longitude, timezone, cloudiness, module_angle, cell_angles, cell_lengths, cell_widths):
         # Integer as the number of days since the start of the year (0 indexed)
         self.day = day
         self.lat = latitude
@@ -33,10 +33,14 @@ class SolarDay:
         # the module angle is the panel angle wrt the horizontal plane.
         # 0 degrees/rad faces North (front of car)
         self.mod_angle = module_angle
+        # Cell info (parallel lists)
+        self.C_angles = cell_angles  # Radians
+        self.C_lengths = cell_lengths
+        self.C_widths = cell_widths
 
     def declination_angle(self):
         """
-        :return: Declination angle in degree's
+        :returns: Declination angle in degree's
         Declination angle is the angle the sun sits in the sky at noon
         """
         d = -23.45 * cos(to_rad(360 / 365) * (self.day + 10))
@@ -54,7 +58,7 @@ class SolarDay:
 
     def sunrise(self):
         """
-        :return: time of sunset (24 hour time) using the hour angle and the sunrise equation
+        :returns: time of sunset (24 hour time) using the hour angle and the sunrise equation
         """
         sunrise = (12 - (1 / to_rad(15))
                    * acos(-1 * tan(to_rad(self.declination_angle()))
@@ -63,7 +67,7 @@ class SolarDay:
 
     def sunset(self):
         """
-        :return: time of sunset (24 hour time) using the hour angle and the sunset equation
+        :returns: time of sunset (24 hour time) using the hour angle and the sunset equation
         """
         sunset = (12 + (1 / to_rad(15))
                   * acos(-1 * tan(to_rad(self.declination_angle()))
@@ -111,3 +115,28 @@ class SolarDay:
             energy.append(self.solar_insolation(self.time_to_HRA(points[i])))
         self.total_energy = integrate(points, energy) * self.cloud
         return (energy, points)
+
+    def suns_vector(self, HRA):
+        """
+        :param HRA: Hour angle
+        :returns: unit vector from origin to sun
+        """
+        elevation = (asin(sin(to_rad(self.declination_angle()))
+                          * sin(to_rad(self.lat))
+                          + cos(to_rad(self.declination_angle()))
+                          * cos(to_rad(self.lat)) * cos(HRA)))
+        azimuth = (acos(sin(to_rad(self.declination_angle()))
+                        * cos(to_rad(self.lat))
+                        - cos(to_rad(self.declination_angle()))
+                        * sin(to_rad(self.lat)) * cos(HRA)) / cos(elevation))
+        if HRA > 0:
+            azimuth = 2 * pi - azimuth
+        zenith = (pi / 2) - elevation
+
+        # Suns unit vector
+        x = sin(zenith) * cos(azimuth)
+        y = sin(zenith) * sin(azimuth)
+        z = cos(zenith)
+        return x, y, z
+
+
