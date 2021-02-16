@@ -2,6 +2,7 @@
 # Specifically the energy coming into the solar panels
 from math import cos, sin, pi, acos, tan, asin
 from numpy import linspace
+from sympy import *
 
 
 def to_rad(angle):
@@ -19,7 +20,8 @@ def integrate(x, y):
 
 class SolarDay:
 
-    def __init__(self, day, latitude, longitude, timezone, cloudiness, module_angle, cell_angles, cell_lengths, cell_widths):
+    def __init__(self, day, latitude, longitude, timezone, cloudiness, module_angle,
+                 cell_angles, cell_lengths, cell_widths):
         # Integer as the number of days since the start of the year (0 indexed)
         self.day = day
         self.lat = latitude
@@ -133,10 +135,36 @@ class SolarDay:
             azimuth = 2 * pi - azimuth
         zenith = (pi / 2) - elevation
 
+        #--------------------------------------------------------------- change as with mod angle
         # Suns unit vector
         x = sin(zenith) * cos(azimuth)
         y = sin(zenith) * sin(azimuth)
         z = cos(zenith)
-        return x, y, z
+        vector = (x, y, z)
+        return vector
 
+    def projected_solar_area(self, sun_vector):
 
+        x, y, z = sun_vector
+        sun_plane = Plane(Point3D(x * 1000, y * 1000, z * 1000), normal_vector=sun_vector)
+        # Loop through each solar cell
+
+        for i in range(len(self.C_angles)):
+            print("yeilo")
+            # initialize the four corners of the solar cell (corner at origin)
+            point_1 = Point3D(0, 0, 0)
+            point_2 = Point3D(0, self.C_widths[i], 0)
+            point_3 = Point3D(self.C_lengths[i] * cos(self.C_angles[i]), self.C_widths[i], self.C_lengths[i] * sin(self.C_angles[i]))
+            point_4 = Point3D(self.C_lengths[i] * cos(self.C_angles[i]), 0, self.C_lengths[i] * sin(self.C_angles[i]))
+            print("holla")
+            point_1_proj = sun_plane.projection(point_1)
+            print("yakyak")
+            point_2_proj = sun_plane.projection(point_2)
+            point_3_proj = sun_plane.projection(point_3)
+            point_4_proj = sun_plane.projection(point_4)
+            print("yello")
+
+if __name__ == "__main__":
+    day = SolarDay(0, 0, 0, 0, 0, 0, [0], [10], [10])
+
+    day.projected_solar_area(day.suns_vector(day.time_to_HRA(12)))
