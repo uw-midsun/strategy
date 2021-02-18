@@ -53,20 +53,17 @@ class Plane:
 def area(point1: Vector, point2: Vector, point3: Vector, point4: Vector):
     vec_1_2 = point2 - point1
     vec_1_4 = point4 - point1
-    vec_2_3 = point2 - point3
-    vec_4_3 = point3 - point4
+    vec_3_2 = point2 - point3
+    vec_3_4 = point4 - point3
 
-    if vec_1_2.is_parallel(vec_4_3) and vec_1_4.is_parallel(vec_2_3):
-        return (vec_1_2 @ vec_1_4).magnitude()
-    else:
-        return "I cry"
+    return ((vec_1_2 @ vec_1_4).magnitude() + (vec_3_2 @ vec_3_4).magnitude()) / 2
 
 
 if __name__ == "__main__":
-    plane = Plane(Vector((10, 10, 10)), Vector((1, 1, 1)))
+    plane = Plane(Vector((500, 500, 500)), Vector((1, 1, 1)))
     point1 = plane.project(Vector((0, 0, 0)))
-    point2 = plane.project(Vector((0, 1, 0)))
-    point3 = plane.project(Vector((1, 1, 0)))
+    point2 = plane.project(Vector((0, 2, 0)))
+    point3 = plane.project(Vector((1, 2, 0)))
     point4 = plane.project(Vector((1, 0, 0)))
 
     print(area(point1, point2, point3, point4))

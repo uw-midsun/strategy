@@ -2,7 +2,7 @@
 # Specifically the energy coming into the solar panels
 from math import cos, sin, pi, acos, tan, asin
 from numpy import linspace
-from sympy import *
+from geometry import *
 
 
 def to_rad(angle):
@@ -140,31 +140,27 @@ class SolarDay:
         x = sin(zenith) * cos(azimuth)
         y = sin(zenith) * sin(azimuth)
         z = cos(zenith)
-        vector = (x, y, z)
+        vector = Vector((x, y, z))
         return vector
 
-    def projected_solar_area(self, sun_vector):
+    def projected_solar_area(self, HRA):
+        sun_vector = self.suns_vector(HRA)
+        panel_area = 0
+        sun_plane = Plane(1000 * sun_vector, sun_vector)
 
-        x, y, z = sun_vector
-        sun_plane = Plane(Point3D(x * 1000, y * 1000, z * 1000), normal_vector=sun_vector)
         # Loop through each solar cell
-
         for i in range(len(self.C_angles)):
-            print("yeilo")
             # initialize the four corners of the solar cell (corner at origin)
-            point_1 = Point3D(0, 0, 0)
-            point_2 = Point3D(0, self.C_widths[i], 0)
-            point_3 = Point3D(self.C_lengths[i] * cos(self.C_angles[i]), self.C_widths[i], self.C_lengths[i] * sin(self.C_angles[i]))
-            point_4 = Point3D(self.C_lengths[i] * cos(self.C_angles[i]), 0, self.C_lengths[i] * sin(self.C_angles[i]))
-            print("holla")
-            point_1_proj = sun_plane.projection(point_1)
-            print("yakyak")
-            point_2_proj = sun_plane.projection(point_2)
-            point_3_proj = sun_plane.projection(point_3)
-            point_4_proj = sun_plane.projection(point_4)
-            print("yello")
+            point_1 = (0, 0, 0)
+            point_2 = (0, self.C_widths[i], 0)
+            point_3 = (self.C_lengths[i] * cos(self.C_angles[i]), self.C_widths[i], self.C_lengths[i] * sin(self.C_angles[i]))
+            point_4 = (self.C_lengths[i] * cos(self.C_angles[i]), 0, self.C_lengths[i] * sin(self.C_angles[i]))
 
-if __name__ == "__main__":
-    day = SolarDay(0, 0, 0, 0, 0, 0, [0], [10], [10])
+            point_1_proj = sun_plane.project(point_1)
+            point_2_proj = sun_plane.project(point_2)
+            point_3_proj = sun_plane.project(point_3)
+            point_4_proj = sun_plane.project(point_4)
 
-    day.projected_solar_area(day.suns_vector(day.time_to_HRA(12)))
+            panel_area += area(point_1_proj, point_2_proj, point_3_proj, point_4_proj)
+
+        return panel_area
