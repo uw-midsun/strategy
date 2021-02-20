@@ -3,9 +3,8 @@ import os.path
 sys.path.append(os.path.dirname(__file__))
 import requests
 import json
-import csv
 
-from Config import WEATHER_API_KEY
+from config import WEATHER_API_KEY
 one_call_base = 'https://api.openweathermap.org/data/2.5/onecall?'
 path = os.path.join(os.path.dirname(__file__), '..', 'routes\ASC2021\ASC2021_draft.csv')
 with open(path, 'r') as wea2021:
