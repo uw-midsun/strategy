@@ -23,7 +23,7 @@ with open(path, 'r') as wea2021:
             locations = [location[j * n:(j + 1) * n] for j in range((len(location) + n - 1) // n )]  
         #for point #1
         lat = locations[0][0].strip()
-        lon = location[0][1].strip()
+        lon = locations[0][1].strip()
 
         # build query to make an API call
         query_url = one_call_base + 'lat=' + lat + '&lon=' + lon + '&exclude=hour,daily&units=metric&appid=' + WEATHER_API_KEY
