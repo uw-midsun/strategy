@@ -1,21 +1,37 @@
 import sys
 import os.path
 sys.path.append(os.path.dirname(__file__))
+import requests
+
 
 from config import WEATHER_API_KEY
+from heartland_coordinates import longtitude, latitude
+import pandas as pd
 
-one_call = 'https://api.openweathermap.org/data/2.5/onecall?lat=35.6870&lon=-105.9378&exclude=hour,daily&units=metric'
-headers = {'Content-Type': }
-path = '/Users/anhmai/Desktop/weather\ api '
-with open(path, 'r') as wea2021:
-    x = next(wea2021)
-    for line in wea2021:
+read_file = pd.read_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/get_weather.py')
+read_file.to_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/new_get_weather.csv', index=None)
+
+one_call_base = 'https://api.openweathermap.org/data/2.5/onecall?'
+path = os.path.join(os.path.dirname(__file__), '..', 'routes\ASC2021\ASC2021_draft.csv')
+with open(path, 'r') as longtitude, latitude:
+    for line in longtitude, latitude:
+        # read a set of latitude and longitude points
         row = line.split(',')
-        # assign lon and lat
-        lon = float(row[1])
-        lat = float(row[2])
-        # make call
-        params = {'key': api_key, 'lat': lat, 'lon': lon}
-        response = requests.get(one_call, headers=headers, params=params)
-        # output weather data
-        
+        lat = row[0].strip()
+        lon = row[1].strip()
+
+        # build query to make an API call
+        query_url = one_call_base + 'lat=' + lat + '&lon=' + lon + '&exclude=hour,daily&units=metric&appid=' + WEATHER_API_KEY
+
+        # this makes our request
+        response = requests.get(query_url)
+        # this will check if API call was successful
+        if response.status_code == 200:
+            # parse response from JSON format to a dictionary object in python
+            weather_data = response.json()
+            # look up specific field based on the JSON structure
+            current_temperature = weather_data["current"]["temp"]
+            # TODO: we'll want to look at more fields, and save into a CSV
+            print(current_temperature)
+
+        # TODO: make requests for every line (ie. for every set of latitude and longitude points)
