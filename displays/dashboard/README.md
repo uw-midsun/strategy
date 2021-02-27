@@ -4,6 +4,7 @@ Directory for dashboard visualization. WORK IN PROGRESS.
 
 ## Instructions for running
 + pip install `dash` and `dash-boostrap-components`. We will need to add this to requirements.txt as we develop it.
++ pip install `dash-leaflet` (required for map functionality)
 + Run `index.py` file to start server. Should start on [local host at port 8050](http://localhost:8050/)
 
 ## Directory components
