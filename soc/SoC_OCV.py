@@ -3,19 +3,12 @@ import numpy as np
 import itertools
 import math
 
-from sklearn import datasets, linear_model, metrics
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.pipeline import make_pipeline
-
 #To fix - still energy left at 0% - 2.85V at end due to IR voltage drop
 #This requires a more precise cell cycling profile generated with a SMU
 #0% SoC is defined as when the cell drops below 2.5V under a 3A load.
 
 import sys
 import os.path
-from numpy.core.overrides import verify_matching_signatures
-
-from numpy.lib.shape_base import _make_along_axis_idx
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 fName = "CellDataFileTestMJ1.txt"
 
@@ -99,13 +92,9 @@ class test_SoC_OCV:
 		#print("Open Circuit Voltage for {} State of Charge is ".format(value) + str(self.SoCOCV.get_cell_ocv(value)))
 		print("Linear Version:")
 		print(f"regular 100: {self.SoCOCV.get_cell_ocv(100)}")
-		print(f"binary 100: {self.SoCOCV.get_binary_sort(100)}")
 		print(f"regular 75: {self.SoCOCV.get_cell_ocv(75)}")
-		print(f"binary 75: {self.SoCOCV.get_binary_sort(75)}")
 		print(f"regular 25: {self.SoCOCV.get_cell_ocv(25)}")
-		print(f"binary 25: {self.SoCOCV.get_binary_sort(25)}")
 		print(f"regular 0: {self.SoCOCV.get_cell_ocv(0)}")
-		print(f"binary 0: {self.SoCOCV.get_binary_sort(0)}")
 	
 	def test_plot_graph(self):
 		self.SoCOCV.plot_graph()
