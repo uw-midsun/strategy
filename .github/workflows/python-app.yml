@@ -31,21 +31,21 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Strategy repository, ignoring routemodel tests since API key not available
+    - name: Strategy repository
       run: |
-        pytest --ignore=routemodel/tests
+        pytest
     - name: Auxloss directory
       run: |
         cd auxloss && pytest && cd tests && pytest && cd ../..
     - name: Displays directory
       run: |
         cd displays && pytest && cd tests && pytest && cd ../..
-    - name: Optimization directory
+    - name: Dynamics directory
       run: |
-        cd optimization && pytest && cd tests && pytest && cd ../..
-    # - name: Routemodel directory
-    #   run: |
-    #     cd routemodel && pytest && cd tests && pytest && cd ../..
+        cd dynamics && pytest && cd tests && pytest && cd ../..
+    - name: Routemodel directory
+      run: |
+        cd routemodel && pytest && cd tests && pytest && cd ../..
     - name: SOC directory - deprecated
       run: |
         cd soc && pytest && cd soc_deprecated/tests && pytest && cd ../../..

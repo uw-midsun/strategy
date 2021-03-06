@@ -1,8 +1,6 @@
-import requests
 import pandas as pd
 import sys
 import os.path
-from config import API_KEY, BASE_URL
 
 sys.path.append(os.path.dirname(__file__))
 
@@ -18,7 +16,7 @@ ENCODER_DICT = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E", 5: "F", 6: "G", 7: "H",
                 57: "5", 58: "6", 59: "7", 60: "8", 61: "9", 62: "_", 63: "-"}
 
 
-def points_builder(coordinates: list):
+def build_elevations_points(coordinates: list):
     """
     Compresses points to compressed string
     @param coordinates: list of dictionaries of coordinates Ex: [{lat1: long1}, {lat2: long2},... {latN: longN}]
@@ -74,7 +72,7 @@ def points_builder(coordinates: list):
     return compressed_points
 
 
-def get_elevation_data(coordinates_str: str, method='default', sample_val=0, heights ='sealevel'):
+def format_elevations_query(coordinates_str: str, method='default', sample_val=0, heights ='sealevel'):
     """
     Retrieves elevation data response from Bing Maps API through one of these two methods:
         - default method:  Gets elevations for a set of coordinates
@@ -89,38 +87,36 @@ def get_elevation_data(coordinates_str: str, method='default', sample_val=0, hei
     """
     if method == 'default':
         # append specified elevation URL details
-        url = BASE_URL + 'Elevation/List?'
+        query = 'Elevation/List?'
         # add parameters to URL
-        url += 'points={}&heights={}&key={}'.format(coordinates_str, heights, API_KEY)
+        query += 'points={}&heights={}'.format(coordinates_str, 
+                                               heights)
     elif method == 'polyline':
         if sample_val <= 0:
             print("Error, sample_val must be greater than 0")
             sys.exit()
         # append specified elevation URL details
-        url = BASE_URL + 'Elevation/Polyline?'
+        query = 'Elevation/Polyline?'
         # add parameters to URL
-        url += 'points={}&heights={}&samples={}&key={}'.format(coordinates_str, heights, sample_val, API_KEY)
+        query += 'points={}&heights={}&samples={}'.format(coordinates_str, 
+                                                          heights, 
+                                                          sample_val)
     else:
         print("Error, incorrect method parameter")
         sys.exit()
 
     # request URL and return json-encoded content of a response
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-    except requests.exceptions.RequestException as err:
-        print("An error occurred:", err, "\nMessage:", err.response.text)
-        sys.exit()
-
-    return response.json()
+    return query
 
 
-def parse_elevation_data(response: dict, coordinates: list, method='default'):
+def parse_elevations_data(response: dict, coordinates: list = [], method='default'):
     """
     Parsing through Elevations API call response.
-        - if API call was done using polyline method, set method in parse_elevation_data to 'polyline'
+        - if API call was done using polyline method, set method parameter in parse_elevations_data to 'polyline'
     @param response: Requests.response.json() object from API call
-    @param coordinates: list of dictionaries of coordinates Ex: [{lat1: long1}, {lat2: long2},... {latN: longN}]
+    @param coordinates: list of dictionaries of coordinates 
+        Not required for polyline method.
+        Ex: [{lat1: long1}, {lat2: long2},... {latN: longN}]
     @param method (optional): string, either 'default' or 'polyline'
     @return: dataframe containing elevation data
     """
@@ -141,12 +137,12 @@ def parse_elevation_data(response: dict, coordinates: list, method='default'):
 
         # loop through coordinates and write coordinates into DataFrame
         counter = 0
-        for index, pair in enumerate(coordinates):
+        for pair in coordinates:
             for key, value in pair.items():
                 elevations_df = elevations_df.append({'Latitude': key,
                                                       'Longitude': value,
                                                       'Elevation': elevations[counter]},
-                                                     ignore_index=True)
+                                                      ignore_index=True)
                 counter += 1
 
         return elevations_df
@@ -156,7 +152,8 @@ def parse_elevation_data(response: dict, coordinates: list, method='default'):
         elevations_df = pd.DataFrame(columns=headers)
         # input elevations into dataframe
         for val in elevations:
-            elevations_df = elevations_df.append({'Elevation': val}, ignore_index=True)
+            elevations_df = elevations_df.append({'Elevation': val}, 
+                                                 ignore_index=True)
 
         return elevations_df
     else:
