@@ -32,7 +32,7 @@ class SolarDay:
         self.points = []
         # Given as an integer of the difference between us and UTC (Greenwich time)
         self.time = timezone
-        # the module angle is the panel angle wrt the horizontal plane.
+        # the cell angle is the panel angle wrt the horizontal plane. (plane through middle of car)
         # 0 degrees/rad faces North (front of car)
         self.mod_angle = module_angle
         # Cell info (parallel lists)
@@ -131,11 +131,13 @@ class SolarDay:
                         * cos(to_rad(self.lat))
                         - cos(to_rad(self.declination_angle()))
                         * sin(to_rad(self.lat)) * cos(HRA)) / cos(elevation))
+
+        # Assuming mod_angle is clockwise. Used to compensate for car facing another direction
+        azimuth -= to_rad(self.mod_angle)
         if HRA > 0:
             azimuth = 2 * pi - azimuth
         zenith = (pi / 2) - elevation
 
-        #--------------------------------------------------------------- change as with mod angle
         # Suns unit vector
         x = sin(zenith) * cos(azimuth)
         y = sin(zenith) * sin(azimuth)
