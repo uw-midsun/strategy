@@ -8,9 +8,6 @@ from config import WEATHER_API_KEY
 from heartland_coordinates import longtitude, latitude
 import pandas as pd
 
-read_file = pd.read_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/get_weather.py')
-read_file.to_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/new_get_weather.csv', index=None)
-
 one_call_base = 'https://api.openweathermap.org/data/2.5/onecall?'
 path = os.path.join(os.path.dirname(__file__), '..', 'routes\ASC2021\ASC2021_draft.csv')
 with open(path, 'r') as longtitude, latitude:
@@ -35,3 +32,6 @@ with open(path, 'r') as longtitude, latitude:
             print(current_temperature)
 
         # TODO: make requests for every line (ie. for every set of latitude and longitude points)
+
+read_file = pd.read_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/get_weather.py')
+read_file.to_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/new_get_weather.csv', index=None)
