@@ -2,7 +2,7 @@ import time
 import sys
 import os.path
 import csv
-import utilities #utility functions
+from utilities import get_radiation_data, getTime, findDistance
 from config import SOLCAST_API_KEY
 api_key = SOLCAST_API_KEY
 
@@ -34,27 +34,32 @@ with open(path, 'r') as asc2018:
     for i in range(16): 
         while total_time < 30:
             p2 = getCoordinates(asc2018)
-            d = utilities.findDistance(p1[0],p1[1], p2[0], p2[1])
-            total_time += utilities.getTime(d) * 60 #get time in mins
+            d = findDistance(p1[0],p1[1], p2[0], p2[1])
+            total_time += getTime(d) * 60 #get time in mins
             p1 = p2
+
         #PRINTING COORDINATES USED
         print(p1)
         print(p2) 
+
         #get prediction forecast (API CALL)
-        raw_forecast = utilities.get_radiation_data(p2[0], p2[1], api_key)
+        raw_forecast = get_radiation_data(p2[0], p2[1], api_key)
         future_forecast = [i, raw_forecast['forecasts'][1]['ghi']]
         #current time
         t = time.localtime()
         current_time = time.strftime("%H:%M:%S", t)
         print(current_time)
+
         #wait 30 minutes
         time.sleep(1800)
+
         #get current forecast (API CALL)
-        raw_curr = utilities.get_radiation_data(p2[0], p2[1], api_key)
+        raw_curr = get_radiation_data(p2[0], p2[1], api_key)
         future_forecast.append(raw_curr['forecasts'][0]['ghi'])
         #write shtuff to csv
         writer = csv.writer(f)
         writer.writerow(future_forecast)
-        #get next points for distance calculation
+
+        #reset time accumulator
         total_time = 0
     f.close()

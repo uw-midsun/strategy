@@ -39,3 +39,4 @@ def findDistance(a1, a2, b1, b2):
 #time in hours
 def getTime(distance):
     return distance/SPEED
+    
