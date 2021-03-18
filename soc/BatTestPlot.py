@@ -5,9 +5,6 @@ from sklearn import datasets, linear_model, metrics
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
 
-# fName = "D:\Documents\MSXIV\MSXIV\Strategy\CellDataFileTestMJ1.txt"
-# fName = r"C:\Users\micke\Documents\MSXIV\Strategy\CellDataFileTestMJ1.txt"
-
 import sys
 import os.path
 sys.path.append(os.path.dirname(__file__))
@@ -44,16 +41,6 @@ class BatTestPlot:
 		soc = soc.reshape(-1,1)
 		voltage = voltage.reshape(-1,1)
 		
-		#model = linear_model.LinearRegression()
-		#model.fit(soc, voltage)
-		
-		#voltage_test = model.predict(soc)
-		
-		#ax.plot(soc, voltage_test, 'r-')
-		
-		#print('Coefficients: \n', model.coef_)
-		#print('Variance Score: %.2f' % metrics.r2_score(voltage, voltage_test))
-		
 		poly_model = make_pipeline(PolynomialFeatures(5), linear_model.Ridge())
 		poly_model.fit(soc, v_ocv)
 		
@@ -75,4 +62,3 @@ print ("Started")
 
 test = BatTestPlot()
 test.read_data(fName)
-#test.plot_SoCOCV()

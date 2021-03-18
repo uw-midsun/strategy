@@ -20,9 +20,10 @@ class CoulombCounter:
 	'''
 	def __init__(self):
 		self.energy_available = 0
-		self.pack_energy = 36 * 36 * 3.45 *3.635 #36S * 36P * 3.45Ah * 3.635V = 16 252.812 Wh
+		# Potential additions to pack_energy: 36S * 36P * 3.45Ah * 3.635V = 16 252.812 Wh
+		self.pack_energy = 36 * 36 * 3.45 *3.635 
 		self.SoC = self.energy_available / self.pack_energy
-		self.maxSoC = 1 #the value of self.SoC when at 100% full
+		#self.maxSoC = 1 #the value of self.SoC when at 100% full
 		self.PackEff = PackEfficiency()
 		#cell ocv is available with PackEff.soc_ocv_curve.get_cell_ocv(self.SoC, max = 1)
 		
@@ -38,7 +39,7 @@ class CoulombCounter:
 		return self.SoC
 		
 	def _print(self):
-		print("SoC: {}  Energy Remaining: {}  Voltage: {}".format(self.SoC, self.energy_available, self.PackEff.soc_ocv_curve.get_cell_ocv(self.SoC, max = self.maxSoC)*36))
+		print("SoC: {}  Energy Remaining: {}  Voltage: {}".format(self.SoC, self.energy_available, self.PackEff.retrieve_ocv(self.SoC)*36))
 	
 	#given telemetry updates, discharge the cells
 	def telemetry_discharge(self, telemetry_pack_current, telemetry_pack_voltage, telemetry_interval_ms):
@@ -51,7 +52,7 @@ class CoulombCounter:
 			power_W *= -1
 		
 		#power calculation taking the power loss into account
-		power_total, efficiency = self.PackEff.draw_power(power_W, self.SoC, max = self.maxSoC)
+		power_total, efficiency = self.PackEff.draw_power(power_W, self.SoC)
 		print(power_total)
 		
 		#total energy in Wh

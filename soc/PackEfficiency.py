@@ -25,17 +25,20 @@ class PackEfficiency:
 	
 	def __init__(self):
 		self.pack_resistance = 0.055
-		
 		#initialize SoC-OCV model curve
 		self.soc_ocv_curve = SoC_OCV()
+
+	# Retrieves the ocv value from the SoC_OCV class
+	def retrieve_ocv(self, soc: float or int):
+		return self.soc_ocv_curve.get_cell_ocv(soc)
 	
 	#if we want say 1000W at the motors, we will need to draw more power (1050W) from the cells
-	def draw_power(self, power_outside_pack_W, soc, max = 100): #max is the maximum value for 100% SoC
+	def draw_power(self, power_outside_pack_W, soc): #max is the maximum value for 100% SoC
 		if power_outside_pack_W == 0:
 			return (0, 1)
 		
 		#pack_ocv = 36*4 #from SoC-OCV curve or telemetry, assume cells are balanced
-		pack_ocv = self.soc_ocv_curve.get_cell_ocv(soc, max) * 36
+		pack_ocv = self.soc_ocv_curve.get_cell_ocv(soc) * 36
 		print("Pack OCV: {}".format(pack_ocv))
 		
 		#solve quadratic equation to find current

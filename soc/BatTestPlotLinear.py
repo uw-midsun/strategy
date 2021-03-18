@@ -31,10 +31,4 @@ class BatTestPlotLinear:
         plt.title('Soc vs Voltage LG MJ1 @3A DSC')
         plt.legend(loc = 'lower right')
         plt.grid(True)
-        plt.show()	
-		
-	
-print ("Started")
-
-test = BatTestPlotLinear()
-test.read_data(fName)
+        plt.show()

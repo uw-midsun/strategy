@@ -10,7 +10,7 @@ import math
 import sys
 import os.path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
-fName = "CellDataFileTestMJ1.txt"
+fName = "Test//CellDataFileTestMJ1.txt"
 
 class SoC_OCV:
 	def __init__(self):
@@ -30,7 +30,7 @@ class SoC_OCV:
 
 		# make points list with x - y pairs
 		self.points = list(zip(soc, v_ocv))
-		self.points.sort(key=lambda tup: tup[1])
+		self.points.sort(key=lambda tup: tup[1]) 
 		self.soc = [x for (x, y) in self.points]
 		self.v_ocv =  [y for (x, y) in self.points]
 		# Graph of the error of the SOC over the entire discharge (% error)
@@ -41,40 +41,52 @@ class SoC_OCV:
 	def get_points(self):
 		return self.points
 	
-	def get_cell_ocv(self, soc: float or int):
+	def get_cell_ocv(self, soc: float or int) -> list:
 		if (soc > self.soc[-1] or soc < self.soc[0]):
-			raise Exception("The soc value if out of predicted range")
+			raise Exception("The soc value is out of predicted range")
 		
 		max_soc = len(self.soc) - 1
 		min_soc = 0
 
-		while (min_soc <= max_soc):
+		while min_soc <= max_soc:
 			mid_soc = math.floor((max_soc + min_soc) / 2)
-			if (self.soc[mid_soc] < soc):
+			if self.soc[mid_soc] < soc:
 				min_soc = mid_soc + 1
-			elif (self.soc[mid_soc] > soc):
+			elif self.soc[mid_soc] > soc:
 				max_soc = mid_soc - 1
 			else:
 				return self.v_ocv[mid_soc]
 		
-		min_soc = max_soc - 10
-		return self.__find_not_in_search__(soc, min_soc)
+		min_soc = max_soc - 1
+
+		if min_soc >= 0:
+			return self.__find_not_in_search__(soc, min_soc, True)
+		else:
+			min_soc = 0
+			return self.__find_not_in_search__(soc, min_soc, True)
 	
-	def __find_not_in_search__(self, soc: int, min_soc: int):
+	def __find_not_in_search__(self, value_used_to_find: int, min: int, is_soc: bool) -> float or int:
 		ocv0 = 0
 		ocv1 = 0
 		soc0 = 0
 		soc1 = 0
-		for index in range(min_soc, len(self.soc)):
-			if (self.soc[index] < soc):
-				soc0 = self.soc[index]
-				ocv0 = self.v_ocv[index]
-			elif ((self.soc[index] > soc)):
-				soc1 = self.soc[index]	
-				ocv1 = self.v_ocv[index]
-				break
-		ocv = round(((soc - soc0)*(ocv1 - ocv0) / (soc1 - soc0)) + ocv0, 6)
-		return ocv
+
+		# Guess: Length of soc array is equal to the ocv array
+		for index in range(min, len(self.soc)):
+				if (self.soc[index] < value_used_to_find):
+					soc0 = self.soc[index]
+					ocv0 = self.v_ocv[index]
+				elif ((self.soc[index] > value_used_to_find)):
+					soc1 = self.soc[index]	
+					ocv1 = self.v_ocv[index]
+					break
+
+		if is_soc:
+			ocv = round(((value_used_to_find - soc0)*(ocv1 - ocv0) / (soc1 - soc0)) + ocv0, 6)
+			return ocv
+		else:
+			soc = round(soc1 - ((ocv1 - value_used_to_find)*(soc1 - soc0) / (ocv1 - ocv0)), 6)
+			return soc		
 	
 	def plot_graph(self):
 		plt.plot(self.soc, self.v_ocv, c = 'r')
@@ -83,19 +95,57 @@ class SoC_OCV:
 		plt.ylabel("Open Circuit Voltage (OCV)")
 		plt.grid(True)
 		plt.show()
+	
+
+	def correct_soc(self, ocv: float or int, current: int or float) -> int or float:
+		if current < 2:
+			if (ocv > self.v_ocv[-1] or ocv < self.v_ocv[0]):
+				raise Exception("The open circuit voltage value is out of predicted range")
+			
+			max_ocv = len(self.v_ocv) - 1
+			min_ocv = 0
+
+			while min_ocv <= max_ocv:
+				mid_ocv = math.floor((max_ocv + min_ocv) / 2)
+				if self.v_ocv[mid_ocv] < ocv:
+					min_ocv = mid_ocv + 1
+				elif self.v_ocv[mid_ocv] > ocv:
+					max_ocv = mid_ocv - 1
+				else:
+					return self.soc[mid_ocv]
+		
+			min_ocv = max_ocv - 1
+
+			if min_ocv >= 0:
+				return self.__find_not_in_search__(ocv, min_ocv, False)
+			else:
+				min_ocv = 0
+				return self.__find_not_in_search__(ocv, min_ocv, False)
+
+		else:
+			raise Exception('Current is too high')
 
 class test_SoC_OCV:
 	def __init__(self):
 		self.SoCOCV = SoC_OCV()
 	
 	def test(self):
-		#print("Open Circuit Voltage for {} State of Charge is ".format(value) + str(self.SoCOCV.get_cell_ocv(value)))
-		print("Linear Version:")
-		print(f"regular 100: {self.SoCOCV.get_cell_ocv(100)}")
-		print(f"regular 75: {self.SoCOCV.get_cell_ocv(75)}")
-		print(f"regular 25: {self.SoCOCV.get_cell_ocv(25)}")
-		print(f"regular 0: {self.SoCOCV.get_cell_ocv(0)}")
-	
+		test1 = self.SoCOCV.get_cell_ocv(100)
+		test2 = self.SoCOCV.get_cell_ocv(75)
+		test3 = self.SoCOCV.get_cell_ocv(25)
+		test4 = self.SoCOCV.get_cell_ocv(0)
+		print("Get OCV test:")
+		print(f"regular 100: {test1}")
+		print(f"regular 75: {test2}")
+		print(f"regular 25: {test3}")
+		print(f"regular 0: {test4}")
+		print('')
+		print("Correct SOC test:")
+		print(f"regular 100: {self.SoCOCV.correct_soc(test1, 1)}")
+		print(f"regular 75: {self.SoCOCV.correct_soc(test2, 1)}")
+		print(f"regular 25: {self.SoCOCV.correct_soc(test3, 1)}")
+		print(f"regular 0: {self.SoCOCV.correct_soc(test4, 1)}")
+
 	def test_plot_graph(self):
 		self.SoCOCV.plot_graph()
 
