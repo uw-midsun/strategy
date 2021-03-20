@@ -2,9 +2,11 @@ import time
 import sys
 import os.path
 import csv
-from utilities import get_radiation_data, getTime, findDistance
+from utilities import get_radiation_data, get_time, findDistance
 from config import SOLCAST_API_KEY
 api_key = SOLCAST_API_KEY
+
+#WARNING: test periodically stops running for ~4 hrs and then continues afterwards
 
 #ALGORITHM OUTLINE
 #*** writing to predictions.csv 
@@ -35,7 +37,7 @@ with open(path, 'r') as asc2018:
         while total_time < 30:
             p2 = getCoordinates(asc2018)
             d = findDistance(p1[0],p1[1], p2[0], p2[1])
-            total_time += getTime(d) * 60 #get time in mins
+            total_time += get_time(d) * 60 #get time in mins
             p1 = p2
 
         #PRINTING COORDINATES USED

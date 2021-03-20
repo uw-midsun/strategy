@@ -26,10 +26,10 @@ def get_radiation_data(longitude, latitude, api_key):
 #takes two pairs of long, lat and calculates distance (km) between them (a1,b1 - lon, a2,b2 - lat)
 def findDistance(a1, a2, b1, b2):
     #converting to radians
-    diff1 = (b2-a2) * math.pi / 180.0
-    diff2 = (b1-a1) * math.pi / 180.0
-    a1_rad = a2 * math.pi / 180.0
-    a2_rad = b2 * math.pi / 180.0
+    diff1 = ((b2-a2) * math.pi) / 180.0
+    diff2 = ((b1-a1) * math.pi) / 180.0
+    a1_rad = (a2 * math.pi) / 180.0
+    a2_rad = (b2 * math.pi) / 180.0
     #haversine formula to find distance
     t1 = math.pow(math.sin(diff1/2), 2)
     t2 = math.cos(a1_rad) * math.cos(a2_rad) * math.pow(math.sin(diff2/2), 2) 
@@ -37,6 +37,6 @@ def findDistance(a1, a2, b1, b2):
     return d
 
 #time in hours
-def getTime(distance):
+def get_time(distance):
     return distance/SPEED
     
