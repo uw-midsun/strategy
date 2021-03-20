@@ -2,6 +2,8 @@ import sys
 import os.path
 sys.path.append(os.path.dirname(__file__))
 import requests
+import csv
+import collections
 
 
 from config import WEATHER_API_KEY
@@ -35,3 +37,18 @@ with open(path, 'r') as longtitude, latitude:
 
 read_file = pd.read_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/get_weather.py')
 read_file.to_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/new_get_weather.csv', index=None)
+
+
+with open('get_weather.csv', 'rb') as f:
+  data = list(csv.reader(f))
+
+
+counter = collections.defaultdict(int)
+for row in data:
+    counter[row[0]] += 1
+
+
+writer = csv.writer(open("/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/new_get_weather.csv", 'w'))
+for row in data:
+    if counter[row[0]] >= 4:
+        writer.writerow(row)
