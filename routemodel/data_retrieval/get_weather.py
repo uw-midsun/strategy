@@ -35,11 +35,11 @@ with open(path, 'r') as longtitude, latitude:
 
         # TODO: make requests for every line (ie. for every set of latitude and longitude points)
 
-read_file = pd.read_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/get_weather.py')
-read_file.to_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/new_get_weather.csv', index=None)
+# read_file = pd.read_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/get_weather.py')
+# read_file.to_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/new_get_weather.csv', index=None)
 
 
-with open('get_weather.csv', 'rb') as f:
+with open('new_get_weather.csv', 'rb') as f:
   data = list(csv.reader(f))
 
 
