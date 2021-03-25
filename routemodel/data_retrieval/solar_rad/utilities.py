@@ -24,7 +24,7 @@ def get_radiation_data(longitude, latitude, api_key):
         return None
 
 #takes two pairs of long, lat and calculates distance (km) between them (a1,b1 - lon, a2,b2 - lat)
-def findDistance(a1, a2, b1, b2):
+def find_distance(a1, a2, b1, b2):
     #converting to radians
     diff1 = ((b2-a2) * math.pi) / 180.0
     diff2 = ((b1-a1) * math.pi) / 180.0

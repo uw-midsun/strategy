@@ -2,12 +2,9 @@ import time
 import sys
 import os.path
 import csv
-from utilities import get_radiation_data, get_time, find_distance
+import utilities #utility functions
 from config import SOLCAST_API_KEY
 api_key = SOLCAST_API_KEY
-
-#WARNING: test periodically stops running for ~4 hrs and then continues afterwards
-
 #ALGORITHM OUTLINE
 #*** writing to predictions.csv 
 #find distance you will be at in 30 mins
@@ -31,37 +28,33 @@ with open(path, 'r') as asc2018:
     next(asc2018)
     total_time = 0
     p2 = None
-    p1 = getCoordinates(asc2018) #[long, lat]
-    f = open('predictions.csv', 'a')
-    for i in range(16): 
+    p1 = getCoordinates(asc2018)
+    f = open('test.csv', 'a')
+    for i in range(2): 
         while total_time < 30:
             p2 = getCoordinates(asc2018)
-            d = find_distance(p1[0],p1[1], p2[0], p2[1])
-            total_time += get_time(d) * 60 #get time in mins
-            p1 = p2
+            #print statement CHECK
+            d = utilities.findDistance(p1[0],p1[1], p2[0], p2[1])
+            total_time += utilities.getTime(d) * 60 #distance in km
+            p1 = p2 #tuple with lat and long
 
-        #PRINTING COORDINATES USED
+        #TEST DISTANCE FUNC
         print(p1)
-        print(p2) 
+        print(p2)
 
         #get prediction forecast (API CALL)
-        raw_forecast = get_radiation_data(p2[0], p2[1], api_key)
-        future_forecast = [i, raw_forecast['forecasts'][1]['ghi']]
-        #current time
-        t = time.localtime()
-        current_time = time.strftime("%H:%M:%S", t)
-        print(current_time)
-
-        #wait 30 minutes
-        time.sleep(1800)
-
+        ##raw_forecast = utilities.get_radiation_data(p2[0], p2[1], api_key)
+        future_forecast = [i, i]
+        #wait 5 minutes
+        time.sleep(1)
         #get current forecast (API CALL)
-        raw_curr = get_radiation_data(p2[0], p2[1], api_key)
-        future_forecast.append(raw_curr['forecasts'][0]['ghi'])
+        ##raw_curr = utilities.get_radiation_data(p2[0], p2[1], api_key)
+        future_forecast.append(i)
         #write shtuff to csv
+        
         writer = csv.writer(f)
         writer.writerow(future_forecast)
-
-        #reset time accumulator
+        
+        #get next points for distance calculation
         total_time = 0
     f.close()
