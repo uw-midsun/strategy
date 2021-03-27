@@ -13,15 +13,13 @@ with open(path, 'r') as wea2021:
     for line in wea2021:
         # read a set of latitude and longitude points
         row = line.split(',')
-        for i in range (len(row)):
-            lat = row[i][0].strip()
-            lon = row[i][1].strip()
-            location.append([lat,lon])
-        print(location)  
+            
         #for point #1
-        lat = locations[0][0].strip()
-        lon = row[0][1].strip()
-
+        lat = row[0]
+        lon = row[1].strip()
+        location.append([float(lat),float(lon)])
+        print(location)
+        
         # build query to make an API call
         query_url = one_call_base + 'lat=' + lat + '&lon=' + lon + '&exclude=hour,daily&units=metric&appid=' + WEATHER_API_KEY
 
