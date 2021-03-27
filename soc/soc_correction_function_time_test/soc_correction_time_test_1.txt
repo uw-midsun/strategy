@@ -1,0 +1,35 @@
+Test 1 with numpy array instead of regular lists: Saturday March 23, 2021 at 11:09 am
+
+# records | time (s)
+--------------------
+4004      | 0.1047
+8050      | 0.1810
+12097     | 0.2928
+16104     | 0.3237
+20146     | 0.4620
+40292     | 4.0332
+120876    | 36.942
+
+Test 2 with regular lists: Saturday March 23, 2021 at 11:10 am
+
+# records | time (s)
+--------------------
+4004      | 0.0777
+8050      | 0.1196
+12097     | 0.1638
+16104     | 0.2063
+20146     | 0.3247
+40292     | 1.9078
+120876    | 19.542
+
+Test 3 with numpy array instead of regular lists: Saturday March 23, 2021 at 11:11 am
+
+# records | time (s)
+--------------------
+4004      | 0.1634
+8050      | 0.2041
+12097     | 0.2439
+16104     | 0.4254
+20146     | 0.8035
+40292     | 2.6015
+120876    | 22.275

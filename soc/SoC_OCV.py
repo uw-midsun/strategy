@@ -31,8 +31,8 @@ class SoC_OCV:
 		# make points list with x - y pairs
 		self.points = list(zip(soc, v_ocv))
 		self.points.sort(key=lambda tup: tup[1]) 
-		self.soc = [x for (x, y) in self.points]
-		self.v_ocv =  [y for (x, y) in self.points]
+		self.soc = np.array([x for (x, y) in self.points])
+		self.v_ocv =  np.array([y for (x, y) in self.points])
 		# Graph of the error of the SOC over the entire discharge (% error)
 		
 	def get_soc_and_v_ocv(self):
@@ -129,8 +129,8 @@ class SoC_OCV:
 class test_SoC_OCV:
 	def __init__(self):
 		self.SoCOCV = SoC_OCV()
-		self.voltage = np.array([])
-		self.current = np.array([])
+		self.voltage_array = np.array([])
+		self.current_array = np.array([])
 		self.v_ocv = np.array([])
 	
 	def test(self):
@@ -155,21 +155,21 @@ class test_SoC_OCV:
 	
 	def test_multiple_correct_soc(self, test_file: str):
 		with open(test_file) as f_in:
-			if np.size(self.voltage) == 0 and np.size(self.current) == 0:
-				self.voltage, self.current = np.loadtxt(itertools.islice(f_in, 3, None), delimiter='\t', usecols=(1,3), unpack=True)
+			if np.size(self.voltage_array) == 0 and np.size(self.current_array) == 0:
+				self.voltage_array, self.current_array = np.loadtxt(itertools.islice(f_in, 3, None), delimiter='\t', usecols=(1,3), unpack=True)
 			else:
 				temp_voltage, temp_current = np.loadtxt(itertools.islice(f_in, 3, None), delimiter='\t', usecols=(1,3), unpack=True)
-				self.voltage = np.concatenate((self.voltage, temp_voltage))
-				self.current = np.concatenate((self.current, temp_current))
+				self.voltage_array = np.concatenate((self.voltage_array, temp_voltage))
+				self.current_array = np.concatenate((self.current_array, temp_current))
 		
-		self.v_ocv = self.voltage + (0.085 * self.current)
+		self.v_ocv = self.voltage_array + (0.085 * self.current_array)
 		print(f"Size of test: {len(self.v_ocv)}")
 
 		for i in range(len(self.v_ocv)):
-			soc = self.SoCOCV.correct_soc(self.v_ocv[i], self.current[i])
+			soc = self.SoCOCV.correct_soc(self.v_ocv[i], self.current_array[i])
 
 testing = test_SoC_OCV()
-#testing.test()
+# testing.test()
 
 test_file1 = "Test//LGMJ1_1_1P_Discharge.txt"
 test_file2 = "Test//LGMJ1_2_1P_Discharge.txt"
@@ -224,9 +224,3 @@ testing.test_multiple_correct_soc(test_file4)
 testing.test_multiple_correct_soc(test_file5)
 seventh_test_time = time.time()
 print(f"time taken for final test: {seventh_test_time - sixth_test_time}\n")
-
-# with open(fName) as f_in:
-# 	x, y, z = np.loadtxt(itertools.islice(f_in, 1, None, 2), delimiter = '\t', usecols = (1,3,5), unpack = True)
-# 	print(x)
-# 	print(y)
-# 	print(z)
