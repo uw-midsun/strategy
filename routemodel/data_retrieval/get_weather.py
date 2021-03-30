@@ -3,19 +3,15 @@ import os.path
 sys.path.append(os.path.dirname(__file__))
 import requests
 import csv
-import collections
-
-
 from config import WEATHER_API_KEY
-from heartland_coordinates import longtitude, latitude
-import pandas as pd
+
 
 one_call_base = 'https://api.openweathermap.org/data/2.5/onecall?'
 path = os.path.join(os.path.dirname(__file__), '..', 'routes\ASC2021\ASC2021_draft.csv')
 
 location = []
-with open(path, 'r') as longtitude, latitude:
-    for line in longtitude, latitude:
+with open(path, 'r') as wea_2021:
+    for line in wea_2021:
         # read a set of latitude and longitude points
         row = line.split(',')
         lat = row[0].strip()
