@@ -12,6 +12,8 @@ import pandas as pd
 
 one_call_base = 'https://api.openweathermap.org/data/2.5/onecall?'
 path = os.path.join(os.path.dirname(__file__), '..', 'routes\ASC2021\ASC2021_draft.csv')
+
+location = []
 with open(path, 'r') as longtitude, latitude:
     for line in longtitude, latitude:
         # read a set of latitude and longitude points
@@ -30,25 +32,14 @@ with open(path, 'r') as longtitude, latitude:
             weather_data = response.json()
             # look up specific field based on the JSON structure
             current_temperature = weather_data["current"]["temp"]
+            location.append(current_temperature)
             # TODO: we'll want to look at more fields, and save into a CSV
             print(current_temperature)
 
         # TODO: make requests for every line (ie. for every set of latitude and longitude points)
 
-# read_file = pd.read_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/get_weather.py')
-# read_file.to_csv (r'/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/new_get_weather.csv', index=None)
+with open('new_get_weather.csv', 'w') as f:
+    data = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-
-with open('new_get_weather.csv', 'rb') as f:
-  data = list(csv.reader(f))
-
-
-counter = collections.defaultdict(int)
-for row in data:
-    counter[row[0]] += 1
-
-
-writer = csv.writer(open("/Users/anhmai/Desktop/MS/strategy/routemodel/data_retrieval/new_get_weather.csv", 'w'))
-for row in data:
-    if counter[row[0]] >= 4:
-        writer.writerow(row)
+    for row in location:   
+        data.writerow([row])
