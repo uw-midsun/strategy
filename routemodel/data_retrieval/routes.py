@@ -1,8 +1,10 @@
 import pandas as pd
 import sys
 import os.path
-
 sys.path.append(os.path.dirname(__file__))
+from datetime import datetime, timedelta
+
+from common import get_API_data
 
 def build_routes_points(waypoints: list, viawaypoints: list):
     """
@@ -111,4 +113,33 @@ def parse_routing_data(response: dict):
     except Exception as error:
         print(f'An error occurred: {error}')
         sys.exit()
+    return route_df
+
+def time_to(speeds: list, route_df: pd.DataFrame, start_time: datetime):
+    '''
+    @param speeds: list of speeds car travels at. Accepts length 1 or same as number of df rows. 
+        Expected to be in equivalent unit as dist_unit in `format_routes_query`
+    @param route_df: Pandas Dataframe object. Expects column of 'Distance to Maneuver'
+    @param start_time: DateTime object, expressing the first row's start time
+
+    @return Pandas Dataframe object passed in, with added columns of:
+        'Speed': Speed at which car travels in segment
+        'Elapsed time': Time (in hours) needed to travel segment based on given speed
+        'Timestamp': Expected time of arrival based on speed and distance to travel
+    '''
+
+    if len(speeds) == 1:
+        route_df['Speed'] = speeds[0]
+    elif len(speeds) == len(route_df.index):
+        route_df['Speed'] = pd.Series(speeds)
+    else:
+        raise ValueError("Incorrect speeds list length")
+
+    route_df['Elapsed Time'] = route_df['Distance to Maneuver'] / route_df['Speed']
+    
+    timestamps = [start_time]
+    timestamps.extend([timestamps[-1] + timedelta(hours=time) \
+        for time in route_df['Elapsed Time'][1:]])
+    route_df['Timestamp'] = pd.Series(timestamps) 
+
     return route_df
