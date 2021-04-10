@@ -4,8 +4,6 @@ import os.path
 sys.path.append(os.path.dirname(__file__))
 from datetime import datetime, timedelta
 
-from common import get_API_data
-
 def build_routes_points(waypoints: list, viawaypoints: list):
     """
     @param waypoints: List of dictionaries of waypoints.
