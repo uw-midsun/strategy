@@ -6,6 +6,8 @@ import pandas as pd
 import data_retrieval.routes as rts
 from datetime import datetime, timedelta
 
+import pytest
+
 def test_routes_points_builder_wps_vwps_correct():
     waypoints = [{"45": "-74"}, {"46": "-75"}]
     viawaypoints = [{"45.5": "-74.5"}]
@@ -130,3 +132,18 @@ def test_time_to_single_speed():
         rts.time_to(speeds, sample_data_df, start_time), 
         result_df
     )
+
+def test_time_to_unexpected_length_speeds():
+    sample_data = {'Latitude':[5, 6],
+                  'Longitude':[10, 16], 
+                  'Maneuver Instruction':['Keep swimming', 'why'],
+                  'Distance to Maneuver':[2, 1.5],
+                  'Direction':['N', 'S'],
+                  'Street':['Main Street', 'yes']}
+    sample_data_df = pd.DataFrame(sample_data, columns = list(sample_data.keys()))
+
+    speeds = [2, 1, 1]
+    start_time = datetime(2020, 12, 8, 1, 2, 3)
+
+    with pytest.raises(ValueError):
+        rts.time_to(speeds, sample_data_df, start_time)

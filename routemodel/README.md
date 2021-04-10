@@ -8,7 +8,7 @@ A directory for modelling the routes the car will take, including information on
 
 Connects and receives responses from Bing Maps APIs to form route / navigation and elevations profile.
 
-+ `routes.py`: Methods to query Routes endpoint, collecting information on latitude, longitude, maneuver instructions, distance to maneuver, distance, and street
++ `routes.py`: Methods to query Routes endpoint, collecting information on latitude, longitude, maneuver instructions, distance to maneuver, distance, and street; method to calculate expected time of arrival based on speeds travelled parameter
 + `elevations.py`: Methods to query Elevations endpoint, forming an elevation profile from a set of coordinates
 + `speedlimits.py`: Methods to query Routes endpoint, collecting information around speed limit changes. Separate call from `routes.py` due to specific route points constraints
 + `common.py`: Common code to execute query on any of the above endpoints and catch errors
