@@ -124,8 +124,8 @@ def time_to(speeds: list, route_df: pd.DataFrame, start_time: datetime):
 
     @return Pandas Dataframe object passed in, with added columns of:
         'Speed': Speed at which car travels in segment
-        'Elapsed time': Time (in hours) needed to travel segment based on given speed
-        'Timestamp': Expected time of arrival based on speed and distance to travel
+        'Elapsed Time': Time (in hours) needed to travel segment based on given speed
+        'Start Timestamp': Expected start time of segment based on speed and distance to travel
     '''
 
     if len(speeds) == 1:
@@ -139,7 +139,7 @@ def time_to(speeds: list, route_df: pd.DataFrame, start_time: datetime):
     
     timestamps = [start_time]
     timestamps.extend([timestamps[-1] + timedelta(hours=time) \
-        for time in route_df['Elapsed Time'][1:]])
-    route_df['Timestamp'] = pd.Series(timestamps) 
+        for time in route_df['Elapsed Time'][:-1]])
+    route_df['Start Timestamp'] = pd.Series(timestamps) 
 
     return route_df
