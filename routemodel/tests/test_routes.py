@@ -130,6 +130,3 @@ def test_time_to_single_speed():
         rts.time_to(speeds, sample_data_df, start_time), 
         result_df
     )
-
-if __name__ == '__main__':
-    test_time_to_single_speed()
