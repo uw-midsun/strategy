@@ -3,8 +3,9 @@ import os.path
 sys.path.append(os.path.dirname(__file__))
 import requests
 import csv
-from config import WEATHER_API_KEY
+import json
 
+from config import WEATHER_API_KEY
 
 one_call_base = 'https://api.openweathermap.org/data/2.5/onecall?'
 path = os.path.join(os.path.dirname(__file__), '..', 'routes\ASC2021\ASC2021_draft.csv')
@@ -12,30 +13,32 @@ path = os.path.join(os.path.dirname(__file__), '..', 'routes\ASC2021\ASC2021_dra
 location = []
 with open(path, 'r') as wea_2021:
     for line in wea_2021:
-        # read a set of latitude and longitude points
         row = line.split(',')
-        lat = row[0].strip()
+        lat = row[0]
         lon = row[1].strip()
 
-        # build query to make an API call
         query_url = one_call_base + 'lat=' + lat + '&lon=' + lon + '&exclude=hour,daily&units=metric&appid=' + WEATHER_API_KEY
 
-        # this makes our request
         response = requests.get(query_url)
-        # this will check if API call was successful
         if response.status_code == 200:
-            # parse response from JSON format to a dictionary object in python
             weather_data = response.json()
-            # look up specific field based on the JSON structure
-            current_temperature = weather_data["current"]["temp"]
-            location.append(current_temperature)
-            # TODO: we'll want to look at more fields, and save into a CSV
-            print(current_temperature)
 
-        # TODO: make requests for every line (ie. for every set of latitude and longitude points)
+            precipitation = 0 if "rain" not in weather_data["current"]["weather"][0] else weather_data["current"]["weather"][0]["rain"]
 
-with open('new_get_weather.csv', 'w') as f:
+            location.append([
+                float(lat), float(lon), 
+                weather_data["current"]["temp"],
+                weather_data["current"]["wind_speed"],
+                weather_data["current"]["wind_deg"],
+                weather_data["current"]["weather"][0]["main"],
+                weather_data["current"]["weather"][0]["description"],
+                precipitation
+            ])
+
+with open('new_get_weather.csv', 'w', newline='') as f:
     data = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
+    data.writerow(['Latitude', 'Longitude', 'Temperature (C)', 'Wind Speed (m/s)', 'Wind Direction', 'Weather', 'Weather Description', 'Precipitation (mm)'])
+
     for row in location:   
-        data.writerow([row])
+        data.writerow(row)
