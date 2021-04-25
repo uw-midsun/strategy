@@ -33,8 +33,7 @@ class BatTestPlotLinear:
         plt.grid(True)
         plt.show()	
 		
-	
-print ("Started")
-
-test = BatTestPlotLinear()
-test.read_data(fName)
+if __name__ == '__main__':	
+    print ("Started")
+    test = BatTestPlotLinear()
+    test.read_data(fName)
