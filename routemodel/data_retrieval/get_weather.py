@@ -34,8 +34,6 @@ def get_weather(one_call_base, path):
                     precipitation
                 ])
 
-get_weather('https://api.openweathermap.org/data/2.5/onecall?', os.path.join(os.path.dirname(__file__), '..', 'routes\ASC2021\ASC2021_draft.csv'))
-
     with open('new_get_weather.csv', 'w', newline='') as f:
         data = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
@@ -43,3 +41,5 @@ get_weather('https://api.openweathermap.org/data/2.5/onecall?', os.path.join(os.
 
         for row in location:   
             data.writerow(row)
+  
+get_weather('https://api.openweathermap.org/data/2.5/onecall?', os.path.join(os.path.dirname(__file__), '..', 'routes\ASC2021\ASC2021_draft.csv'))
