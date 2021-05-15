@@ -1,17 +1,14 @@
-def get_weather():
+import sys
+import os.path
+sys.path.append(os.path.dirname(__file__))
+import requests
+import csv
+import json
+
+from config import WEATHER_API_KEY
+
+def get_weather(one_call_base, path):
     
-    import sys
-    import os.path
-    sys.path.append(os.path.dirname(__file__))
-    import requests
-    import csv
-    import json
-
-    from config import WEATHER_API_KEY
-
-    one_call_base = 'https://api.openweathermap.org/data/2.5/onecall?'
-    path = os.path.join(os.path.dirname(__file__), '..', 'routes\ASC2021\ASC2021_draft.csv')
-
     location = []
     with open(path, 'r') as wea_2021:
         for line in wea_2021:
@@ -36,6 +33,8 @@ def get_weather():
                     weather_data["current"]["weather"][0]["description"],
                     precipitation
                 ])
+
+get_weather('https://api.openweathermap.org/data/2.5/onecall?', os.path.join(os.path.dirname(__file__), '..', 'routes\ASC2021\ASC2021_draft.csv'))
 
     with open('new_get_weather.csv', 'w', newline='') as f:
         data = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
