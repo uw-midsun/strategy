@@ -36,10 +36,10 @@ def get_weather(one_call_base, path):
 
 get_weather('https://api.openweathermap.org/data/2.5/onecall?', os.path.join(os.path.dirname(__file__), '..', 'routes\ASC2021\ASC2021_draft.csv'))
 
-    with open('new_get_weather.csv', 'w', newline='') as f:
-        data = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+with open('new_get_weather.csv', 'w', newline='') as f:
+    data = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-        data.writerow(['Latitude', 'Longitude', 'Temperature (C)', 'Wind Speed (m/s)', 'Wind Direction', 'Weather', 'Weather Description', 'Precipitation (mm)'])
+    data.writerow(['Latitude', 'Longitude', 'Temperature (C)', 'Wind Speed (m/s)', 'Wind Direction', 'Weather', 'Weather Description', 'Precipitation (mm)']
 
-        for row in location:   
-            data.writerow(row)
+    for row in location:   
+        data.writerow(row)
