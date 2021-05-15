@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import itertools
 import math
-import time
 
 #To fix - still energy left at 0% - 2.85V at end due to IR voltage drop
 #This requires a more precise cell cycling profile generated with a SMU
@@ -11,7 +10,7 @@ import time
 import sys
 import os.path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
-fName = "Test//CellDataFileTestMJ1.txt"
+fName = "test_data//CellDataFileTestMJ1.txt"
 
 class SoC_OCV:
 
@@ -35,12 +34,11 @@ class SoC_OCV:
 
 		#Estimate the ocv of the cell, only taking the internal resistance into account (assuming no voltage relaxation or recovery)
 		v_ocv = voltage + IR * current
-		# make points list with x - y pairs
+
 		self.points = list(zip(soc, v_ocv))
 		self.points.sort(key=lambda tup: tup[1]) 
 		self.soc = np.array([x for (x, y) in self.points])
 		self.v_ocv =  np.array([y for (x, y) in self.points])
-		# Graph of the error of the SOC over the entire discharge (% error)
 		
 	def get_soc_and_v_ocv(self) -> list:
 		""" 
