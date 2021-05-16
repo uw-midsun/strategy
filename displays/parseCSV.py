@@ -1,10 +1,10 @@
-# Requirements: 
-# - Files must be in CSV formats. 
-# - Two CSV's must be entered into the function, with the first csv containing a "Digi-Key Part Number" column value and a "Mfg Std Lead Time" value. The second CSV should contain a "Mouser Part Number" column value and a "Lead Time in Weeks" value. 
-# - The third parameter is either the Digi-Key Part Number or the Mouser Part Number. The part number is to be entered as a string, as with the other CSV names. 
-
-
 import pandas as pd
+
+def main():
+    parseCSV()
+
+if __name__=='__main__':
+    main()
 
 def parseCSV(csv1, csv2, partNumber):
 
@@ -23,5 +23,3 @@ def parseCSV(csv1, csv2, partNumber):
     except:
         print(f"Did not find part number in {csv2}.")
 
-# Testing - Assuming names for the CSV files and selecting random part number from BomSample_.csv 
-parseCSV('BomSample_.csv','MidnightSun-Jan28-QuoteRequest.csv','490-4789-1-ND')
