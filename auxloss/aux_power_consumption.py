@@ -62,13 +62,27 @@ class AuxPowerConsumption:
 
         return current_power
 
-    def calculate_energy_usage(self, components, time_in_seconds):
+    def calculate_typical_total_power_consumption(self):
+        """
+        Calculates instantaneous power from auxiliary losses in power budget 
+            assuming all components at typical level
+
+        :return: float, sum of power usage by all components
+        """
+        current_power = 0
+       
+        for component in self.power_consumptions:
+            current_power += float(self.power_consumptions[component]["Typical Power (W)"])
+
+        return current_power
+
+    def calculate_energy_usage_kWh(self, components, time_in_hours):
         """
         Calculates energy usage from instantaneous auxiliary losses in power budget
 
         :param components: dictionary, see `calculate_instantaneous_power(self, components_used)`
-        :param time_in_seconds: float, time (s) that power is used
+        :param time_in_hours: float, time (h) that power is used
         
-        :return: float, energy = power * time
+        :return: float, energy (kWh) = power (W) / 1000 * time (h)
         """
-        return self.calculate_instantaneous_power(components) * time_in_seconds
+        return self.calculate_instantaneous_power(components) / 1000 * time_in_hours
