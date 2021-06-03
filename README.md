@@ -21,7 +21,7 @@ This is the Midnight Sun Strategy subteam repository. This contains all of the m
  - Visualization - Dashboard interface for our models and graphs
 
 ## Getting Started
-- Make sure Python3 is installed on your system (open a command prompt and type `python3` or `py`, you should be brought to an interactive Python session). If it's not, download the latest release at [here](https://www.python.org/downloads/). NOTE: Python 3.8 currently breaks our builds. Install Python 3.6 or 3.7
+- Make sure Python3 is installed on your system (open a command prompt and type `python3` or `py`, you should be brought to an interactive Python session). If it's not, download the latest release at [here](https://www.python.org/downloads/). NOTE: Anything Python 3.6 to 3.9 should be ok.
 - Clone this repository by running `git clone https://github.com/uw-midsun/strategy.git`. This creates a local copy of code for you to make changes to.
 - Navigate into the new folder with `cd strategy` and then run `pip3 install -r requirements` to download the python packages. If this doesn't work, try `py -m pip install -r requirements.txt` or `python -m pip install -r requirements.txt`.
 - To make sure everything is up and working, run `pytest` from the command line. This should run a number of tests. If they all pass, you're all set to go!
