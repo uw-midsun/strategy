@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import itertools
+from SoC_OCV import SoC_OCV 
 from sklearn import datasets, linear_model, metrics
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
@@ -11,38 +12,50 @@ from sklearn.pipeline import make_pipeline
 import sys
 import os.path
 sys.path.append(os.path.dirname(__file__))
-fName = 'CellDataFileTestMJ1.txt'
+fName = 'test_data//CellDataFileTestMJ1.txt'
 
 class BatTestPlot:
 	def __init__(self):
-		#includes 0.050 cell and 0.035 cable, from tests done on single cell
+		"""Initialize BatTestPlot class to test plotting as a fit or as a linear approximation. Includes 0.050 cell and 0.035 cable, from tests done on single cell
+		"""
+
 		self.IR = 0.085
-		
-	def plot_SoCOCV(self):
-		print ("plotting SoC OCV")
-		
-		x = np.arange(0,10,0.2)
-		y = np.sin(x)
-		
-		socfig, ax = plt.subplots()
-		ax.plot(x,y)
-		plt.title('MJ1 SoC OCV @3.5A')
-		plt.show()
+		self.four_parallel_IR = ((self.IR - 0.035) / 4) + 0.035
+		self.voltage = []
+		self.current = []
+		self.soc = []
+		self.v_ocv = []
 		
 	def read_data(self, filename):
-		#voltage, capacity = np.loadtxt(filename, delimiter = '\t', skiprows = 1, usecols = (1,7), unpack = True)
-		with open(filename) as f_in:
-			voltage, current, soc = np.loadtxt(itertools.islice(f_in, 1, None, 2), delimiter = '\t', usecols = (1,3,9), unpack = True)
+		"""Read data from passed test file. Function reads cell test data (voltage, current, soc)
 
-		v_ocv = voltage + self.IR * current
+		Args:
+			filename: name and relative path of file in file structure 
+		"""
+
+		with open(filename) as f_in:
+			self.voltage, self.current, self.soc = np.loadtxt(itertools.islice(f_in, 1, None, 2), delimiter = '\t', usecols = (1,3,9), unpack = True)
+
+		self.v_ocv = self.voltage + self.IR * self.current
+
+	def plot_SocOCV_linear(self):
+		"""Graph data based on linear approximations. Uses Soc_OCV class to graph data
+		"""
+
+		soc_ocv = SoC_OCV()
+		soc_ocv.plot_graph()
+
+	def plot_SoCOCV_fit(self):
+		"""Graph data based on fit. Uses Scikit-learn to fit data to data points
+		"""
 		
 		fig, ax = plt.subplots()
 		
-		ax.plot(soc, voltage, 'bo',label = 'v')
-		ax.plot(soc, v_ocv, 'm-', label = 'ocv')
+		ax.plot(self.soc, self.voltage, 'bo',label = 'v')
+		ax.plot(self.soc, self.v_ocv, 'm-', label = 'ocv')
 		
-		soc = soc.reshape(-1,1)
-		voltage = voltage.reshape(-1,1)
+		self.soc = self.soc.reshape(-1,1)
+		self.voltage = self.voltage.reshape(-1,1)
 		
 		#model = linear_model.LinearRegression()
 		#model.fit(soc, voltage)
@@ -55,24 +68,26 @@ class BatTestPlot:
 		#print('Variance Score: %.2f' % metrics.r2_score(voltage, voltage_test))
 		
 		poly_model = make_pipeline(PolynomialFeatures(5), linear_model.Ridge())
-		poly_model.fit(soc, v_ocv)
+		poly_model.fit(self.soc, self.v_ocv)
 		
 		print("coefficients:")
 		print(poly_model[1].coef_)
 		print("Intercept:")
 		print(poly_model[1].intercept_)
 		
-		poly_voltage_plot = poly_model.predict(soc)
-		ax.plot(soc, poly_voltage_plot, 'g-', label = 'v_prediction', linewidth = 6)
+		poly_voltage_plot = poly_model.predict(self.soc)
+		ax.plot(self.soc, poly_voltage_plot, 'g-', label = 'v_prediction', linewidth = 6)
 		
-		plt.title('Soc vs Voltage LG MJ1 @3A DSC')
+		plt.title('Soc vs Voltage LG MJ1 @3A DSC Fit')
 		plt.legend(loc = 'lower right')
 		plt.grid(True)
 		plt.show()
 		
-	
-print ("Started")
 
-test = BatTestPlot()
-test.read_data(fName)
-#test.plot_SoCOCV()
+if __name__ == '__main__':	
+	print ("Started")
+	test = BatTestPlot()
+	test.read_data(fName)
+	test.plot_SocOCV_linear()
+	test.plot_SoCOCV_fit()
+
