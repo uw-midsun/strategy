@@ -24,7 +24,6 @@ class SoC_OCV:
 		This is the Resistance present when the chg-discharge curve was done, not the pack resistance
 		Should be eplicitly tested on the setup. This is a rough estimate of what I expect it was, as we never measured it.
 		"""
-		
 		IR = 0.085 
 		four_parallel_IR = ((IR - 0.035) / 4) + 0.035
 
@@ -41,6 +40,7 @@ class SoC_OCV:
 		self.soc = np.array([x for (x, y) in self.points])
 		self.v_ocv =  np.array([y for (x, y) in self.points])
 		
+    
 	def get_soc_and_v_ocv(self) -> list:
 		""" 
 		Get SOC and OCV lists. Need to use two variables for both returns
@@ -52,9 +52,9 @@ class SoC_OCV:
 			soc: State of Charge data points in numpy array format
 			v_ocv: Open Circuit Voltage data points in numpy array format
 		"""
-
 		return self.soc, self.v_ocv
 	
+  
 	def get_cell_ocv(self, soc: float or int) -> float:
 		""" 
 		Get Open Circuit Voltage (OCV) corresponding to State of Charge (SOC) passed through.
@@ -73,10 +73,8 @@ class SoC_OCV:
 
 		if (soc > self.soc[-1] or soc < self.soc[0]):
 			raise Exception("The soc value is out of predicted range")
-		
 		max_soc = len(self.soc) - 1
 		min_soc = 0
-
 		while min_soc <= max_soc:
 			mid_soc = math.floor((max_soc + min_soc) / 2)
 			if self.soc[mid_soc] < soc:
@@ -85,7 +83,6 @@ class SoC_OCV:
 				max_soc = mid_soc - 1
 			else:
 				return self.v_ocv[mid_soc]
-		
 		min_soc = max_soc - 1
 
 		if min_soc >= 0:
@@ -94,6 +91,7 @@ class SoC_OCV:
 			min_soc = 0
 			return self.__find_not_in_search__(soc, min_soc, True)
 	
+  
 	def __find_not_in_search__(self, value_used_to_find: int, min: int, is_soc: bool) -> float or int:
 		"""
 		Hidden function used in the get_cell_ocv or correct_soc functions. Function is called when the soc or ocv values are not
@@ -131,6 +129,7 @@ class SoC_OCV:
 			soc = round(soc1 - ((ocv1 - value_used_to_find)*(soc1 - soc0) / (ocv1 - ocv0)), 6)
 			return soc		
 	
+  
 	def plot_graph(self):
 		"""
 		Plot matplotlib graph using SOC and OCV data lists created when object was initialized. Once function is called,
@@ -148,6 +147,7 @@ class SoC_OCV:
 		plt.grid(True)
 		plt.show()
 
+    
 	def correct_soc(self, ocv: float or int, current: int or float) -> int or float:
 		""" 
 		Correct state of charge (soc) corresponding to open circuit voltage (ocv) passed through.
@@ -164,7 +164,6 @@ class SoC_OCV:
 			self.soc[mid_ocv]: soc corresponding to the ocv of the battery pack. Based on the SOC-OCV graph created through multiple test data
 			self.__find_not_in_search__(ocv, min_ocv, False): uses hidden function to return expected soc value based on graph
 		"""
-
 		if current < 3:
 			# 
 			if ocv > self.v_ocv[-1] or ocv < self.v_ocv[0]:
@@ -193,6 +192,7 @@ class SoC_OCV:
 		else:
 			raise Exception(f'Current is too high. current is: {current}')
 
+      
 class test_SoC_OCV:
 	def __init__(self):
 		self.SoCOCV = SoC_OCV()
