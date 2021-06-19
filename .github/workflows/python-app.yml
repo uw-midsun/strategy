@@ -64,3 +64,6 @@ jobs:
           pytest --cache-clear --cov=solar solar/ >> pytest-coverage.txt
       - name: Comment coverage
         uses: coroo/pytest-coverage-commentator@v1.0.2
+      - name: Remove coverage file
+        run: |
+          rm pytest-coverage.txt
