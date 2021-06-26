@@ -8,7 +8,7 @@ import mock
 
 from aux_power_consumption import AuxPowerConsumption
 
-budget_file = os.path.join(os.path.dirname(__file__), '..', 'MSXIV Power Budget.csv')
+budget_file = os.path.join(os.path.dirname(__file__), '..', 'MSXIV LV Power Budget Rev 2 - Summary.csv')
 
 global auxpc
 auxpc = AuxPowerConsumption(budget_file)
@@ -38,16 +38,16 @@ def test_expected_headers_stored():
         assert("Max Power (W)" in headers and "Typical Power (W)" in headers)
 
 def test_calculate_instantaneous_power_string_names_only():
-    assert(auxpc.calculate_instantaneous_power({"components": ['Center Console']}) == 4.4)
-    assert(auxpc.calculate_instantaneous_power({"components": ["Horn", "Motor Interface", "Solar Master"]}) == 0 + 2.4 + 4.0)
+    assert(auxpc.calculate_instantaneous_power({"components": ['Center Console']}) == 16.54)
+    assert(auxpc.calculate_instantaneous_power({"components": ["Horn", "Motor Interface", "Solar Master"]}) == 0)
 
 def test_calculate_instantaneous_power_tuples_only():
-    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 10)]}) == round(62.1 * 0.1, 3))
-    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 100), ("Fan", 50), ("Telemetry", 0)]}) == 62.1 + 3 * 0.5)
+    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 10)]}) == round(0, 3))
+    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 100), ("Fan", 50), ("Telemetry", 0)]}) == 0)
 
 def test_calculate_instantaneous_power_strings_and_tuples():
-    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 10), "Center Console"]}) == 6.21 + 4.4)
-    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 100), ("Fan", 50), "Telemetry"]}) == 62.1 + 3 * 0.5 + 4.5)
+    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 10), "Center Console"]}) == 16.54)
+    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 100), ("Fan", 50), "Telemetry"]}) == 0)
 
 def test_calculate_instantaneous_power_unexpected_input_format():
     with pytest.raises(TypeError):
@@ -55,8 +55,8 @@ def test_calculate_instantaneous_power_unexpected_input_format():
         assert(auxpc.calculate_instantaneous_power({"test2": ["hello"]}))
 
 def test_calculate_instantaneous_power_ignores_unknown_components():
-    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 10), "Center Console", "Some random unknown"]}) == 6.21 + 4.4)
-    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 100), ("Fan", 50), "Telemetry", ("Unknowns", 200)]}) == 62.1 + 3 * 0.5 + 4.5)
+    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 10), "Center Console", "Some random unknown"]}) == 16.54)
+    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 100), ("Fan", 50), "Telemetry", ("Unknowns", 200)]}) == 0)
     assert(auxpc.calculate_instantaneous_power({"components": [("Unknowns", 200), "Winnie the Pooh", ("Caillou", 2)]}) == 0)
 
 def test_calculate_energy_usage_kWh_zero_power():
