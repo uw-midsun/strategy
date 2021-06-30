@@ -59,16 +59,17 @@ def test_calculate_instantaneous_power_ignores_unknown_components():
     assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 100), ("Fan", 50), "Telemetry", ("Unknowns", 200)]}) == 62.1 + 3 * 0.5 + 4.5)
     assert(auxpc.calculate_instantaneous_power({"components": [("Unknowns", 200), "Winnie the Pooh", ("Caillou", 2)]}) == 0)
 
-def test_calculate_energy_usage_zero_power():
+def test_calculate_energy_usage_kWh_zero_power():
     with mock.patch('aux_power_consumption.AuxPowerConsumption.calculate_instantaneous_power', return_value=0):
-        assert(auxpc.calculate_energy_usage({"components":[]}, 10) == 0)
+        assert(auxpc.calculate_energy_usage_kWh({"components":[]}, 10) == 0)
 
-def test_calculate_energy_usage_zero_time():
+def test_calculate_energy_usage_kWh_zero_time():
     with mock.patch('aux_power_consumption.AuxPowerConsumption.calculate_instantaneous_power', return_value=1.0):
-        assert(auxpc.calculate_energy_usage("test", 0) == 0)
+        assert(auxpc.calculate_energy_usage_kWh("test", 0) == 0)
 
-def test_calculate_energy_usage():
+def test_calculate_energy_usage_kWh():
     with mock.patch('aux_power_consumption.AuxPowerConsumption.calculate_instantaneous_power', return_value=1.0):
-        assert(auxpc.calculate_energy_usage("test", 100) == 100)
+        assert(auxpc.calculate_energy_usage_kWh("test", 100) == 0.1)
     with mock.patch('aux_power_consumption.AuxPowerConsumption.calculate_instantaneous_power', return_value=14.5):
-        assert(round(auxpc.calculate_energy_usage("test", 87), 3) == round(87 * 14.5, 3))
+        expected_result = round(87 * 14.5 / 1000, 3)
+        assert(round(auxpc.calculate_energy_usage_kWh("test", 87), 3) == expected_result)
