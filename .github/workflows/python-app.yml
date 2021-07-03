@@ -5,13 +5,12 @@ name: Python application
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -19,40 +18,52 @@ jobs:
         python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Strategy repository
-      run: |
-        pytest
-    - name: Auxloss directory
-      run: |
-        cd auxloss && pytest && cd tests && pytest && cd ../..
-    - name: Displays directory
-      run: |
-        cd displays && pytest && cd tests && pytest && cd ../..
-    - name: Dynamics directory
-      run: |
-        cd dynamics && pytest && cd tests && pytest && cd ../..
-    - name: Routemodel directory
-      run: |
-        cd routemodel && pytest && cd tests && pytest && cd ../..
-    - name: SOC directory - deprecated
-      run: |
-        cd soc && pytest && cd soc_deprecated/tests && pytest && cd ../../..
-    - name: Solar directory
-      run: |
-        cd solar && pytest && cd tests && pytest && cd ../..
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest pytest-cov
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Strategy repository
+        run: |
+          pytest
+      - name: Auxloss directory
+        run: |
+          cd auxloss && pytest && cd tests && pytest && cd ../..
+      - name: Displays directory
+        run: |
+          cd displays && pytest && cd tests && pytest && cd ../..
+      - name: Dynamics directory
+        run: |
+          cd dynamics && pytest && cd tests && pytest && cd ../..
+      - name: Routemodel directory
+        run: |
+          cd routemodel && pytest && cd tests && pytest && cd ../..
+      - name: SOC directory - deprecated
+        run: |
+          cd soc && pytest && cd soc_deprecated/tests && pytest && cd ../../..
+      - name: Solar directory
+        run: |
+          cd solar && pytest && cd tests && pytest && cd ../..
+      - name: Build coverage file
+        run: |
+          pytest --cache-clear --cov=auxloss auxloss/ > pytest-coverage.txt
+          pytest --cache-clear --cov=displays displays/ >> pytest-coverage.txt
+          pytest --cache-clear --cov=dynamics dynamics/ >> pytest-coverage.txt
+          pytest --cache-clear --cov=routemodel routemodel/ >> pytest-coverage.txt
+          pytest --cache-clear --cov=solar solar/ >> pytest-coverage.txt
+      - name: Comment coverage
+        uses: coroo/pytest-coverage-commentator@v1.0.2
+      - name: Remove coverage file
+        run: |
+          rm pytest-coverage.txt
