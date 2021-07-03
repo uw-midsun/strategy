@@ -39,15 +39,15 @@ def test_expected_headers_stored():
 
 def test_calculate_instantaneous_power_string_names_only():
     assert(auxpc.calculate_instantaneous_power({"components": ['Center Console']}) == 16.54)
-    assert(auxpc.calculate_instantaneous_power({"components": ["Horn", "Motor Interface", "Solar Master"]}) == 0)
+    assert(auxpc.calculate_instantaneous_power({"components": ["Driver display Pi + lte dongle", "Motor Interface/Precharge", "Solar Sense"]}) == 8.9)
 
 def test_calculate_instantaneous_power_tuples_only():
-    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 10)]}) == round(0, 3))
-    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 100), ("Fan", 50), ("Telemetry", 0)]}) == 0)
+    assert(auxpc.calculate_instantaneous_power({"components": [("Driver display Pi + lte dongle", 10)]}) == round(1.25, 3))
+    assert(auxpc.calculate_instantaneous_power({"components": [("Driver display Pi + lte dongle", 100), ("Rear Enclosure/DCDC Fan", 50), ("Telemetry - router ", 0)]}) == 18.57)
 
 def test_calculate_instantaneous_power_strings_and_tuples():
-    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 10), "Center Console"]}) == 16.54)
-    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 100), ("Fan", 50), "Telemetry"]}) == 0)
+    assert(auxpc.calculate_instantaneous_power({"components": [("Driver display Pi + lte dongle", 10), "Center Console"]}) == 17.79)
+    assert(auxpc.calculate_instantaneous_power({"components": [("Driver display Pi + lte dongle", 100), ("Rear Enclosure/DCDC Fan", 50), "Telemetry - router "]}) == 26.57)
 
 def test_calculate_instantaneous_power_unexpected_input_format():
     with pytest.raises(TypeError):
@@ -55,8 +55,8 @@ def test_calculate_instantaneous_power_unexpected_input_format():
         assert(auxpc.calculate_instantaneous_power({"test2": ["hello"]}))
 
 def test_calculate_instantaneous_power_ignores_unknown_components():
-    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 10), "Center Console", "Some random unknown"]}) == 16.54)
-    assert(auxpc.calculate_instantaneous_power({"components": [("Horn", 100), ("Fan", 50), "Telemetry", ("Unknowns", 200)]}) == 0)
+    assert(auxpc.calculate_instantaneous_power({"components": [("Driver display Pi + lte dongle", 10), "Center Console", "Some random unknown"]}) == 17.79)
+    assert(auxpc.calculate_instantaneous_power({"components": [("Driver display Pi + lte dongle", 100), ("Rear Enclosure/DCDC Fan", 50), "Telemetry", ("Unknowns", 200)]}) == 18.57)
     assert(auxpc.calculate_instantaneous_power({"components": [("Unknowns", 200), "Winnie the Pooh", ("Caillou", 2)]}) == 0)
 
 def test_calculate_energy_usage_kWh_zero_power():
