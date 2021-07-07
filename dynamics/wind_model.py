@@ -65,7 +65,7 @@ def gen_car_vector(points):
     """
     Generates vectors between adjacent coordinates, to model direction for which is travelling in
     @param points: list of length 2 containing tuples containing coordinates Ex: [(lat1, long1), (lat2, long2)]
-    @return: tuple containing a vector for which the car travelling in
+    @return: tuple containing a vector modelling the car direction
     """
 
     # Create a vector between the first and second tuple
@@ -83,7 +83,7 @@ def gen_wind_vector(wind_speed, wind_dir):
     Generates a wind vector
     @param wind_speed: wind speed in m/s
     @param wind_dir: angle of wind in degrees on a wind direction compass
-    @return: tuple containing a vector for which the wind travelling in
+    @return: tuple containing a vector modelling the wind direction
     """
     if wind_speed == 0:
         sys.exit()
