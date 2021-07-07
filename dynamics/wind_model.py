@@ -63,9 +63,9 @@ def parse_wind_data(response):
 
 def gen_car_vector(points):
     """
-    Generates vectors between adjacent coordinates, to model direction for which is travelling in
+    Generates a vector between adjacent coordinates, to model the car's direction of travel
     @param points: list of length 2 containing tuples containing coordinates Ex: [(lat1, long1), (lat2, long2)]
-    @return: tuple containing a vector modelling the car direction
+    @return: tuple containing a vector modelling the car
     """
 
     # Create a vector between the first and second tuple
@@ -80,10 +80,10 @@ def gen_car_vector(points):
 
 def gen_wind_vector(wind_speed, wind_dir):
     """
-    Generates a wind vector
+    Generates a vector to model wind direction and speed
     @param wind_speed: wind speed in m/s
-    @param wind_dir: angle of wind in degrees on a wind direction compass
-    @return: tuple containing a vector modelling the wind direction
+    @param wind_dir: angle of wind in degrees (on a wind direction compass)
+    @return: tuple containing a vector modelling the wind
     """
     if wind_speed == 0:
         sys.exit()
@@ -116,8 +116,8 @@ def gen_wind_vector(wind_speed, wind_dir):
 def get_wind_component(wind_vector, car_vector):
     """
     Projects wind vector onto car vector to get the wind vector component
-    @param wind_vector: tuple containing a vector modelling the wind direction
-    @param car_vector: tuple containing a vector modelling the car direction
+    @param wind_vector: tuple containing a vector modelling the wind
+    @param car_vector: tuple containing a vector modelling the car
     @return: tuple containing vector modelling the component of wind that is in the direction of the car's motion
     """
 
@@ -132,8 +132,8 @@ def get_wind_component(wind_vector, car_vector):
 def visualize_vectors(wind_vector, unit_car_vector):
     """
     Plots the wind vector, car vector and projected wind vector for visualization, not critical to model functionality
-    @param wind_vector: tuple containing a vector modelling the wind direction
-    @param unit_car_vector: tuple containing a vector modelling the car direction
+    @param wind_vector: tuple containing a vector modelling the wind
+    @param unit_car_vector: tuple containing a vector modelling the car
 
     """
 
