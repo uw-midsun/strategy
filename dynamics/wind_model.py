@@ -173,7 +173,7 @@ def visualize_vectors(wind_vector, unit_car_vector):
 def wind_model_main(coordinates_list):
     """
     Calculates the drag of the car for a series of two points, drag is calculated based on wind data at 2nd point
-    @param coordinates_list: list of tuples that contains coordinates points
+    @param coordinates_list: list of length 2 containing tuples containing coordinates Ex: [(lat1, long1), (lat2, long2)]
     @return: Drag force in N
 
     """
