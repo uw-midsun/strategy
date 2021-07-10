@@ -97,13 +97,11 @@ def gen_wind_vector(wind_speed, wind_dir):
 
     # Convert from polar coordinates to rectangular coordinates
     x_component = wind_speed * math.cos(polar_theta)
+    y_component = wind_speed * math.sin(polar_theta)
 
     # Resolve rounding error
     if abs(x_component) < 0.0000001:
         x_component = 0
-    y_component = wind_speed * math.sin(polar_theta)
-
-    # Resolve rounding error
     if abs(y_component) < 0.0000001:
         y_component = 0
 
