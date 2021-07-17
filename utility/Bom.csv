@@ -1,0 +1,122 @@
+Manufacturer Part Number,Manufacturer,Digi-Key Part Number,Customer Reference,Reference Designator,Packaging,Part Status,Quantity,Unit Price,Extended Price,Quantity Available,Mfg Std Lead Time,Description,RoHS Status,Lead Free Status,REACH Status,Priority
+06035C104KAT2A,AVX Corporation,478-5052-1-ND,,,Cut Tape (CT),Active,41,0.077,$3.15 ,5849716,12 Weeks,CAP CER 0.1UF 50V X7R 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+GCM21BR72A104KA37L,Murata Electronics,490-4789-1-ND,,,Cut Tape (CT),Active,2,0.4,$0.80 ,10568555,27 Weeks,CAP CER 0.1UF 100V X7R 0805,ROHS3 Compliant,Lead free,Not Available,n
+C2012X5R1V226M125AC,TDK Corporation,445-14428-2-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,200234,12 Weeks,CAP CER 22UF 35V X5R 0805,ROHS3 Compliant,Lead free,REACH Unaffected,n
+C0603C221J5GACAUTO,KEMET,399-6868-1-ND,,,Cut Tape (CT),Active,10,0.111,$1.11 ,23537,10 Weeks,CAP CER 220PF 50V C0G/NP0 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+BZX384C3V3-E3-08,Vishay General Semiconductor - Diodes Division,BZX384C3V3-E3-08GICT-ND,,,Cut Tape (CT),Active,14,0.238,$3.33 ,9664,24 Weeks,DIODE ZENER 3.3V 200MW SOD323,ROHS3 Compliant,Lead free,REACH Unaffected,n
+SMBJ5353B-TP,Micro Commercial Co,SMBJ5353B-TPMSTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,4556,30 Weeks,DIODE ZENER 16V 5W DO214AA,ROHS3 Compliant,Lead free,REACH Unaffected,n
+1264EY-3R3N=P3,Murata Electronics,490-10821-2-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,0,21 Weeks,FIXED IND 3.3UH 4.8A 21 MOHM,ROHS3 Compliant,Lead free,Not Available,n
+CD74HC4067M96,Texas Instruments,296-29408-2-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,8703,6 Weeks,IC MUX/DEMUX 1X16 24SOIC,ROHS3 Compliant,Lead free,REACH Unaffected,y
+TPS565201DDCT,Texas Instruments,296-47501-2-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,505,6 Weeks,IC REG BUCK ADJ 5A TSOT23-6,ROHS3 Compliant,Lead free,REACH Unaffected,y
+ADT7476AARQZ-R,ON Semiconductor,ADT7476AARQZ-ROSTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,1916,45 Weeks,IC REMOTE THERMAL CTLR 24QSOP,ROHS3 Compliant,Lead free,REACH Unaffected,y
+150060VS75000,Würth Elektronik,732-4980-1-ND,,,Cut Tape (CT),Active,10,0.19,$1.90 ,37752,10 Weeks,LED GREEN CLEAR 0603 SMD,ROHS3 Compliant,Lead free,REACH Unaffected,n
+150060YS75000,Würth Elektronik,732-4981-1-ND,,,Cut Tape (CT),Active,24,0.19,$4.56 ,53664,10 Weeks,LED YELLOW CLEAR 0603 SMD,ROHS3 Compliant,Lead free,REACH Unaffected,n
+CRCW06030000Z0EAHP,Vishay Dale,541-0.0SBCT-ND,,,Cut Tape (CT),Active,18,0.174,$3.13 ,314689,18 Weeks,RES SMD 0 OHM JUMPER 1/3W 0603,ROHS3 Compliant,Lead free,Not Available,y
+PMR18EZPFU6L00,Rohm Semiconductor,RHM.006ALTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,12704,10 Weeks,RES 0.006 OHM 1% 1W 1206,ROHS3 Compliant,Lead free,REACH Unaffected,n
+CR0603-FX-1211ELF,Bourns Inc.,CR0603-FX-1211ELFCT-ND,,,Cut Tape (CT),Active,14,0.024,$0.33 ,72098,14 Weeks,RES SMD 1.21K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+ERA-3AEB3651V,Panasonic Electronic Components,P3.65KDBCT-ND,,,Cut Tape (CT),Active,3,0.46,$1.38 ,3825,22 Weeks,RES SMD 3.65KOHM 0.1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+RC0603FR-074K7L,Yageo,311-4.70KHRCT-ND,,,Cut Tape (CT),Active,53,0.034,$1.80 ,3477167,20 Weeks,RES SMD 4.7K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+RC0603FR-0710KL,Yageo,311-10.0KHRCT-ND,,,Cut Tape (CT),Active,33,0.034,$1.12 ,23661644,20 Weeks,RES SMD 10K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+ERJ-3EKF4702V,Panasonic Electronic Components,P47.0KHCT-ND,,,Cut Tape (CT),Active,26,0.052,$1.35 ,70160,22 Weeks,RES SMD 47K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+ERJ-3EKF5492V,Panasonic Electronic Components,P54.9KHTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,40480,22 Weeks,RES SMD 54.9K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+ERA-3AEB620V,Panasonic Electronic Components,P62DBCT-ND,,,Cut Tape (CT),Active,3,0.46,$1.38 ,17481,22 Weeks,RES SMD 62 OHM 0.1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+RC0603JR-07100KL,Yageo,311-100KGRCT-ND,,,Cut Tape (CT),Active,7,0.15,$1.05 ,3920621,20 Weeks,RES SMD 100K OHM 5% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+YC164-JR-074K7L,Yageo,YC164J-4.7KCT-ND,,,Cut Tape (CT),Active,9,0.15,$1.35 ,180499,20 Weeks,RES ARRAY 4 RES 4.7K OHM 1206,ROHS3 Compliant,Lead free,REACH Unaffected,n
+ERA-3AEB103V,Panasonic Electronic Components,P10KDBCT-ND,,,Cut Tape (CT),Active,5,0.46,$2.30 ,269439,22 Weeks,RES SMD 10K OHM 0.1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+RC0603FR-0733KL,Yageo,311-33.0KHRTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,1617064,20 Weeks,RES SMD 33K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+9774050151R,Würth Elektronik,732-7095-1-ND,,,Cut Tape (CT),Active,4,1.6,$6.40 ,14458,22 Weeks,RND STANDOFF M2.5X0.45 STEEL 5MM,ROHS3 Compliant,Lead free,REACH Affected,n
+C1210C226K4PACTU,KEMET,399-5092-1-ND,,,Cut Tape (CT),Active,2,0.73,$1.46 ,95105,17 Weeks,CAP CER 22UF 16V X5R 1210,ROHS3 Compliant,Lead free,REACH Unaffected,n
+RC0603FR-1010KL,Yageo,13-RC0603FR-1010KLCT-ND,,,Cut Tape (CT),Active,2,0.15,$0.30 ,963,20 Weeks,RES 10K OHM 1% 1/10W 0603,ROHS3 Compliant,Not Available,REACH Unaffected,n
+GCM188R71H683KA57D,Murata Electronics,490-8027-1-ND,,,Cut Tape (CT),Not For New Designs,3,0.36,$1.08 ,1972764,27 Weeks,CAP CER 0.068UF 50V X7R 0603,ROHS3 Compliant,Lead free,Not Available,n
+UMK107AB7105KA-T,Taiyo Yuden,587-3247-1-ND,,,Cut Tape (CT),Active,8,0.39,$3.12 ,1117881,17 Weeks,CAP CER 1UF 50V X7R 0603,ROHS3 Compliant,Lead free,Not Available,y
+GRM188R61E225KA12D,Murata Electronics,490-10731-1-ND,,,Cut Tape (CT),Active,2,0.22,$0.44 ,47584,23 Weeks,CAP CER 2.2UF 25V X5R 0603,ROHS3 Compliant,Lead free,Not Available,y
+C0603C104K5RACTU,KEMET,399-5089-2-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,2690929,11 Weeks,CAP CER 0.1UF 50V X7R 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+EEE-1HA4R7NP,Panasonic Electronic Components,PCE4304CT-ND,,,Cut Tape (CT),Active,5,0.69,$3.45 ,17596,30 Weeks,CAP ALUM 4.7UF 20% 50V SMD,RoHS Compliant,Lead free,Not Available,n
+GRT31CR61H106ME01L,Murata Electronics,490-12457-1-ND,,,Cut Tape (CT),Active,12,0.44,$5.28 ,556335,27 Weeks,CAP CER 10UF 50V X5R 1206,ROHS3 Compliant,Lead free,Not Available,n
+"BZX84-C33,235",Nexperia USA Inc.,1727-8508-1-ND,,,Cut Tape (CT),Active,3,0.17,$0.51 ,6501,20 Weeks,DIODE ZENER 33V 250MW TO236AB,ROHS3 Compliant,Lead free,REACH Unaffected,n
+MMSZ5226BS-7-F,Diodes Incorporated,MMSZ5226BS-FDICT-ND,,,Cut Tape (CT),Active,3,0.39,$1.17 ,2086,17 Weeks,DIODE ZENER 3.3V 200MW SOD323,ROHS3 Compliant,Lead free,REACH Unaffected,y
+PDS760Q-13,Diodes Incorporated,PDS760Q-13DITR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,20699,18 Weeks,DIODE SCHOTTKY 60V 7A POWERDI5,ROHS3 Compliant,Contains lead,REACH Affected,n
+RCU-0C,TE Connectivity AMP Connectors,A106145CT-ND,,,Cut Tape (CT),Active,2,0.33,$0.66 ,201323,27 Weeks,PC TEST POINT NATURAL,RoHS Compliant,Lead free,Not Available,y
+6PCV-02-006,TE Connectivity AMP Connectors,A98481-ND,,,Bulk,Active,1,2.28,$2.28 ,13039,25 Weeks,"CONN BARRIER STRIP 2CIRC 0.375""",RoHS Compliant,Lead free,Not Available,n
+436500215,Molex,WM1917-ND,,,Tray,Active,4,0.87,$3.48 ,56015,5 Weeks,CONN HEADER VERT 2POS 3MM,ROHS3 Compliant,Lead free,REACH Unaffected,y
+430450613,Molex,WM2650-ND,,,Tray,Active,1,2.46,$2.46 ,6284,6 Weeks,CONN HEADER VERT 6POS 3MM,ROHS3 Compliant,Lead free,REACH Unaffected,n
+SI7997DP-T1-GE3,Vishay Siliconix,SI7997DP-T1-GE3TR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,23747,19 Weeks,MOSFET 2P-CH 30V 60A PPAK SO-8,ROHS3 Compliant,Lead free,Not Available,y
+RC0603JR-071KL,Yageo,311-1.0KGRCT-ND,,,Cut Tape (CT),Active,15,0.028,$0.42 ,6177075,20 Weeks,RES SMD 1K OHM 5% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+RC0603FR-07100RL,Yageo,311-100HRCT-ND,,,Cut Tape (CT),Active,11,0.034,$0.37 ,3664715,20 Weeks,RES SMD 100 OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+RC0603FR-0729K4L,Yageo,311-29.4KHRCT-ND,,,Cut Tape (CT),Active,6,0.15,$0.90 ,385949,20 Weeks,RES SMD 29.4K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+RT0603FRE0747RL,Yageo,13-RT0603FRE0747RLCT-ND,,,Cut Tape (CT),Active,3,0.15,$0.45 ,9704,20 Weeks,RES SMD 47 OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+ERJ-3RBD1211V,,,,,,,,,,,,,,,,n
+CRCW060322R1FKEA,Vishay Dale,541-22.1HCT-ND,,,Cut Tape (CT),Active,3,0.15,$0.45 ,34744,52 Weeks,RES SMD 22.1 OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,Not Available,y
+CR0603-FX-1502ELF,Bourns Inc.,CR0603-FX-1502ELFCT-ND,,,Cut Tape (CT),Active,2,0.15,$0.30 ,129913,14 Weeks,RES SMD 15K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+OPA2197IDGKR,Texas Instruments,296-47349-1-ND,,,Cut Tape (CT),Active,3,3.65,$10.95 ,0,26 Weeks,IC OPAMP GP 2 CIRCUIT 8VSSOP,ROHS3 Compliant,Lead free,REACH Unaffected,y
+LP2985-10DBVR,Texas Instruments,296-24263-2-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,11558,6 Weeks,IC REG LINEAR 10V 150MA SOT23-5,ROHS3 Compliant,Lead free,REACH Unaffected,n
+BTS70041EPPXUMA1,Infineon Technologies,BTS70041EPPXUMA1CT-ND,,,Cut Tape (CT),Active,2,4.35,$8.70 ,0,42 Weeks,IC PWR SWTCH N-CHAN 1:1 TSDSO-14,ROHS3 Compliant,Lead free,REACH Unaffected,y
+C1H15,,,,,,,,,,,,,,,,n
+BTS70401EPAXUMA1,Infineon Technologies,BTS70401EPAXUMA1CT-ND,,,Cut Tape (CT),Active,7,1.97,$13.79 ,0,42 Weeks,IC PWR SWTCH N-CHAN 1:1 TSDSO-14,ROHS3 Compliant,Lead free,REACH Unaffected,y
+GRM188R61E475KE11D,Murata Electronics,490-7203-1-ND,,,Cut Tape (CT),Active,4,0.5,$2.00 ,322103,23 Weeks,CAP CER 4.7UF 25V X5R 0603,ROHS3 Compliant,Lead free,Not Available,n
+C1206C104K5RAC7800,KEMET,399-C1206C104K5RAC7800CT-ND,,,Cut Tape (CT),Active,10,0.105,$1.05 ,1556275,11 Weeks,CAP CER 0.1UF 50V X7R 1206,ROHS3 Compliant,Lead free,REACH Unaffected,y
+UUJ2E220MNQ1MS,Nichicon,493-6191-2-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,229,21 Weeks,CAP ALUM 22UF 20% 250V SMD,ROHS3 Compliant,Lead free,REACH Unaffected,n
+8.60021E+11,Würth Elektronik,732-8879-1-ND,,,Cut Tape (CT),Active,2,0.18,$0.36 ,124,20 Weeks,CAP ALUM 0.47UF 20% 400V RADIAL,ROHS3 Compliant,Lead free,REACH Unaffected,y
+C0603C103J5JAC7867,KEMET,399-13384-1-ND,,,Cut Tape (CT),Active,2,0.39,$0.78 ,2040,11 Weeks,CAP CER 10000PF 50V U2J 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+B360A-13-F,Diodes Incorporated,B360A-FDITR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,255409,10 Weeks,DIODE SCHOTTKY 60V 3A SMA,ROHS3 Compliant,Contains lead,REACH Affected,y
+SMBJ5341B-TP,Micro Commercial Co,SMBJ5341B-TPMSTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,24968,30 Weeks,DIODE ZENER 6.2V 5W DO214AA,ROHS3 Compliant,Lead free,REACH Unaffected,n
+RF071LAM4STR,Rohm Semiconductor,RF071LAM4STRTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,1885,12 Weeks,DIODE GEN PURP 400V 1A PMDTM,ROHS3 Compliant,Lead free,REACH Affected,y
+DDZ9699-7,Diodes Incorporated,DDZ9699DICT-ND,,,Cut Tape (CT),Active,2,0.39,$0.78 ,50679,22 Weeks,DIODE ZENER 12V 500MW SOD123,ROHS3 Compliant,Lead free,REACH Unaffected,n
+MM5Z15VT1G,ON Semiconductor,MM5Z15VT1GOSTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,0,51 Weeks,DIODE ZENER 15V 500MW SOD523,ROHS3 Compliant,Lead free,REACH Unaffected,y
+KLM-12,Eaton - Bussmann Electrical Division,KLM-12-ND,,,Bulk,Active,1,0,$0.00 ,0,8 Weeks,FUSE CRTRDGE 12A 600VAC/VDC 5AG,RoHS Compliant,Lead free,Not Available,n
+LTST-C193TBKT-5A,Lite-On Inc.,160-1827-1-ND,,,Cut Tape (CT),Active,2,0.41,$0.82 ,0,20 Weeks,LED BLUE CLEAR CHIP SMD,ROHS3 Compliant,Lead free,Not Available,y
+IPB200N25N3GATMA1,Infineon Technologies,IPB200N25N3GATMA1TR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,2085,39 Weeks,MOSFET N-CH 250V 64A D2PAK,ROHS3 Compliant,Lead free,REACH Unaffected,n
+BSS126 H6327,,,,,,,,,,,,,,,,y
+RC0603FR-071K3L,Yageo,311-1.30KHRCT-ND,,,Cut Tape (CT),Active,2,0.15,$0.30 ,332649,20 Weeks,RES SMD 1.3K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+RC0603FR-07160KL,Yageo,311-160KHRCT-ND,,,Cut Tape (CT),Active,2,0.15,$0.30 ,1001884,20 Weeks,RES SMD 160K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+CRGCQ0603J10M,TE Connectivity Passive Product,A130115TR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,24453,19 Weeks,CRGCQ 0603 10M 5%,RoHS Compliant,Lead free,Not Available,n
+RC0603FR-07255KL,Yageo,311-255KHRCT-ND,,,Cut Tape (CT),Active,4,0.15,$0.60 ,137872,20 Weeks,RES SMD 255K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+ERJ-P06J204V,Panasonic Electronic Components,P200KADTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,21926,22 Weeks,RES SMD 200K OHM 5% 1/2W 0805,ROHS3 Compliant,Lead free,REACH Unaffected,n
+RR0816P-332-D,Susumu,RR08P3.3KDCT-ND,,,Cut Tape (CT),Active,2,0.15,$0.30 ,74515,14 Weeks,RES SMD 3.3K OHM 0.5% 1/16W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+RR0816P-562-D,Susumu,RR08P5.6KDCT-ND,,,Cut Tape (CT),Active,3,0.15,$0.45 ,9112,14 Weeks,RES SMD 5.6K OHM 0.5% 1/16W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+RC0603FR-0722R1L,Yageo,311-22.1HRTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,360819,20 Weeks,RES SMD 22.1 OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+MCP3427-E/UN,Microchip Technology,MCP3427-E/UN-ND,,,Tube,Active,3,4.37,$13.11 ,3444,14 Weeks,IC ADC 16BIT SIGMA-DELTA 10MSOP,ROHS3 Compliant,Lead free,REACH Unaffected,n
+MC74LVX138DTR2G,ON Semiconductor,MC74LVX138DTR2GOSTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,1540,45 Weeks,IC DECODER/DEMUX 1X3:8 16TSSOP,ROHS3 Compliant,Lead free,REACH Unaffected,y
+SN74LV4051AQPWRQ1,Texas Instruments,296-29043-2-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,42982,16 Weeks,IC MUX/DMUX 8X1 16TSSOP,ROHS3 Compliant,Lead free,REACH Unaffected,n
+LTC4359IMS8#PBF,Analog Devices Inc.,LTC4359IMS8#PBF-ND,,,Tube,Active,1,9.51,$9.51 ,4099,16 Weeks,IC OR CTRLR N+1 8MSOP,ROHS3 Compliant,Lead free,REACH Unaffected,n
+MAX6643LBFAEE+,Maxim Integrated,MAX6643LBFAEE+-ND,,,Tube,Active,1,3.49,$3.49 ,98,6 Weeks,IC CTLR PWM FAN-SPEED 16QSOP,ROHS3 Compliant,Lead free,REACH Unaffected,n
+NL17SZ00DFT2G,ON Semiconductor,NL17SZ00DFT2GOSTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,3556,16 Weeks,IC GATE NAND 1CH 2-INP SC88A,ROHS3 Compliant,Lead free,REACH Unaffected,n
+ERJ-3RBD1002V,,,,,,,,,,,,,,,,n
+AC0603FR-071M15L,,,,,,,,,,,,,,,,y
+SFR03EZPF1003,Rohm Semiconductor,511-1819-1-ND,,,Cut Tape (CT),Active,6,0.15,$0.90 ,10672,8 Weeks,RES 100 KOHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+BK/1A3400-09-R,Eaton - Electronics Division,283-2829-ND,,,Bag,Active,2,1.16,$2.32 ,5716,13 Weeks,FUSE CLIP CARTRIDGE 20A PCB,RoHS Compliant,Lead free,Not Available,y
+XPEBAM-L1-0000-00903,Cree Inc.,XPEBAM-L1-0000-00903CT-ND,,,Cut Tape (CT),Active,11,2.575,$28.32 ,1506,9 Weeks,LED XLAMP XPE2 AMBER 593NM 2SMD,RoHS Compliant,Lead free,Not Available,n
+GRM21BR61E106KA73L,Murata Electronics,490-5523-2-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,7832794,23 Weeks,CAP CER 10UF 25V X5R 0805,ROHS3 Compliant,Lead free,Not Available,n
+1N4148WQ-7-F,Diodes Incorporated,1N4148WQ-7-FDICT-ND,,,Cut Tape (CT),Active,3,0.28,$0.84 ,0,22 Weeks,DIODE GEN PURP 100V 300MA SOD123,ROHS3 Compliant,Lead free,REACH Unaffected,n
+SRU1048A-101Y,Bourns Inc.,SRU1048A-101YTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,1926,22 Weeks,FIXED IND 100UH 1.2A 220MOHM SMD,ROHS3 Compliant,Lead free,REACH Unaffected,n
+BCM56DSF,Nexperia USA Inc.,1727-7829-2-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,29134,23 Weeks,BCM56DS/SOT457/SC-74,Not Available,Not Available,REACH Unaffected,y
+23BR20KLFTR,TT Electronics/BI,987-1016-1-ND,,,Cut Tape (CT),Active,2,1.71,$3.42 ,0,9 Weeks,TRIMMER 20K OHM 0.25W GW TOP ADJ,RoHS Compliant,Lead free,REACH Unaffected,n
+CRM1206AFX-1R00ELF,Bourns Inc.,CRM1206AFX-1R00ELFCT-ND,,,Cut Tape (CT),Active,2,0.57,$1.14 ,4760,18 Weeks,RES 1 OHM 1% 1/2W 1206,ROHS3 Compliant,Lead free,Not Available,y
+RC1206JR-070RL,Yageo,311-0.0ERTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,8238586,20 Weeks,RES SMD 0 OHM JUMPER 1/4W 1206,ROHS3 Compliant,Lead free,REACH Unaffected,n
+RCU-0C,TE Connectivity AMP Connectors,A106145TR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,201323,27 Weeks,PC TEST POINT NATURAL,RoHS Compliant,Lead free,Not Available,y
+LD2981CM50TR,STMicroelectronics,497-7787-2-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,5645,14 Weeks,IC REG LINEAR 5V 100MA SOT23-5,ROHS3 Compliant,Lead free,REACH Unaffected,n
+XPEBRD-L1-0000-00902,Cree Inc.,XPEBRD-L1-0000-00902CT-ND,,,Cut Tape (CT),Active,8,2.6,$20.80 ,2725,9 Weeks,LED XLAMP XP-E RED SMD,RoHS Compliant,Lead free,Not Available,y
+RC0603FR-0715KL,Yageo,311-15.0KHRCT-ND,,,Cut Tape (CT),Active,9,0.15,$1.35 ,1546147,20 Weeks,RES SMD 15K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+ESE-20C321,Panasonic Electronic Components,P11161S-ND,,,Bulk,Active,5,1.93,$9.65 ,645,18 Weeks,SWITCH PUSH SPST-NO 0.1A 14V,RoHS Compliant,Lead free,Not Available,y
+M74HC14YRM13TR,STMicroelectronics,497-14386-1-ND,,,Cut Tape (CT),Active,4,0.74,$2.96 ,6566,28 Weeks,IC INVERT SCHMITT 6CH 6-INP 14SO,ROHS3 Compliant,Lead free,REACH Unaffected,n
+3000,,,,,,,,,,,,,,,,y
+EEE-1VA470WP,Panasonic Electronic Components,PCE3961CT-ND,,,Cut Tape (CT),Active,2,0.54,$1.08 ,60717,30 Weeks,CAP ALUM 47UF 20% 35V SMD,RoHS Compliant,Lead free,Not Available,n
+CGA3E2C0G1H020C080AA,TDK Corporation,445-5616-1-ND,,,Cut Tape (CT),Active,3,0.24,$0.72 ,4603,12 Weeks,CAP CER 2PF 50V C0G 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+EEE-1VA101XP,Panasonic Electronic Components,PCE3951TR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,79950,30 Weeks,CAP ALUM 100UF 20% 35V SMD,RoHS Compliant,Lead free,Not Available,n
+SMBJ15CA,,,,,,,,,,,,,,,,y
+DFLS130L-7,Diodes Incorporated,DFLS130LDICT-ND,,,Cut Tape (CT),Active,4,0.64,$2.56 ,69798,18 Weeks,DIODE SCHOTTKY 30V 1A POWERDI123,ROHS3 Compliant,Contains lead,REACH Affected,n
+Feb-57,Keystone Electronics,36-3557-2-ND,,,Bulk,Active,3,1.71,$5.13 ,334661,6 Weeks,FUSE BLOCK BLADE 500V 30A PCB,ROHS3 Compliant,Lead free,REACH Unaffected,y
+FDWS9508L-F085,ON Semiconductor,FDWS9508L-F085OSCT-ND,,,Cut Tape (CT),Active,4,3.02,$12.08 ,0,21 Weeks,MOSFET P-CH 40V 80A 8PQFN,Not Available,Lead free,REACH Unaffected,n
+ERJ-PA3F4703V,Panasonic Electronic Components,P470KBYCT-ND,,,Cut Tape (CT),Active,3,0.21,$0.63 ,4630,22 Weeks,RES SMD 470K OHM 1% 1/4W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+TLR2HWDTE4L00F75,"KOA Speer Electronics, Inc.",2019-TLR2HWDTE4L00F75CT-ND,,,Cut Tape (CT),Active,2,1.18,$2.36 ,6551,10 Weeks,RES 0.004 OHM 1% 2W 2010,ROHS3 Compliant,Lead free,REACH Unaffected,y
+AC0603FR-072K21L,Yageo,YAG3586CT-ND,,,Cut Tape (CT),Active,3,0.15,$0.45 ,7922,20 Weeks,RES SMD 2.21K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,y
+RC0603FR-071ML,Yageo,311-1.00MHRCT-ND,,,Cut Tape (CT),Active,4,0.15,$0.60 ,6291647,20 Weeks,RES SMD 1M OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+ERA-3AEB753V,Panasonic Electronic Components,P75KDBCT-ND,,,Cut Tape (CT),Active,2,0.46,$0.92 ,3898,22 Weeks,RES SMD 75K OHM 0.1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+ERJ-3EKF4422V,Panasonic Electronic Components,P44.2KHTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,739,22 Weeks,RES SMD 44.2K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,REACH Unaffected,n
+CRCW060310K0FKEA,Vishay Dale,541-10.0KHTR-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,878495,52 Weeks,RES SMD 10K OHM 1% 1/10W 0603,ROHS3 Compliant,Lead free,Not Available,n
+TPS79330DBVR,Texas Instruments,296-12159-2-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,6829,20 Weeks,IC REG LINEAR 3V 200MA SOT23-5,ROHS3 Compliant,Lead free,REACH Unaffected,n
+INA240A3PWR,Texas Instruments,296-45090-1-ND,,,Cut Tape (CT),Active,4,4.35,$17.40 ,5823,6 Weeks,IC CURR SENSE 1 CIRCUIT 8TSSOP,ROHS3 Compliant,Lead free,REACH Unaffected,n
+MCP6L91T-E/OT,Microchip Technology,MCP6L91T-E/OTCT-ND,,,Cut Tape (CT),Active,3,0.71,$2.13 ,4040,23 Weeks,IC OPAMP GP 1 CIRCUIT SOT23-5,ROHS3 Compliant,Lead free,REACH Unaffected,y
+LTC4417CGN#PBF,Analog Devices Inc.,LTC4417CGN#PBF-ND,,,Tube,Active,1,11.11,$11.11 ,341,20 Weeks,IC OR CTRLR SRC SELECT 24SSOP,ROHS3 Compliant,Lead free,REACH Unaffected,n
+SN74LVC1G04DBVR,Texas Instruments,296-11599-2-ND,,,Tape & Reel (TR),Active,1,0,$0.00 ,75199,12 Weeks,IC INVERTER 1CH 1-INP SOT23-5,ROHS3 Compliant,Lead free,REACH Unaffected,y
+DRV120APWR,Texas Instruments,296-34776-2-ND,,,Tape & Reel (TR),Discontinued at Digi-Key,1,0,$0.00 ,1191,6 Weeks,IC PWR DRIVER N-CHAN 1:1 14TSSOP,ROHS3 Compliant,Lead free,REACH Unaffected,n
