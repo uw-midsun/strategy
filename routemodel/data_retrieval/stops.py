@@ -3,47 +3,104 @@ import os.path
 import requests
 import xml.etree.ElementTree  as ElementTree
 
-BASE_URL = 'http://overpass-api.de/api/xapi?*'
+OSM_URL = 'https://api.openstreetmap.org/api/0.6'
+OSRM_URL = 'http://router.project-osrm.org'
 
-def build_bbox_query(coordinates: list, query_type: str):
+""" 
+Method 1: 
+    For each coordinate passed in, get its node ID from OSM API.
+    Once all coordinates' node ID's are collected, query again to get its information,
+        and flag the nodes with a traffic signal/stop tag.
+"""
+
+def get_node_ids(lat: str, long: str):
+    """
+    @param lat: string representing latitude
+    @param long: string representing longitude
+    @return: OSM node ids corresponding to the coordinates
+    """
+
+    query = OSRM_URL + '/nearest/v1/driving/{},{}'.format(long,lat)
+    response = requests.get(query)
+    node_list = response.json()['waypoints'][0]['nodes']
+    node_str = str()
+    for node in node_list:
+        if (node is not 0):
+            node_str += '{},'.format(node)
+    return node_str
+
+def get_stop_query(coordinates: list):
     """
     @param coordinates: list of dictionaries for coordinates.
         Format as: [{lat1: long1}, {lat2: long2},... {latN: longN}]
-    @param query_type: type of query to create
-        'stop' for stop sign, 'traffic_signals' for traffic stops
-    @return: completed query url string
+    @return: API response for node descriptions of all the coordinates
     """
-    min_lat = min_long = 180.0
-    max_lat = max_long = -180.0 
+
+    query = OSM_URL + '/nodes/?nodes='
     for index, point in enumerate(coordinates):
-        for key in point.keys():
-            key_float = float(key)
-            value_float = float(point[key])
+        for key, value in point.items():
+            node_ids = get_node_ids(key, value)
+            query += str(node_ids)
+    print(query)
+    return requests.get(query)
 
-            if (key_float < min_lat):
-                min_lat = key_float
-            if (key_float > max_lat):
-                max_lat = key_float
-            if (value_float < min_long):
-                min_long = value_float
-            if (value_float > max_long):
-                max_long = value_float
-
-    query = BASE_URL + '[highway={}][bbox={},{},{},{}]'.format(query_type, min_long, min_lat, max_long, max_lat)
-    return query
-
-def get_stop_query (query: str):
+def parse_stop_data(response):
     """
-    @param query: openstreetmap url to send GET API request
-    @return: list of dictionaries that are coordinates {lat:long}
+    @param response: response xml from Open Street Map query, containing
+        information of nodes (coordinates)
+    @return: list of coordinates representing stop sign/signal locations
     """
-    stop_result = []
+
+    stop_coords = []
     try:
-        response = requests.get(query)
-        # OpenStreetMap API returns XML response to parse
         tree = ElementTree.fromstring(response.content)
         for element in tree.iterfind('node'):
-            stop_result.append({element.attrib['lat']: element.attrib['lon']})
+            for child in list(element):
+                if (child.attrib['v'] == 'stop' or child.attrib['v'] == 'traffic_signals'):
+                    stop_coords.append({element.attrib['lat']: element.attrib['lon']})
+                    break
     except:
-        print("Returned an invalid reponse")
-    return stop_result
+        print("Returned an invalid response")
+    return stop_coords
+
+
+""" 
+Method 2: 
+    Pass all coordinates as points of a path, and retrieve all node ids along the path.
+    Then, send a query for the information of all these node ids, 
+        and flag the nodes with a traffic signal/stop tag.
+"""
+
+def get_path_nodes (waypoints: list):
+    """
+    @param coordinates: list of dictionaries for coordinates.
+        Format as: [{lat1: long1}, {lat2: long2},... {latN: longN}]
+    @return: API response for node descriptions of all the coordinates
+    """
+
+    query = OSRM_URL + '/route/v1/driving/'
+    params = '?overview=false&annotations=true'
+    for index, waypoint in enumerate(waypoints):
+        for key, value in waypoint.items():
+            query += '{},{};'.format(value, key)
+    query = query[:-1] + params
+    return requests.get(query).json()
+
+def get_path_stop_query (response):
+    """
+    @param response: API response for node descriptions of all the coordinates.
+        It should be in json format
+    @return: list of coordinates that represent a stop sign/signal location.
+    """
+
+    query = OSM_URL + '/nodes/?nodes='
+    stop_coords = []
+    route_data = response
+    for leg in route_data["routes"][0]["legs"]:
+        query_new = query + str(leg["annotation"]["nodes"])[1:-1]
+        res = requests.get(query_new, headers={"Accept": "application/json"})
+        if res.status_code == 200:
+            for element in res.json()["elements"]:
+                if "tags" in element and "highway" in element["tags"] and (element["tags"]["highway"] == "stops" or element["tags"]["highway"] == "traffic_signals"):
+                    stop_coords.append({element["lat"]:element["lon"]})
+    return stop_coords
