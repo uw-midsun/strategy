@@ -5,10 +5,10 @@
 import pandas as pd
 
 # parseCSV will accept the BOM.csv and MS_Quote Excel File and return two seperate Excel/CSV files with winning parts. 
-def parseCSV(Bom, MS_Quote): 
+def parse_hardware_bom_(Bom_file, MS_Quote_file): 
 
-    Bom_DF = pd.read_csv(Bom)
-    MS_Quote_DF = pd.read_excel(MS_Quote)
+    Bom_DF = pd.read_csv(Bom_file)
+    MS_Quote_DF = pd.read_excel(MS_Quote_file)
     
     #  Create DF of relevant information.
     Bom_DF = Bom_DF[['Manufacturer Part Number', 'Description', 'Unit Price','Mfg Std Lead Time']]
@@ -79,5 +79,7 @@ def parseCSV(Bom, MS_Quote):
     Bom_Win.to_excel('Bom_Parts.xlsx')
     MS_Win.to_excel('MS_Quote_Parts.xlsx')
 
+    print("Wrote selected purchases to Bom_Parts.xlsx and MS_Quote_Parts.xlsx")
+
 if __name__ == "__main__":
-    parseCSV('Bom.csv', 'MS Quote Request.xls')
+    parse_hardware_bom_('Bom.csv', 'MS Quote Request.xls')
