@@ -29,7 +29,9 @@ def get_wind_data(lat, long):
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()
-    return
+
+    print("An error occurred: ", response.json())
+    sys.exit()
 
 
 def parse_wind_data(response):
@@ -38,8 +40,6 @@ def parse_wind_data(response):
     @param response: Requests.response.json() object from API call
     @return: Dataframe containing relevant wind data
     """
-    if response is None:
-        sys.exit()
 
     # Parse down to relevant information
     try:
@@ -47,8 +47,9 @@ def parse_wind_data(response):
         long = response['coord']['lon']
         wind_speed = response['wind']['speed']
         wind_deg = response['wind']['deg']
-    except KeyError:
-        return False
+    except KeyError as err:
+        print("Error with the following key: ", err)
+        sys.exit()
 
     # Initialize dataframe and populate with wind data
     headers = ['Latitude', 'Longitude', 'Wind Speed (m/s)', 'Direction in Deg']
@@ -85,8 +86,6 @@ def gen_wind_vector(wind_speed, wind_dir):
     @param wind_dir: angle of wind in degrees (on a wind direction compass)
     @return: tuple containing a vector modelling the wind
     """
-    if wind_speed == 0:
-        sys.exit()
 
     # Convert the wind angle to a polar angle
     polar_theta = 90 - wind_dir
@@ -100,9 +99,9 @@ def gen_wind_vector(wind_speed, wind_dir):
     y_component = wind_speed * math.sin(polar_theta)
 
     # Resolve rounding error
-    if abs(x_component) < 0.0000001:
+    if abs(x_component) < 0.0001:
         x_component = 0
-    if abs(y_component) < 0.0000001:
+    if abs(y_component) < 0.0001:
         y_component = 0
 
     # Create tuple for wind vector
