@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 sys.path.append(os.path.dirname(__file__))
 from routemodel.data_retrieval.get_weather import get_weather
 
+
 def gen_car_vector(points):
     """
     Generates a vector between adjacent coordinates, to model the car's direction of travel
