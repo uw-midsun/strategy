@@ -1,66 +1,12 @@
 import sys
 import os.path
-import requests
 import csv
 import pandas as pd
 import math
 import matplotlib.pyplot as plt
 
 sys.path.append(os.path.dirname(__file__))
-from config import WEATHER_API_KEY
-
-
-def get_wind_data(lat, long):
-    """
-    Calls OpenWeather API to get wind data and returns JSON response 
-    @param lat: latitude coordinate  
-    @param long: longitude coordinate
-    @return: Requests.response.json() object from API call
-    """
-
-    # URL Example: api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
-    url = "http://api.openweathermap.org/data/2.5/weather?"
-    units = "metric"
-
-    # Define all parameters to be inserted into the URL
-    url += "lat={}&lon={}&appid={}&units={}".format(lat, long, WEATHER_API_KEY, units)
-
-    # Call OpenWeather API and return response object
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()
-
-    print("An error occurred: ", response.json())
-    sys.exit()
-
-
-def parse_wind_data(response):
-    """
-    Parses the OpenWeather API call for relevant data
-    @param response: Requests.response.json() object from API call
-    @return: Dataframe containing relevant wind data
-    """
-
-    # Parse down to relevant information
-    try:
-        lat = response['coord']['lat']
-        long = response['coord']['lon']
-        wind_speed = response['wind']['speed']
-        wind_deg = response['wind']['deg']
-    except KeyError as err:
-        print("Error with the following key: ", err)
-        sys.exit()
-
-    # Initialize dataframe and populate with wind data
-    headers = ['Latitude', 'Longitude', 'Wind Speed (m/s)', 'Direction in Deg']
-    wind_df = pd.DataFrame(columns=headers)
-    wind_df = wind_df.append({'Latitude': lat,
-                              'Longitude': long,
-                              'Wind Speed (m/s)': wind_speed,
-                              'Direction in Deg': wind_deg},
-                             ignore_index=True)
-    return wind_df
-
+from routemodel.data_retrieval.get_weather import get_weather
 
 def gen_car_vector(points):
     """
@@ -98,7 +44,7 @@ def gen_wind_vector(wind_speed, wind_dir):
     x_component = wind_speed * math.cos(polar_theta)
     y_component = wind_speed * math.sin(polar_theta)
 
-    # Resolve rounding error
+    # Resolve rounding error (covers the "should be 0" case)
     if abs(x_component) < 0.0001:
         x_component = 0
     if abs(y_component) < 0.0001:
@@ -179,12 +125,17 @@ def wind_model_main(coordinates_list):
 
     # Get wind data from API for a given coordinate point
     current_point = coordinates_list[1]
-    response = get_wind_data(current_point[0], current_point[1])
+    weather_api_result = []
+    weather_data = get_weather(str(current_point[0]), str(current_point[1]), weather_api_result)
 
-    # Parse API response to get relevant data
-    wind_df = parse_wind_data(response)
-    wind_speed = wind_df.iloc[0]['Wind Speed (m/s)']
-    wind_direction = wind_df.iloc[0]['Direction in Deg']
+    # Parse down to relevant data
+    # For reference array structure is as follows: ['Latitude', 'Longitude',
+    # 'Temperature(C)', 'Wind Speed (m/s)',  'Wind Direction', 'Weather', 'Weather Description',
+    #  Pressure (hPa), 'Precipitation (mm)']
+    wind_speed = weather_data[0][3]
+    wind_direction = weather_data[0][4]
+    pressure = weather_data[0][7] * 100  # Convert hPa to Pa
+    temperature = weather_data[0][2] + 273  # Convert to absolute temperature
 
     # Generate a wind vector and solve for component of wind parallel to car's direction of travel
     wind_vector = gen_wind_vector(wind_speed, wind_direction)
@@ -197,7 +148,8 @@ def wind_model_main(coordinates_list):
         parallel_wind_component_magnitude = parallel_wind_component_magnitude * -1
 
     # Set variables for the drag force equation
-    fluid_density = 1.225  # TODO calculate based on the a coordinate
+    R = 287.058  # Specific gas constant [J/(kg * K)]
+    fluid_density = pressure / (R * temperature)  # Density of the air at a given point
     car_velocity = 15  # Temp value,  change once measured in reality
     car_frontal_area = 2.8  # Temp value, change once measured in reality
     drag_coefficient = 0.201  # Temp value, once measured in reality
@@ -210,35 +162,40 @@ def wind_model_main(coordinates_list):
 
 
 if __name__ == '__main__':
-    COORDINATES_FILE = ""  # Fill in the CSV of a route for which you want drag data
+    PATH = os.path.join(os.path.dirname(__file__), '..', 'routemodel/routes/ASC2021/ASC2021_draft.csv')
+    COORDINATES_FILE = PATH  # Fill in the CSV of a route for which you want drag data
     coordinates_list = []
     headers = ['Point 1', 'Point 2', 'Drag Force (N)']
     drag_df = pd.DataFrame(columns=headers)
-    with open(COORDINATES_FILE, 'r') as read_obj:
-        csv_reader = csv.reader(read_obj)
+    try:
+        with open(COORDINATES_FILE, 'r') as read_obj:
+            csv_reader = csv.reader(read_obj)
 
-        # Iterate over each row in the csv using reader object
-        i = 1
-        for row in csv_reader:
-            if len(row) == 0:
-                continue
+            # Iterate over each row in the csv using reader object
+            i = 1
+            for row in csv_reader:
+                if len(row) == 0:
+                    continue
 
-            # Create a tuple for each coordinate in the form (lat, long)
-            x_val = float(row[0])
-            y_val = float(row[1])
-            coordinate = (float(row[0]), float(row[1]))
-            coordinates_list.append(coordinate)
+                # Create a tuple for each coordinate in the form (lat, long)
+                x_val = float(row[0])
+                y_val = float(row[1])
+                coordinate = (float(row[0]), float(row[1]))
+                coordinates_list.append(coordinate)
 
-            # Run the wind model for two points at a time
-            if i % 2 == 0:
-                drag = wind_model_main(coordinates_list)
+                # Run the wind model for two points at a time
+                if i % 2 == 0:
+                    drag = wind_model_main(coordinates_list)
 
-                # Initialize dataframe and populate with drag data
-                drag_df = drag_df.append({'Point 1': coordinates_list[0],
-                                          'Point 2': coordinates_list[1],
-                                          'Drag Force (N)': drag},
-                                         ignore_index=True)
-                coordinates_list = []
-            i += 1
+                    # Initialize dataframe and populate with drag data
+                    drag_df = drag_df.append({'Point 1': coordinates_list[0],
+                                              'Point 2': coordinates_list[1],
+                                              'Drag Force (N)': drag},
+                                             ignore_index=True)
+                    coordinates_list = []
+                i += 1
+    except FileNotFoundError as err:
+        print("An error occurred:", err)
+        sys.exit()
 
     print(drag_df)
