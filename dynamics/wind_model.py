@@ -163,8 +163,7 @@ def wind_model_main(coordinates_list):
 
 
 if __name__ == '__main__':
-    PATH = os.path.join(os.path.dirname(__file__), '..', 'routemodel/routes/ASC2021/ASC2021_draft.csv')
-    COORDINATES_FILE = PATH  # Fill in the CSV of a route for which you want drag data
+    COORDINATES_FILE = ''  # Fill in the CSV of a route for which you want drag data
     coordinates_list = []
     headers = ['Point 1', 'Point 2', 'Drag Force (N)']
     drag_df = pd.DataFrame(columns=headers)
