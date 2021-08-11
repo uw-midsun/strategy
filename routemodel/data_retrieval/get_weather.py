@@ -58,6 +58,8 @@ if __name__ == '__main__':
                 row = line.split(',')
                 lat = row[0]
                 long = row[1].strip()
+
+                # Get wind data for each coordinate point
                 weather_df = (get_weather(lat, long, weather_df))
 
         # Save to CSV
