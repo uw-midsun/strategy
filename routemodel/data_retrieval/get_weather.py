@@ -1,84 +1,67 @@
 import sys
 import os.path
-sys.path.append(os.path.dirname(__file__))
 import requests
-import csv
-
+import pandas as pd
 from config import WEATHER_API_KEY
 
+sys.path.append(os.path.dirname(__file__))
 ONE_CALL_BASE = 'https://api.openweathermap.org/data/2.5/onecall?'
 PATH = os.path.join(os.path.dirname(__file__), '..', 'routes/ASC2021/ASC2021_draft.csv')
 
 
-def get_weather(lat, long, weather_api_result):
+def get_weather(lat, long, weather_df):
     """
-    Calls OpenWeather API to get wind data and returns data in a list
+    Calls OpenWeather API to get wind data and returns data in a pandas dataframe
     @param lat: string containing latitude value
     @param long: string containing longitude value
-    @param weather_api_result: list of lists containing weather data
-    @return: list of lists containing weather data
+    @param weather_df: dataframe containing the weather data
+    @return: dataframe containing the weather data
 
     """
-    query_url = ONE_CALL_BASE + 'lat=' + lat + '&lon=' + long + '&exclude=hour,daily&units=metric&appid=' + WEATHER_API_KEY
+    units = "metric"
+    exclude = "minutely,hourly,daily,alerts"  # To exclude certain weather reports, right now just using current
+    url = ONE_CALL_BASE + "lat={}&lon={}&exclude={}&units={}&appid={}".format(lat, long, exclude, units,
+                                                                              WEATHER_API_KEY)
+    response = requests.get(url)
 
-    response = requests.get(query_url)
     if response.status_code == 200:
         weather_data = response.json()
 
         precipitation = 0 if "rain" not in weather_data["current"]["weather"][0] else \
-        weather_data["current"]["weather"][0]["rain"]
-
-        weather_api_result.append([
-            float(lat), float(long),
-            weather_data["current"]["temp"],
-            weather_data["current"]["wind_speed"],
-            weather_data["current"]["wind_deg"],
-            weather_data["current"]["weather"][0]["main"],
-            weather_data["current"]["weather"][0]["description"],
-            weather_data["current"]["pressure"],
-            precipitation
-        ])
-        return weather_api_result
+            weather_data["current"]["weather"][0]["rain"]
+        weather_df = weather_df.append({'Latitude': lat,
+                                                              'Longitude': long,
+                                                              'Temperature (C)': weather_data["current"]["temp"],
+                                                              'Wind Speed (m/s)': weather_data["current"]["wind_speed"],
+                                                              'Wind Direction': weather_data["current"]["wind_deg"],
+                                                              'Weather': weather_data["current"]["weather"][0]["main"],
+                                                              'Weather Description':
+                                                                  weather_data["current"]["weather"][0]["description"],
+                                                              'Pressure (hPa)': weather_data["current"]["pressure"],
+                                                              'Precipitation (mm)': precipitation},
+                                       ignore_index=True)
+        return weather_df
 
     print("An error occurred: ", response.json())
     sys.exit()
 
 
-def save_weather_to_csv(weather_api_data):
-    """
-    Writes the weather data to a CSV file
-    @param weather_api_result: list of lists containing weather data
-
-    """
-    with open('new_get_weather.csv', 'w', newline='') as f:
-        data = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-
-        data.writerow([
-            'Latitude',
-            'Longitude',
-            'Temperature (C)',
-            'Wind Speed (m/s)',
-            'Wind Direction',
-            'Weather',
-            'Weather Description',
-            'Pressure (hPa)',
-            'Precipitation (mm)'
-        ])
-
-        for row in weather_api_data:
-            data.writerow(row)
-
-
 if __name__ == '__main__':
-    weather_api_result = []
+    # Initialize dataframe and populate with headers
+    headers = ['Latitude', 'Longitude', 'Temperature (C)', 'Wind Speed (m/s)', 'Wind Direction', 'Weather',
+               'Weather Description', 'Pressure (hPa)', 'Precipitation (mm)']
+    weather_df = pd.DataFrame(columns=headers)
+
     try:
         with open(PATH, 'r') as wea_2021:
             for line in wea_2021:
                 row = line.split(',')
                 lat = row[0]
                 long = row[1].strip()
-                weather_data_list = get_weather(lat, long, weather_api_result)
-        save_weather_to_csv(weather_data_list)
+                weather_df = (get_weather(lat, long, weather_df))
+
+        # Save to CSV
+        weather_df.to_csv('get_weather_data.csv', index=False)
     except FileNotFoundError as err:
         print("An error occurred:", err)
         sys.exit()

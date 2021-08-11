@@ -4,9 +4,14 @@ import csv
 import pandas as pd
 import math
 import matplotlib.pyplot as plt
+from routemodel.data_retrieval.get_weather import get_weather
 
 sys.path.append(os.path.dirname(__file__))
-from routemodel.data_retrieval.get_weather import get_weather
+
+R = 287.058  # Specific gas constant [J/(kg * K)]
+CAR_VELOCITY = 15  # Temp value,  change once measured in reality
+CAR_FRONTAL_AREA = 2.8  # Temp value, change once measured in reality
+DRAG_COEFFICIENT = 0.201  # Temp value, once measured in reality
 
 
 def gen_car_vector(points):
@@ -126,17 +131,20 @@ def wind_model_main(coordinates_list):
 
     # Get wind data from API for a given coordinate point
     current_point = coordinates_list[1]
-    weather_api_result = []
-    weather_data = get_weather(str(current_point[0]), str(current_point[1]), weather_api_result)
+
+    # Initialize dataframe to hold weather data
+    headers = ['Latitude', 'Longitude', 'Temperature (C)', 'Wind Speed (m/s)', 'Wind Direction', 'Weather',
+               'Weather Description', 'Pressure (hPa)', 'Precipitation (mm)']
+    weather_df = pd.DataFrame(columns=headers)
+
+    # Get weather data and store into dataframe
+    weather_df = get_weather((current_point[0]), (current_point[1]), weather_df)
 
     # Parse down to relevant data
-    # For reference array structure is as follows: ['Latitude', 'Longitude',
-    # 'Temperature(C)', 'Wind Speed (m/s)',  'Wind Direction', 'Weather', 'Weather Description',
-    #  Pressure (hPa), 'Precipitation (mm)']
-    wind_speed = weather_data[0][3]
-    wind_direction = weather_data[0][4]
-    pressure = weather_data[0][7] * 100  # Convert hPa to Pa
-    temperature = weather_data[0][2] + 273  # Convert to absolute temperature
+    wind_speed = weather_df.iloc[0]['Wind Speed (m/s)']
+    wind_direction = weather_df.iloc[0]['Wind Direction']
+    pressure = weather_df.iloc[0]['Pressure (hPa)'] * 100  # Convert hPa to Pa
+    temperature = weather_df.iloc[0]['Temperature (C)'] + 273  # Convert to absolute temperature
 
     # Generate a wind vector and solve for component of wind parallel to car's direction of travel
     wind_vector = gen_wind_vector(wind_speed, wind_direction)
@@ -146,23 +154,23 @@ def wind_model_main(coordinates_list):
 
     # If wind component is in same direction of car, must subtract wind component from car speed
     if ((parallel_wind_component[0] * car_vector[0]) >= 0) or ((parallel_wind_component[1] * car_vector[0]) >= 1):
-        parallel_wind_component_magnitude = parallel_wind_component_magnitude * -1
+        parallel_wind_component_magnitude *= -1
 
     # Set variables for the drag force equation
-    R = 287.058  # Specific gas constant [J/(kg * K)]
     fluid_density = pressure / (R * temperature)  # Density of the air at a given point
-    car_velocity = 15  # Temp value,  change once measured in reality
-    car_frontal_area = 2.8  # Temp value, change once measured in reality
-    drag_coefficient = 0.201  # Temp value, once measured in reality
-    relative_velocity = car_velocity + parallel_wind_component_magnitude
+    relative_velocity = CAR_VELOCITY + parallel_wind_component_magnitude
 
     # Calculate Drag force
-    drag_force = 1/2 * (fluid_density * relative_velocity * relative_velocity * drag_coefficient * car_frontal_area)
+    drag_force = 1/2 * (fluid_density * relative_velocity * relative_velocity * DRAG_COEFFICIENT * CAR_FRONTAL_AREA)
 
     return drag_force
 
 
 if __name__ == '__main__':
+    # File paths for ASC and Heartland are commented below
+    # COORDINATES_FILE = os.path.join(os.path.dirname(__file__), '..', 'routemodel/routes/ASC2021/ASC2021_draft.csv')
+    # COORDINATES_FILE = os.path.join(os.path.dirname(__file__), '..', 'routemodel/routes/Heartland/heartland_coordinates.csv')
+
     COORDINATES_FILE = ''  # Fill in the CSV of a route for which you want drag data
     coordinates_list = []
     headers = ['Point 1', 'Point 2', 'Drag Force (N)']
