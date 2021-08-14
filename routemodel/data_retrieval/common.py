@@ -1,10 +1,13 @@
 import requests
 import sys
 import os.path
+from dotenv import load_dotenv
 
 sys.path.append(os.path.dirname(__file__))
 
-from config import BASE_URL, API_KEY
+load_dotenv()
+BING_API_KEY = os.environ.get("BING_API_KEY")
+BASE_URL = 'https://dev.virtualearth.net/REST/v1/'
 
 # common getter for all files
 def get_API_data(query: str):
@@ -13,7 +16,7 @@ def get_API_data(query: str):
     #return: a JSON response from API
     """
     url = BASE_URL + query
-    url += '&key={}'.format(API_KEY)
+    url += '&key={}'.format(BING_API_KEY)
      # get and return response
     try:
         response = requests.get(url)

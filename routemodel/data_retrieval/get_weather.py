@@ -4,8 +4,11 @@ sys.path.append(os.path.dirname(__file__))
 import requests
 import csv
 import json
+from dotenv import load_dotenv
 
-from config import WEATHER_API_KEY
+load_dotenv()
+WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
+
 ONE_CALL_BASE = 'https://api.openweathermap.org/data/2.5/onecall?'
 PATH = os.path.join(os.path.dirname(__file__), '..', 'routes\ASC2021\ASC2021_draft.csv')
 

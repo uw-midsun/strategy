@@ -15,4 +15,4 @@ Thumbs.db
 .python-version
 
 # for API keys
-**/config.py
+**/.env
