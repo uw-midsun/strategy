@@ -62,20 +62,19 @@ def gen_wind_vector(wind_speed, wind_dir):
     return wind_vector
 
 
-def get_wind_component(wind_vector, car_vector):
+def get_projection(vector_a, vector_b):
     """
     Projects wind vector onto car vector to get the wind vector component
-    @param wind_vector: tuple containing a vector modelling the wind
-    @param car_vector: tuple containing a vector modelling the car
-    @return: tuple containing vector modelling the component of wind that is in the direction of the car's motion
+    @param vector_a: tuple containing the vector to be projected onto vector B
+    @param vector_b: tuple containing the vector used for the basis of the projection
+    @return: tuple containing the project of vector A onto vector B
     """
 
-    # Solving for the component of wind vector that's parallel to the car vector i.e project wind vect onto car vect
-    projection = ((wind_vector[0] * car_vector[0] + wind_vector[1] * car_vector[1]) * car_vector[0],
-                  (wind_vector[0] * car_vector[0] + wind_vector[1] * car_vector[1]) * car_vector[1])
-    parallel_wind_component = projection
+    # Project vector A onto vector B
+    projection = ((vector_a[0] * vector_b[0] + vector_a[1] * vector_b[1]) * vector_b[0],
+                  (vector_a[0] * vector_b[0] + vector_a[1] * vector_b[1]) * vector_b[1])
 
-    return parallel_wind_component
+    return projection
 
 
 def visualize_vectors(wind_vector, unit_car_vector):
@@ -94,11 +93,7 @@ def visualize_vectors(wind_vector, unit_car_vector):
     wind_vector_magnitude = math.sqrt(wind_vector[0] * wind_vector[0] + wind_vector[1] * wind_vector[1])
     unit_wind_vector = (wind_vector[0] / wind_vector_magnitude, wind_vector[1] / wind_vector_magnitude)
 
-    projection = (
-        (unit_wind_vector[0] * unit_car_vector[0] + unit_wind_vector[1] * unit_car_vector[1]) * unit_car_vector[0],
-        (unit_wind_vector[0] * unit_car_vector[0] + unit_wind_vector[1] * unit_car_vector[1]) * unit_car_vector[1]
-                )
-    unit_parallel_wind_component = projection
+    unit_parallel_wind_component = get_projection(unit_wind_vector, unit_car_vector)
 
     print("Unit Wind Vector:", unit_wind_vector)
     print("Unit Car Vector:", unit_car_vector)
@@ -138,7 +133,7 @@ def wind_model_main(coordinates_list):
     weather_df = pd.DataFrame(columns=headers)
 
     # Get weather data and store into dataframe
-    weather_df = get_weather((current_point[0]), (current_point[1]), weather_df)
+    weather_df = weather_df.append(get_weather(current_point[0], current_point[1]),ignore_index=True)
 
     # Parse down to relevant data
     wind_speed = weather_df.iloc[0]['Wind Speed (m/s)']
@@ -148,7 +143,7 @@ def wind_model_main(coordinates_list):
 
     # Generate a wind vector and solve for component of wind parallel to car's direction of travel
     wind_vector = gen_wind_vector(wind_speed, wind_direction)
-    parallel_wind_component = get_wind_component(wind_vector, car_vector)
+    parallel_wind_component = get_projection(wind_vector, car_vector)
     parallel_wind_component_magnitude = math.sqrt(parallel_wind_component[0] * parallel_wind_component[0] +
                                                   parallel_wind_component[1] * parallel_wind_component[1])
 
