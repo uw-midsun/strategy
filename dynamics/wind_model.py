@@ -25,8 +25,7 @@ def gen_car_vector(points):
     car_vector = (points[1][0] - points[0][0], points[1][1] - points[0][1])
 
     # Convert to unit vector
-    magnitude_car_vector = math.sqrt(car_vector[0] * car_vector[0] + car_vector[1] * car_vector[1])
-    unit_car_vector = (car_vector[0] / magnitude_car_vector, car_vector[1] / magnitude_car_vector)
+    unit_car_vector = get_unit_vector(car_vector)
 
     return unit_car_vector
 
@@ -77,6 +76,21 @@ def get_projection(vector_a, vector_b):
     return projection
 
 
+def get_unit_vector(vector):
+    """
+    Converts a vector into a unit vector
+    @param vector: tuple containing the vector to be converted into a unit vector
+    @return: tuple containing the unit vector of the inputted vector
+    """
+
+    # Converts vector into unit vector
+    vector_magnitude = math.sqrt(vector[0] * vector[0] + vector[1] * vector[1])
+    unit_vector = (vector[0] / vector_magnitude,
+                   vector[1] / vector_magnitude)
+
+    return unit_vector
+
+
 def visualize_vectors(wind_vector, unit_car_vector):
     """
     Plots the wind vector, car vector and projected wind vector for visualization, not critical to model functionality
@@ -90,14 +104,9 @@ def visualize_vectors(wind_vector, unit_car_vector):
     y = [0]
 
     # Create unit wind vector
-    wind_vector_magnitude = math.sqrt(wind_vector[0] * wind_vector[0] + wind_vector[1] * wind_vector[1])
-    unit_wind_vector = (wind_vector[0] / wind_vector_magnitude, wind_vector[1] / wind_vector_magnitude)
-
+    unit_wind_vector = get_unit_vector(wind_vector)
     unit_parallel_wind_component = get_projection(unit_wind_vector, unit_car_vector)
 
-    print("Unit Wind Vector:", unit_wind_vector)
-    print("Unit Car Vector:", unit_car_vector)
-    print("Unit Proj Vector:", unit_parallel_wind_component)
     plt.quiver(x, y, unit_wind_vector[0], unit_wind_vector[1], color='b', units='xy', scale=1, label="Wind Direction")
     plt.quiver(x, y, unit_car_vector[0], unit_car_vector[1], color='r', units='xy', scale=1, label="Car Direction")
     plt.quiver(x, y, unit_parallel_wind_component[0], unit_parallel_wind_component[1], color='g', units='xy', scale=1,
@@ -133,7 +142,7 @@ def wind_model_main(coordinates_list):
     weather_df = pd.DataFrame(columns=headers)
 
     # Get weather data and store into dataframe
-    weather_df = weather_df.append(get_weather(current_point[0], current_point[1]),ignore_index=True)
+    weather_df = weather_df.append(get_weather(current_point[0], current_point[1]), ignore_index=True)
 
     # Parse down to relevant data
     wind_speed = weather_df.iloc[0]['Wind Speed (m/s)']
@@ -163,10 +172,10 @@ def wind_model_main(coordinates_list):
 
 if __name__ == '__main__':
     # File paths for ASC and Heartland are commented below
-    # COORDINATES_FILE = os.path.join(os.path.dirname(__file__), '..', 'routemodel/routes/ASC2021/ASC2021_draft.csv')
+    COORDINATES_FILE = os.path.join(os.path.dirname(__file__), '..', 'routemodel/routes/ASC2021/ASC2021_draft.csv')
     # COORDINATES_FILE = os.path.join(os.path.dirname(__file__), '..', 'routemodel/routes/Heartland/heartland_coordinates.csv')
 
-    COORDINATES_FILE = ''  # Fill in the CSV of a route for which you want drag data
+    # COORDINATES_FILE = ''  # Fill in the CSV of a route for which you want drag data
     coordinates_list = []
     headers = ['Point 1', 'Point 2', 'Drag Force (N)']
     drag_df = pd.DataFrame(columns=headers)
