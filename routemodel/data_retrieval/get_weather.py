@@ -20,7 +20,7 @@ def get_weather(lat, long):
     units = "metric"
     exclude = "minutely,hourly,daily,alerts"  # To exclude certain weather reports, right now just using current
     url = ONE_CALL_BASE + \
-          "lat={}&lon={}&exclude={}&units={}&appid={}".format(lat, long, exclude, units, WEATHER_API_KEY)
+        "lat={}&lon={}&exclude={}&units={}&appid={}".format(lat, long, exclude, units, WEATHER_API_KEY)
 
     response = requests.get(url)
 

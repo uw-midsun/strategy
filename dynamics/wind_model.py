@@ -66,7 +66,7 @@ def get_projection(vector_a, vector_b):
     Projects wind vector onto car vector to get the wind vector component
     @param vector_a: tuple containing the vector to be projected onto vector B
     @param vector_b: tuple containing the vector used for the basis of the projection
-    @return: tuple containing the project of vector A onto vector B
+    @return: tuple containing the projection of vector A onto vector B
     """
 
     # Project vector A onto vector B
@@ -105,6 +105,8 @@ def visualize_vectors(wind_vector, unit_car_vector):
 
     # Create unit wind vector
     unit_wind_vector = get_unit_vector(wind_vector)
+
+    # Project onto car vector
     unit_parallel_wind_component = get_projection(unit_wind_vector, unit_car_vector)
 
     plt.quiver(x, y, unit_wind_vector[0], unit_wind_vector[1], color='b', units='xy', scale=1, label="Wind Direction")
@@ -172,10 +174,10 @@ def wind_model_main(coordinates_list):
 
 if __name__ == '__main__':
     # File paths for ASC and Heartland are commented below
-    COORDINATES_FILE = os.path.join(os.path.dirname(__file__), '..', 'routemodel/routes/ASC2021/ASC2021_draft.csv')
+    # COORDINATES_FILE = os.path.join(os.path.dirname(__file__), '..', 'routemodel/routes/ASC2021/ASC2021_draft.csv')
     # COORDINATES_FILE = os.path.join(os.path.dirname(__file__), '..', 'routemodel/routes/Heartland/heartland_coordinates.csv')
 
-    # COORDINATES_FILE = ''  # Fill in the CSV of a route for which you want drag data
+    COORDINATES_FILE = ''  # Fill in the CSV of a route for which you want drag data
     coordinates_list = []
     headers = ['Point 1', 'Point 2', 'Drag Force (N)']
     drag_df = pd.DataFrame(columns=headers)
