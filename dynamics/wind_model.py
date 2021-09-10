@@ -4,9 +4,9 @@ import csv
 import pandas as pd
 import math
 import matplotlib.pyplot as plt
-from routemodel.data_retrieval.get_weather import get_weather
 
-sys.path.append(os.path.dirname(__file__))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from routemodel.data_retrieval.get_weather import get_weather
 
 R = 287.058  # Specific gas constant [J/(kg * K)]
 CAR_VELOCITY = 15  # Temp value,  change once measured in reality
@@ -167,7 +167,7 @@ def wind_model_main(coordinates_list):
     relative_velocity = CAR_VELOCITY + parallel_wind_component_magnitude
 
     # Calculate Drag force
-    drag_force = 1/2 * (fluid_density * relative_velocity * relative_velocity * DRAG_COEFFICIENT * CAR_FRONTAL_AREA)
+    drag_force = 1 / 2 * (fluid_density * relative_velocity * relative_velocity * DRAG_COEFFICIENT * CAR_FRONTAL_AREA)
 
     return drag_force
 
