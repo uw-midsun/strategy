@@ -7,7 +7,7 @@ import pytest
 
 import sys
 import os.path
-sys.path.append(os.path.join(os.path.dirname(__file__)))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 fName = "test_data//CellDataFileTestMJ1.txt"
 
 from SoC_OCV import SoC_OCV
@@ -81,34 +81,3 @@ if __name__ == '__main__':
 	testing.test_multiple_correct_soc(test_file5)
 	fifth_test_time = time.time()
 	print(f"time taken for final test: {fifth_test_time - fourth_test_time}\n")
-
-	testing.test_multiple_correct_soc(test_file1)
-	testing.test_multiple_correct_soc(test_file2)
-	testing.test_multiple_correct_soc(test_file3)
-	testing.test_multiple_correct_soc(test_file4)
-	testing.test_multiple_correct_soc(test_file5)
-	sixth_test_time = time.time()
-	print(f"time taken for final test: {sixth_test_time - fifth_test_time}\n")
-
-	testing.test_multiple_correct_soc(test_file1)
-	testing.test_multiple_correct_soc(test_file2)
-	testing.test_multiple_correct_soc(test_file3)
-	testing.test_multiple_correct_soc(test_file4)
-	testing.test_multiple_correct_soc(test_file5)
-	testing.test_multiple_correct_soc(test_file1)
-	testing.test_multiple_correct_soc(test_file2)
-	testing.test_multiple_correct_soc(test_file3)
-	testing.test_multiple_correct_soc(test_file4)
-	testing.test_multiple_correct_soc(test_file5)
-	testing.test_multiple_correct_soc(test_file1)
-	testing.test_multiple_correct_soc(test_file2)
-	testing.test_multiple_correct_soc(test_file3)
-	testing.test_multiple_correct_soc(test_file4)
-	testing.test_multiple_correct_soc(test_file5)
-	testing.test_multiple_correct_soc(test_file1)
-	testing.test_multiple_correct_soc(test_file2)
-	testing.test_multiple_correct_soc(test_file3)
-	testing.test_multiple_correct_soc(test_file4)
-	testing.test_multiple_correct_soc(test_file5)
-	seventh_test_time = time.time()
-	print(f"time taken for final test: {seventh_test_time - sixth_test_time}\n")
