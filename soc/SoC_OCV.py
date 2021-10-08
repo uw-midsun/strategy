@@ -11,7 +11,7 @@ import time
 import sys
 import os.path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
-fName = "test_data//CellDataFileTestMJ1.txt"
+fName = "test_data_5A//CellDataFileTestMJ1.txt"
 
 class SoC_OCV:
 
@@ -190,4 +190,5 @@ class SoC_OCV:
 			return self.__find_not_in_search__(ocv, min_ocv, False)
 
 		else:
-			raise Exception(f'Current is too high. current is: {current}')
+			return f'Current us too high. Current is: {current}'
+			# raise Exception(f'Current is too high. current is: {current}')

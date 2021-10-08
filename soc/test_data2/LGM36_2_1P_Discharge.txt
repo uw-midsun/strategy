@@ -1,5 +1,4 @@
 Start Voltage: 4.1657
-
 Time (s) - Voltage	Voltage - Voltage	Time (s) - Current	Current - Current	Time (s) - Power	Power - Power	
 0	4.03868	0	2.99986	0	12.1155	
 1	4.03452	1	2.99986	1	12.103	
