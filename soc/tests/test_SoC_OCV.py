@@ -57,14 +57,16 @@ class test_SoC_OCV:
 
 		print(f"Size of test: {len(self.v_ocv)}\n")
 
+		file = "tests/test_results.txt"
+		with open(file, 'w') as write_to_file:
+			write_to_file.write("Actual OCV | Calculated SOC | Calculated OCV \n")
+
 		for i in range(len(self.v_ocv)):
 			soc = self.SoCOCV.correct_soc(self.v_ocv[i], self.current_array[i])
-			if i % 1000 == 0:
-				print(f'The actual Open Curuit Voltage is: {self.v_ocv[i]}')
-				print(f'The State of Charge Percentage is: {soc}')
+			if i % 4000 == 0:
 				if not isinstance(soc, str):
-					print(f'The calculated Open Circuit Voltage for the State of Charge is: {self.SoCOCV.get_cell_ocv(soc)}')
-				print('')
+					with open(file, 'a') as append_to_file:
+						append_to_file.write(f"{self.v_ocv[i]} | {soc} | {self.SoCOCV.get_cell_ocv(soc)} \n")
 
 
 
