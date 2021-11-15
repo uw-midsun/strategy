@@ -46,6 +46,8 @@ def parse_hardware_bom(bom_file, ms_quote_file):
                 bom_winners = bom_winners.append(row)
             elif row['Mfg Std Lead Time'] > row['Lead Time in Weeks']:
                 ms_quote_winners = ms_quote_winners.append(row)
+        elif row['Priority'] != 'y' and row['Priority'] != 'n':
+            print("Please fill in empty priority fields in Excel Files.")
 
     bom_winners = bom_winners.drop(bom_winners[['Order Unit Price','Lead Time in Weeks']], 1)
     ms_quote_winners = ms_quote_winners.drop(ms_quote_winners[['Unit Price','Mfg Std Lead Time']], 1)
