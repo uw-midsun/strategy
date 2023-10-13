@@ -6,7 +6,9 @@ from dynamics.car_model import Car
 import numpy
 from scipy.optimize import minimize
 import argparse
-
+# SOC 
+from soc.SoCEstimation import CoulombCounter
+soc_estimator = CoulombCounter()
 
 global car
 car = Car()
@@ -106,9 +108,11 @@ if __name__ == "__main__":
     init_profile = generate_initial_profile(time, distance, elev_profile,
                                             min_velocity, stop_profile.copy(),
                                             max_stop_velocity)
+    soc_constraint.previous_soc = soc_estimator.get_soc()
 
     def objective(v_profile):
         energy = car.energy_used(v_profile, elev_profile, distance=dist_step)
+        soc_estimator.discharge(energy, 1, dirOUT=True)
         return energy / 1000000
 
     def time_constraint(v_profile):
@@ -124,6 +128,34 @@ if __name__ == "__main__":
                 error += max_velocity - v_profile[i]
         return error
 
+    def soc_constraint(v_profile):
+        """
+        We can add some contraint on the SOC 
+        These contraints are based on the battery that we are using
+            min and max values could also be provided by the Battery Management System
+        """
+        # Assuming arbit constants
+        min_soc = 0.1
+        max_soc = 0.9
+        max_soc_change_rate = 0.01
+
+    
+        current_soc = soc_estimator.get_soc()
+        delta_soc = current_soc - soc_constraint.previous_soc
+        soc_constraint.previous_soc = current_soc
+
+        if current_soc < min_soc:
+            # SoC is below the minimum
+            return min_soc - current_soc
+        elif current_soc > max_soc:
+            # SoC is above the maximum
+            return current_soc - max_soc
+        elif abs(delta_soc) > max_soc_change_rate:
+            # Rate of change in SoC is too high
+            return delta_soc - max_soc_change_rate
+        else:
+            return 0
+
     # initial guess
     v0 = numpy.asarray(init_profile)
     print('Initial SSE Objective: ' + str(objective(v0)))
@@ -137,7 +169,8 @@ if __name__ == "__main__":
     # constraints
     condition1 = {'type': 'ineq', 'fun': time_constraint}
     condition2 = {'type': 'ineq', 'fun': speed_constraint}
-    conditions = ([condition1, condition2])
+    condition3 = {'type': 'ineq', 'fun': soc_constraint}
+    conditions = [condition1, condition2, condition3]
     solution = minimize(objective, v0, method='SLSQP',
                         bounds=bounds, constraints=conditions)
 
