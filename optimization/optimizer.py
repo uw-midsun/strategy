@@ -57,7 +57,7 @@ def load_course_map(course_name="COTA"):
                 stops.append(int(clean_data[i][0]))
     if course_name == "ASC":
         pass
-    return (elev_profile, stops, total_dist)
+    return (elev_profile, stops, total_dist, clean_data)
 
 
 def generate_initial_profile(time, distance, e_profile, min_velocity,
@@ -98,6 +98,7 @@ if __name__ == "__main__":
     elev_profile = map_data[0]
     stop_profile = map_data[1]
     distance = map_data[2]
+    clean_data = map_data[3]
 
     # Load in the distance and necessary time for a lap
     dist_step = args.step
@@ -143,8 +144,10 @@ if __name__ == "__main__":
                         bounds=bounds, constraints=conditions)
 
     v = solution.x
-    print("pitch,velocity")
+    max_velocity = [car.max_velocity(velocity, timestep=distance / velocity) for velocity in v]
+    error = [max_velocity - velocity for max_velocity, velocity in zip(max_velocity, v)]
+
+    print("pitch,mv,error,velocity")
     for i in range(len(v)):
-        print(f"{elev_profile[i][0]},{v[i]}")
-    message = solution.message
-    status = solution.status
+        if i not in stop_profile:
+            print(f"{elev_profile[i][0]},{max_velocity[i]},{error[i]},{v[i]}")

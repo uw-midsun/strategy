@@ -5,8 +5,7 @@ from sklearn.preprocessing import StandardScaler
 # Read the training data from the CSV file
 data = pd.read_csv('training.csv')
 
-# Split the data into input features (pitch) and target variable (velocity)
-X = data['pitch'].values.reshape(-1, 1)
+X = data[['pitch','mv','error']].values
 y = data['velocity'].values
 
 # Scale the input features
@@ -24,4 +23,4 @@ model.fit(X_train, y_train)
 
 # Test accuracy
 accuracy = model.score(X_test, y_test)
-print(accuracy * 10000)
+print(accuracy)
