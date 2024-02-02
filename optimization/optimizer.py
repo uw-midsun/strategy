@@ -47,6 +47,8 @@ def load_course_map(course_name="COTA"):
         stops = []
         total_dist = 0
         for i in range(len(clean_data) - 1):
+            # float(clean_data[i][1] = rise
+            # float(clean_data[i][2] = run or span
             pitch = numpy.arctan(float(clean_data[i][1])
                                  / float(clean_data[i][2]))
             elev_profile.append((pitch, int(clean_data[i][2])))
