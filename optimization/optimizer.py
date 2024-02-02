@@ -126,8 +126,7 @@ if __name__ == "__main__":
 
     # initial guess
     v0 = numpy.asarray(init_profile)
-    print('Initial SSE Objective: ' + str(objective(v0)))
-
+    
     # bounds
     elements = len(v0)
     bounds = [(min_velocity, max_velocity)] * elements
@@ -142,8 +141,8 @@ if __name__ == "__main__":
                         bounds=bounds, constraints=conditions)
 
     v = solution.x
-    print(v)
+    print("pitch,velocity")
+    for i in range(len(v)):
+        print(f"{elev_profile[i][0]},{v[i]}")
     message = solution.message
-    print(message)
     status = solution.status
-    print(status)
